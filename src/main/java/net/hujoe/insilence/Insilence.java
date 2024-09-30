@@ -20,5 +20,7 @@ public class Insilence implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
+		InsilenceClient client = new InsilenceClient();
+		client.onInitializeClient();
 	}
 }
