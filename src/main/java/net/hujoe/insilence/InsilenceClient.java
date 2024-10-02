@@ -2,7 +2,10 @@ package net.hujoe.insilence;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.hujoe.insilence.client.SoundEntityRenderer;
+import net.hujoe.insilence.entity.ModEntities;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.util.Identifier;
@@ -23,6 +26,10 @@ public class InsilenceClient implements ClientModInitializer {
             RenderSystem.enableBlend(); // allows wheel to be transparent
             drawContext.drawTexture(RAKE_WHEEL, x - 78, y - 110,0, 0, 156, 64, 156, 64); // draws the rake wheel texture
             RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
+        });
+
+        EntityRendererRegistry.register(ModEntities.SOUNDENTITY, (context) -> {
+            return new SoundEntityRenderer(context);
         });
     }
 }
