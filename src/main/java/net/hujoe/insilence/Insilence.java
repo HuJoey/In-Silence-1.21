@@ -2,6 +2,7 @@ package net.hujoe.insilence;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.hujoe.insilence.entity.ModEntities;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,5 +23,6 @@ public class Insilence implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 		InsilenceClient client = new InsilenceClient();
 		client.onInitializeClient();
+		ModEntities.registerModEntities();
 	}
 }
