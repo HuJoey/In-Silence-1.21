@@ -2,8 +2,11 @@ package net.hujoe.insilence;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
+import net.hujoe.insilence.client.ModModelLayers;
+import net.hujoe.insilence.client.RakeModel;
 import net.hujoe.insilence.client.SoundEntityRenderer;
 import net.hujoe.insilence.entity.ModEntities;
 import net.minecraft.client.MinecraftClient;
@@ -31,5 +34,13 @@ public class InsilenceClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.SOUNDENTITY, (context) -> {
             return new SoundEntityRenderer(context);
         });
+
+        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE, RakeModel::getTexturedModelData);
+    }
+
+    private double calculateAngle(double m1, double m2){
+        double angle = Math.abs((m2 - m1) / (1 + m1 * m2));
+        double ret = Math.atan(angle);
+        return (ret * 180) / 3.14159265;
     }
 }
