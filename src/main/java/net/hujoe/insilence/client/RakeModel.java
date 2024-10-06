@@ -1,15 +1,20 @@
 package net.hujoe.insilence.client;
 
+import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import org.joml.Quaternionf;
+
+import static net.minecraft.data.DataProvider.LOGGER;
 
 // Made with Blockbench 4.11.1
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
-public class RakeModel extends EntityModel {
+public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 	private final ModelPart rake;
 	private final ModelPart leftleg;
 	private final ModelPart rightleg;
@@ -26,7 +31,7 @@ public class RakeModel extends EntityModel {
 	private final ModelPart tail;
 	private final ModelPart head;
 	private final ModelPart teeth6;
-	public final EntityModel model = this;
+	public float yaw;
 	public RakeModel(ModelPart root) {
 		this.rake = root.getChild("rake");
 		this.leftleg = this.rake.getChild("leftleg");
@@ -295,16 +300,27 @@ public class RakeModel extends EntityModel {
 		.uv(0, 0).cuboid(5.0F, -2.0F, -2.0F, 0.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-3.0F, -7.0F, 11.0F, -2.1817F, 0.0F, 0.0F));
 		return TexturedModelData.of(modelData, 128, 128);
 	}
-	@Override
-	public void setAngles(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-	}
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
+		matrices.push();
+		rotate(matrices);
+		matrices.translate(0.0F, -1.5F, 0.0F);
 		rake.render(matrices, vertices, light, overlay);
+		matrices.pop();
 	}
 
-	public EntityModel getModel(){
-		return this;
+	@Override
+	public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+		this.yaw = headYaw;
+	}
+
+	public void rotate(MatrixStack matrices) {
+		this.yaw += 180;
+		this.yaw = this.yaw % 360;
+		this.yaw -= 180;
+		if (this.yaw != 0.0F) {
+			matrices.multiply(new Quaternionf().rotationZYX(0F, (float) (-(this.yaw * Math.PI)/180), -110F));
+		}
 	}
 }

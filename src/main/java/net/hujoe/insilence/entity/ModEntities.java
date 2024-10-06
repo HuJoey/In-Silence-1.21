@@ -3,6 +3,7 @@ package net.hujoe.insilence.entity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityDimensions;
@@ -19,6 +20,10 @@ public class ModEntities {
     public static final EntityType<SoundEntity> SOUNDENTITY =
             Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "sound"),
                     EntityType.Builder.create(SoundEntity::new, SpawnGroup.MISC).dimensions(0f, 0f).build("sound"));
+
+    public static final EntityType<RakeEntity> RAKE =
+            Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "rake"),
+                    EntityType.Builder.create(RakeEntity::new, SpawnGroup.MISC).dimensions(1f, 1f).build("rake"));
 
     public static void registerModEntities() {
         Insilence.LOGGER.info("Registering ModEntities for " + Insilence.MOD_ID);
