@@ -12,6 +12,7 @@ To-do:
 - Voice Chat Implementation
 - Mice
 - Update HUD Texture for Rake
+- Make Sound HUD only appear for Rakes
 
 Bugs:
 - Choppy Rake Rotation
