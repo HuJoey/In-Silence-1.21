@@ -13,7 +13,6 @@ import net.hujoe.insilence.client.ModModelLayers;
 import net.hujoe.insilence.client.RakeModel;
 import net.hujoe.insilence.client.RakeRenderer;
 import net.hujoe.insilence.client.SoundEntityRenderer;
-import net.hujoe.insilence.command.RakeCommand;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.server.RakeManager;
