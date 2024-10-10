@@ -48,7 +48,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 	@Inject(method="render", at = @At("HEAD"), cancellable = true)
 	public void render(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci){
 		if ((Object) this instanceof PlayerEntityRenderer) {
-			//LOGGER.info("Overlay:" + this.getOverlay(livingEntity, 0));
 			MinecraftClient minecraftClient = MinecraftClient.getInstance();
 			ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
 			if (RakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
