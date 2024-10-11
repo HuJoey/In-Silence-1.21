@@ -32,12 +32,7 @@ import static net.minecraft.server.command.CommandManager.literal;
 public class InsilenceClient implements ClientModInitializer {
     @Override
     public void onInitializeClient(){
-        EntityRendererRegistry.register(ModEntities.SOUNDENTITY, (context) -> {
-            return new SoundEntityRenderer(context);
-        });
-        EntityRendererRegistry.register(ModEntities.RAKE, (context) -> {
-            return new RakeRenderer(context);
-        });
+        EntityRendererRegistry.register(ModEntities.SOUNDENTITY, SoundEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE, RakeModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.RAKE, RakeRenderer::new);
@@ -55,9 +50,5 @@ public class InsilenceClient implements ClientModInitializer {
                 }))));
     }
 
-    private double calculateAngle(double m1, double m2){
-        double angle = Math.abs((m2 - m1) / (1 + m1 * m2));
-        double ret = Math.atan(angle);
-        return (ret * 180) / 3.14159265;
-    }
+
 }

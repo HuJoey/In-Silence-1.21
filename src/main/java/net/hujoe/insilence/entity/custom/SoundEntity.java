@@ -22,16 +22,10 @@ import java.util.function.Predicate;
 public class SoundEntity extends Entity {
     private static final int duration = 40;
     private int strength;
-    private int radius1;
-    private int radius2;
-    private int radius3;
 
     public SoundEntity(EntityType<?> type, World world) {
         super(type, world);
         strength = 50; //for testing purposes
-        radius1 = strength / 2;
-        radius2 = strength;
-        radius3 = 2 * strength;
     }
 
     public void tick() {
