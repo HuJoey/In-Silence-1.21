@@ -47,7 +47,7 @@ public class InGameHudMixin {
             MinecraftClient minecraftClient = MinecraftClient.getInstance();
             ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
         assert clientPlayerEntity != null;
-        if (RakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
+        if (RakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard()) && !clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
             // renders wheel hud
                 int x = minecraftClient.getWindow().getScaledWidth() / 2;
                 int y = minecraftClient.getWindow().getScaledHeight();
@@ -111,36 +111,9 @@ public class InGameHudMixin {
                 double yOffset = -78 * Math.cos(soundAngle) / 2.55;
 
                 RenderSystem.enableBlend();
-                context.drawTexture(SOUND, (int) (x - 6 + xOffset), (int) (y - 80 + yOffset),0, 0, 12, 12, 12, 12);
+                context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset),0, 0, 12,12, 12, 12);
                 RenderSystem.disableBlend();
             }
         }
-    }
-
-    @Unique
-    private double calculateAngle(SoundEntity soundEntity, PlayerEntity playerEntity){
-        double x1 = soundEntity.getX();
-        double x2 = playerEntity.getX();
-        double z1 = soundEntity.getZ();
-        double z2 = playerEntity.getZ();
-
-        if (x1 - x2 == 0){
-            x1 += 0.01;
-        }
-        double m1 = (z1 - z2) / (x1 - x2);
-
-        var facing = playerEntity.getRotationVector();
-        var offset = new Vec3d(50 * facing.getX(), facing.getY(), 50 * facing.getZ());
-
-        x1 = offset.getX() + x2;
-        z1 = offset.getZ() + z2;
-
-        if (x1 - x2 == 0){
-            x1 += 0.01;
-        }
-        double m2 = (z1 - z2) / (x1 - x2);
-        double angle = (m2 - m1) / (1 + m1 * m2);
-        LOGGER.info("angle " + angle);
-        return Math.atan(angle);
     }
 }
