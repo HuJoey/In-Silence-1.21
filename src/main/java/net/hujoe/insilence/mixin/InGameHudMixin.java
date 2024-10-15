@@ -92,6 +92,7 @@ public class InGameHudMixin {
             for (SoundEntity temp : closeEntities) {
                 x1 = temp.getX();
                 z1 = temp.getZ();
+                int size = (int) (-0.2285F * clientPlayerEntity.distanceTo(temp) + 18);
 
                 if (x1 - clientPlayerEntity.getX() == 0){
                     x1 += 0.01;
@@ -111,7 +112,7 @@ public class InGameHudMixin {
                 double yOffset = -78 * Math.cos(soundAngle) / 2.55;
 
                 RenderSystem.enableBlend();
-                context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset),0, 0, 12,12, 12, 12);
+                context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset),0, 0, size,size, size, size);
                 RenderSystem.disableBlend();
             }
         }
