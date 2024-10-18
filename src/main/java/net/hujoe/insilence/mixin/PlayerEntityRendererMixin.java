@@ -39,8 +39,8 @@ import static net.hujoe.insilence.Insilence.LOGGER;
 public class PlayerEntityRendererMixin<T extends LivingEntity> {
 	@Unique
 	private static final Identifier rakeTexture = Identifier.of(Insilence.MOD_ID, "textures/rake/rake.png");
-	private final RakeModel<T> model = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE));
-	private final ModelPart leftarm = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE)).getArm(1);
+	private final ModelPart leftArm = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE)).leftwrist;
+	private final ModelPart rightArm = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE)).rightwrist;
 
     @ModifyReturnValue(method = "getTexture(Lnet/minecraft/client/network/AbstractClientPlayerEntity;)Lnet/minecraft/util/Identifier;", at = @At("RETURN"))
 	private Identifier getTexture(Identifier original, AbstractClientPlayerEntity abstractClientPlayerEntity) {
@@ -62,17 +62,21 @@ public class PlayerEntityRendererMixin<T extends LivingEntity> {
 	private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
 		if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
 			PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel = ((PlayerEntityRenderer) (Object) this).getModel();
-			if (player.isSpectator()) {
-				playerEntityModel.setVisible(false);
-			} else {
-				playerEntityModel.setVisible(true);
-			}
+            playerEntityModel.setVisible(!player.isSpectator());
 			matrices.push();
-			matrices.translate(0, -0.75, 1.5);
+			if (player.getMainArm() == Arm.RIGHT) {
+				matrices.translate(0, -0.75, 1.5);
+				arm = rightArm;
+				arm.pitch = 4.7F;
+				arm.yaw = 4.5F;
+			} else {
+				matrices.translate(0, -0.25, 1.5);
+				arm = leftArm;
+				arm.pitch = 5F;
+				arm.yaw = -4.25F;
+			}
 			matrices.scale(3F, 3F, 3F);
-			leftarm.pitch = 4.7F;
-			leftarm.yaw = 4.5F;
-			leftarm.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(rakeTexture)), light, OverlayTexture.DEFAULT_UV);
+			arm.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(rakeTexture)), light, OverlayTexture.DEFAULT_UV);
 			matrices.pop();
 			ci.cancel();
 		}

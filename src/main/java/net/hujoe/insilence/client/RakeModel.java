@@ -31,8 +31,8 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 	private final ModelPart tail;
 	public final ModelPart head;
 	private final ModelPart teeth6;
-	private final ModelPart leftwrist;
-	private final ModelPart rightwrist;
+	public final ModelPart leftwrist;
+	public final ModelPart rightwrist;
 	public float yaw;
 	public RakeModel(ModelPart root) {
 		this.rake = root.getChild("rake");
@@ -328,17 +328,6 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 		matrices.translate(0.0F, -1.5F, 0.0F);
 		rake.render(matrices, vertices, light, overlay);
 		matrices.pop();
-	}
-
-	public ModelPart getArm(int i){
-		switch (i) {
-			case -1:
-				return leftwrist;
-			case 1:
-				return rightwrist;
-			default:
-				return null;
-		}
 	}
 
 	@Override
