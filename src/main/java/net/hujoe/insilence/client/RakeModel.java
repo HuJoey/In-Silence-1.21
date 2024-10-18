@@ -15,10 +15,10 @@ import static net.minecraft.data.DataProvider.LOGGER;
 // Exported for Minecraft version 1.17+ for Yarn
 // Paste this class into your mod and generate all required imports
 public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
-	private final ModelPart rake;
+	public final ModelPart rake;
 	private final ModelPart leftleg;
 	private final ModelPart rightleg;
-	private final ModelPart torso;
+	public final ModelPart torso;
 	private final ModelPart tongue;
 	private final ModelPart teeth;
 	private final ModelPart teeth5;
@@ -26,11 +26,13 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 	private final ModelPart teeth2;
 	private final ModelPart teeth3;
 	private final ModelPart hair;
-	private final ModelPart leftarm;
-	private final ModelPart rightarm;
+	public final ModelPart leftarm;
+	public final ModelPart rightarm;
 	private final ModelPart tail;
-	private final ModelPart head;
+	public final ModelPart head;
 	private final ModelPart teeth6;
+	private final ModelPart leftwrist;
+	private final ModelPart rightwrist;
 	public float yaw;
 	public RakeModel(ModelPart root) {
 		this.rake = root.getChild("rake");
@@ -49,6 +51,8 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 		this.tail = this.rake.getChild("tail");
 		this.head = this.rake.getChild("head");
 		this.teeth6 = this.head.getChild("teeth6");
+		this.leftwrist = this.leftarm.getChild("leftwrist");
+		this.rightwrist = this.rightarm.getChild("rightwrist");
 	}
 	public static TexturedModelData getTexturedModelData() {
 		ModelData modelData = new ModelData();
@@ -230,39 +234,55 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 
 		ModelPartData cube_r70 = hair.addChild("cube_r70", ModelPartBuilder.create().uv(27, 7).cuboid(-3.0F, 0.0F, -2.0F, 4.0F, 0.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(-1.0F, -8.0F, -1.0F, 0.5236F, 0.0F, 0.0436F));
 
-		ModelPartData leftarm = rake.addChild("leftarm", ModelPartBuilder.create(), ModelTransform.pivot(-6.0F, -12.0F, 4.0F));
+		ModelPartData leftarm = rake.addChild("leftarm", ModelPartBuilder.create(), ModelTransform.pivot(-4.0F, -35.0F, -3.0F));
 
-		ModelPartData cube_r71 = leftarm.addChild("cube_r71", ModelPartBuilder.create().uv(40, 0).cuboid(-1.0F, -3.0F, -1.0F, 4.0F, 13.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -21.0F, -9.0F, -0.1705F, -0.0376F, 0.265F));
+		ModelPartData shoulder = leftarm.addChild("shoulder", ModelPartBuilder.create(), ModelTransform.pivot(-2.0F, 23.0F, 7.0F));
 
-		ModelPartData cube_r72 = leftarm.addChild("cube_r72", ModelPartBuilder.create().uv(53, 0).cuboid(-2.0F, 0.0F, -1.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(7.0F, 0.0F, 0.0F, -2.0257F, -0.1586F, -0.3123F));
+		ModelPartData cube_r71 = shoulder.addChild("cube_r71", ModelPartBuilder.create().uv(40, 0).cuboid(-1.0F, -3.0F, -1.0F, 4.0F, 13.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -21.0F, -9.0F, -0.1705F, -0.0376F, 0.265F));
 
-		ModelPartData cube_r73 = leftarm.addChild("cube_r73", ModelPartBuilder.create().uv(32, 69).cuboid(-2.0F, 0.0F, -1.0F, 2.0F, 2.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(5.0F, -4.0F, 3.0F, -2.0316F, -0.1393F, -0.2727F));
+		ModelPartData leftwrist = leftarm.addChild("leftwrist", ModelPartBuilder.create(), ModelTransform.pivot(-3.0F, 10.0F, 0.0F));
 
-		ModelPartData cube_r74 = leftarm.addChild("cube_r74", ModelPartBuilder.create().uv(62, 28).cuboid(-2.0F, -1.0F, -1.0F, 2.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, -9.0F, 3.0F, -1.5298F, 0.0149F, -0.3488F));
+		ModelPartData claw = leftwrist.addChild("claw", ModelPartBuilder.create(), ModelTransform.pivot(8.0F, 13.0F, 7.0F));
 
-		ModelPartData cube_r75 = leftarm.addChild("cube_r75", ModelPartBuilder.create().uv(62, 47).cuboid(-2.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -13.0F, 0.0F, -1.2582F, 0.3332F, -0.468F));
+		ModelPartData cube_r72 = claw.addChild("cube_r72", ModelPartBuilder.create().uv(53, 0).cuboid(-2.0F, 0.0F, -1.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -2.0257F, -0.1586F, -0.3123F));
 
-		ModelPartData cube_r76 = leftarm.addChild("cube_r76", ModelPartBuilder.create().uv(62, 57).cuboid(-2.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -13.0F, -4.0F, 0.082F, 0.0298F, -0.3478F));
+		ModelPartData cube_r73 = claw.addChild("cube_r73", ModelPartBuilder.create().uv(32, 69).cuboid(-2.0F, 0.0F, -1.0F, 2.0F, 2.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(-2.0F, -4.0F, 3.0F, -2.0316F, -0.1393F, -0.2727F));
 
-		ModelPartData cube_r77 = leftarm.addChild("cube_r77", ModelPartBuilder.create().uv(32, 59).cuboid(-3.0F, -2.0F, -1.0F, 3.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -13.0F, -9.0F, -0.0807F, -0.0334F, -0.3914F));
+		ModelPartData cube_r74 = claw.addChild("cube_r74", ModelPartBuilder.create().uv(62, 28).cuboid(-2.0F, -1.0F, -1.0F, 2.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(-4.0F, -9.0F, 3.0F, -1.5298F, 0.0149F, -0.3488F));
 
-		ModelPartData rightarm = rake.addChild("rightarm", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, -11.0F, 4.0F));
+		ModelPartData cube_r75 = claw.addChild("cube_r75", ModelPartBuilder.create().uv(62, 47).cuboid(-2.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(-7.0F, -13.0F, 0.0F, -1.2582F, 0.3332F, -0.468F));
 
-		ModelPartData cube_r78 = rightarm.addChild("cube_r78", ModelPartBuilder.create().uv(0, 37).cuboid(-1.0F, -3.0F, -1.0F, 4.0F, 13.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, -22.0F, -9.0F, -0.0879F, -0.151F, -0.5606F));
+		ModelPartData arm = leftwrist.addChild("arm", ModelPartBuilder.create(), ModelTransform.pivot(1.0F, 13.0F, 7.0F));
 
-		ModelPartData cube_r79 = rightarm.addChild("cube_r79", ModelPartBuilder.create().uv(48, 49).cuboid(1.0F, 0.0F, -1.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(1.0F, -4.0F, 9.0F, -1.9056F, -0.4149F, 0.1393F));
+		ModelPartData cube_r76 = arm.addChild("cube_r76", ModelPartBuilder.create().uv(62, 57).cuboid(-2.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -13.0F, -4.0F, 0.082F, 0.0298F, -0.3478F));
 
-		ModelPartData cube_r80 = rightarm.addChild("cube_r80", ModelPartBuilder.create().uv(67, 18).cuboid(0.0F, 0.0F, -1.0F, 2.0F, 2.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(1.0F, -9.0F, 10.0F, -1.62F, -0.4795F, 0.0227F));
+		ModelPartData cube_r77 = arm.addChild("cube_r77", ModelPartBuilder.create().uv(32, 59).cuboid(-3.0F, -2.0F, -1.0F, 3.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, -13.0F, -9.0F, -0.0807F, -0.0334F, -0.3914F));
 
-		ModelPartData cube_r81 = rightarm.addChild("cube_r81", ModelPartBuilder.create().uv(62, 9).cuboid(0.0F, -1.0F, -1.0F, 2.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, -14.0F, 8.0F, -1.1476F, -0.1096F, 0.2382F));
+		ModelPartData rightarm = rake.addChild("rightarm", ModelPartBuilder.create(), ModelTransform.pivot(3.0F, -35.0F, -3.0F));
 
-		ModelPartData cube_r82 = rightarm.addChild("cube_r82", ModelPartBuilder.create().uv(12, 62).cuboid(0.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(4.0F, -17.0F, 4.0F, -0.6272F, -0.2136F, 0.1525F));
+		ModelPartData shoulder2 = rightarm.addChild("shoulder2", ModelPartBuilder.create(), ModelTransform.pivot(0.0F, 2.0F, -2.0F));
 
-		ModelPartData cube_r83 = rightarm.addChild("cube_r83", ModelPartBuilder.create().uv(44, 62).cuboid(0.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(6.0F, -14.0F, 0.0F, 0.737F, -0.3931F, -0.1946F));
+		ModelPartData cube_r78 = shoulder2.addChild("cube_r78", ModelPartBuilder.create().uv(0, 37).cuboid(-1.0F, -3.0F, -1.0F, 4.0F, 13.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -0.0879F, -0.151F, -0.5606F));
 
-		ModelPartData cube_r84 = rightarm.addChild("cube_r84", ModelPartBuilder.create().uv(58, 0).cuboid(0.0F, -2.0F, -1.0F, 3.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(7.0F, -14.0F, -5.0F, -0.088F, -0.1304F, 0.0115F));
+		ModelPartData rightwrist = rightarm.addChild("rightwrist", ModelPartBuilder.create(), ModelTransform.pivot(4.0F, 10.0F, 2.0F));
 
-		ModelPartData tail = rake.addChild("tail", ModelPartBuilder.create(), ModelTransform.pivot(-1.0F, -31.0F, -22.0F));
+		ModelPartData arm2 = rightwrist.addChild("arm2", ModelPartBuilder.create(), ModelTransform.pivot(-7.0F, 14.0F, 5.0F));
+
+		ModelPartData cube_r79 = arm2.addChild("cube_r79", ModelPartBuilder.create().uv(44, 62).cuboid(0.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(6.0F, -14.0F, 0.0F, 0.737F, -0.3931F, -0.1946F));
+
+		ModelPartData cube_r80 = arm2.addChild("cube_r80", ModelPartBuilder.create().uv(58, 0).cuboid(0.0F, -2.0F, -1.0F, 3.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(7.0F, -14.0F, -5.0F, -0.088F, -0.1304F, 0.0115F));
+
+		ModelPartData claw2 = rightwrist.addChild("claw2", ModelPartBuilder.create(), ModelTransform.pivot(-6.0F, 5.0F, 15.0F));
+
+		ModelPartData cube_r81 = claw2.addChild("cube_r81", ModelPartBuilder.create().uv(67, 18).cuboid(0.0F, 0.0F, -1.0F, 2.0F, 2.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.62F, -0.4795F, 0.0227F));
+
+		ModelPartData cube_r82 = claw2.addChild("cube_r82", ModelPartBuilder.create().uv(62, 9).cuboid(0.0F, -1.0F, -1.0F, 2.0F, 3.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(2.0F, -5.0F, -2.0F, -1.1476F, -0.1096F, 0.2382F));
+
+		ModelPartData cube_r83 = claw2.addChild("cube_r83", ModelPartBuilder.create().uv(12, 62).cuboid(0.0F, -2.0F, -1.0F, 2.0F, 4.0F, 6.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, -8.0F, -6.0F, -0.6272F, -0.2136F, 0.1525F));
+
+		ModelPartData cube_r84 = claw2.addChild("cube_r84", ModelPartBuilder.create().uv(48, 49).cuboid(1.0F, 0.0F, -1.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 5.0F, -1.0F, -1.9056F, -0.4149F, 0.1393F));
+
+		ModelPartData tail = rake.addChild("tail", ModelPartBuilder.create(), ModelTransform.pivot(-1.0F, -18.0F, -9.0F));
 
 		ModelPartData cube_r85 = tail.addChild("cube_r85", ModelPartBuilder.create().uv(35, 43).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -2.4871F, 0.0F, 0.0F));
 
@@ -308,6 +328,17 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 		matrices.translate(0.0F, -1.5F, 0.0F);
 		rake.render(matrices, vertices, light, overlay);
 		matrices.pop();
+	}
+
+	public ModelPart getArm(int i){
+		switch (i) {
+			case -1:
+				return leftwrist;
+			case 1:
+				return rightwrist;
+			default:
+				return null;
+		}
 	}
 
 	@Override

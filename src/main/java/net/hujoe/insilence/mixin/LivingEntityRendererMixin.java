@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import static net.minecraft.data.DataProvider.LOGGER;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
+public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 	@Shadow @Nullable protected abstract RenderLayer getRenderLayer(T entity, boolean showBody, boolean translucent, boolean showOutline);
 
 	@Shadow

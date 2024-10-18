@@ -2,26 +2,50 @@ package net.hujoe.insilence.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.client.ModModelLayers;
+import net.hujoe.insilence.client.RakeModel;
 import net.hujoe.insilence.server.RakeManager;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
+import net.minecraft.client.render.entity.model.BipedEntityModel;
+import net.minecraft.client.render.entity.model.EntityModel;
+import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerModelPart;
+import net.minecraft.util.Arm;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.gen.Accessor;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import static net.hujoe.insilence.Insilence.LOGGER;
+
 @Mixin(PlayerEntityRenderer.class)
-public class PlayerEntityRendererMixin {
+public class PlayerEntityRendererMixin<T extends LivingEntity> {
 	@Unique
-	private static final Identifier RAKE = Identifier.of(Insilence.MOD_ID, "textures/rake/rake.png");
-	@ModifyReturnValue(method = "getTexture(Lnet/minecraft/client/network/AbstractClientPlayerEntity;)Lnet/minecraft/util/Identifier;", at = @At("RETURN"))
+	private static final Identifier rakeTexture = Identifier.of(Insilence.MOD_ID, "textures/rake/rake.png");
+	private final RakeModel<T> model = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE));
+	private final ModelPart leftarm = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE)).getArm(1);
+
+    @ModifyReturnValue(method = "getTexture(Lnet/minecraft/client/network/AbstractClientPlayerEntity;)Lnet/minecraft/util/Identifier;", at = @At("RETURN"))
 	private Identifier getTexture(Identifier original, AbstractClientPlayerEntity abstractClientPlayerEntity) {
 		if (RakeManager.getRakeManager().isRake(abstractClientPlayerEntity.getNameForScoreboard())) {
-			return RAKE;
+			return rakeTexture;
 		}
 		return original;
 	}
@@ -29,6 +53,27 @@ public class PlayerEntityRendererMixin {
 	@Inject(method = "setModelPose", at = @At("HEAD"), cancellable = true)
 	private void setModelPose(AbstractClientPlayerEntity player, CallbackInfo ci) {
 		if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
+			ci.cancel();
+		}
+	}
+
+
+	@Inject(method = "renderArm", at = @At("HEAD"), cancellable = true)
+	private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
+		if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
+			PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel = ((PlayerEntityRenderer) (Object) this).getModel();
+			if (player.isSpectator()) {
+				playerEntityModel.setVisible(false);
+			} else {
+				playerEntityModel.setVisible(true);
+			}
+			matrices.push();
+			matrices.translate(0, -0.75, 1.5);
+			matrices.scale(3F, 3F, 3F);
+			leftarm.pitch = 4.7F;
+			leftarm.yaw = 4.5F;
+			leftarm.render(matrices, vertexConsumers.getBuffer(RenderLayer.getEntitySolid(rakeTexture)), light, OverlayTexture.DEFAULT_UV);
+			matrices.pop();
 			ci.cancel();
 		}
 	}
