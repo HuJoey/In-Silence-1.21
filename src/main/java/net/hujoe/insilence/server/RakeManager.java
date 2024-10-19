@@ -1,5 +1,8 @@
 package net.hujoe.insilence.server;
 
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.server.MinecraftServer;
+
 import java.util.ArrayList;
 
 public class RakeManager {

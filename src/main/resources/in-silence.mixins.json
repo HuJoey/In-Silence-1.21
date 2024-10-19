@@ -3,7 +3,9 @@
   "package": "net.hujoe.insilence.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "GameRendererMixin",
     "LivingEntityRendererMixin",
+    "LivingEntityMixin",
     "PlayerEntityRendererMixin"
   ],
   "injectors": {

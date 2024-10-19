@@ -1,0 +1,59 @@
+package net.hujoe.insilence.mixin;
+
+import net.hujoe.insilence.server.RakeManager;
+import net.minecraft.entity.*;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+@Mixin(LivingEntity.class)
+public class LivingEntityMixin extends Entity {
+    public LivingEntityMixin(EntityType<?> type, World world) {
+        super(type, world);
+    }
+
+    @Unique
+    @Override
+    protected void initDataTracker(DataTracker.Builder builder) {
+    }
+
+    @Unique
+    @Override
+    protected void readCustomDataFromNbt(NbtCompound nbt) {
+    }
+
+    @Unique
+    @Override
+    protected void writeCustomDataToNbt(NbtCompound nbt) {
+    }
+
+    @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
+    private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
+        if ((Object) this instanceof PlayerEntity player) {
+            if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())){
+                switch (pose){
+                    case STANDING:
+                        cir.setReturnValue(EntityDimensions.changing(0.9F, 2.7F)
+                                .withEyeHeight(2.5F)
+                                .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
+                        cir.cancel();
+                        break;
+                    case CROUCHING:
+                        cir.setReturnValue(EntityDimensions.changing(0.9F, 2.4F)
+                                .withEyeHeight(2.15F)
+                                .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
+                        cir.cancel();
+                        break;
+                }
+            }
+        }
+    }
+
+}
