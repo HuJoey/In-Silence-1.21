@@ -1,20 +1,38 @@
 package net.hujoe.insilence.mixin;
 
+import com.google.common.base.Objects;
+import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin extends Entity {
+public abstract class LivingEntityMixin extends Entity {
+    @Shadow protected abstract boolean isImmobile();
+
+    @Shadow protected boolean jumping;
+    @Shadow private float movementSpeed;
+    @Shadow public float forwardSpeed;
+    @Shadow public float sidewaysSpeed;
+    @Shadow private BlockPos lastBlockPos;
+    private int ticksSinceLastSound = 20;
+    private Vec3d lastPos;
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -56,4 +74,36 @@ public class LivingEntityMixin extends Entity {
         }
     }
 
+
+    @Inject(method="baseTick", at = @At("TAIL"))
+    public void baseTick(CallbackInfo ci) {
+        if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard())){
+            World world = this.getWorld();
+            if (!world.isClient()) {
+                if (ticksSinceLastSound == 0) {
+                    ticksSinceLastSound = 20;
+                    int soundStrength = 0;
+                    if (this.isSprinting()) {
+                        soundStrength += 30;
+                    } else if (!Objects.equal(this.lastPos, this.getPos())) {
+                        if (!this.isSneaking()) {
+                            soundStrength += 10;
+                        }
+                    }
+                    if (this.getType() == EntityType.PLAYER) {
+                        Insilence.LOGGER.info(soundStrength + "");
+                    }
+                    if (soundStrength > 0) {
+                        SoundEntity soundEntity = new SoundEntity(ModEntities.SOUNDENTITY, world);
+                        soundEntity.setStrength(soundStrength);
+                        soundEntity.setPosition(this.getPos());
+                        world.spawnEntity(soundEntity);
+                    }
+                } else {
+                    ticksSinceLastSound--;
+                }
+                lastPos = this.getPos();
+            }
+        }
+    }
 }

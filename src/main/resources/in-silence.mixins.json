@@ -4,8 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "GameRendererMixin",
-    "LivingEntityRendererMixin",
     "LivingEntityMixin",
+    "LivingEntityRendererMixin",
     "PlayerEntityRendererMixin"
   ],
   "injectors": {
