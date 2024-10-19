@@ -20,12 +20,11 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class SoundEntity extends Entity {
-    private static final int duration = 40;
+    private int life = 70;
     private int strength;
 
     public SoundEntity(EntityType<?> type, World world) {
         super(type, world);
-        strength = 50; //for testing purposes
     }
 
     public void tick() {
@@ -33,28 +32,21 @@ public class SoundEntity extends Entity {
             for(int i = 0; i < 2; ++i) {
                 this.getWorld().addParticle(ParticleTypes.PORTAL, this.getParticleX(0.5), this.getRandomBodyY() - 0.25, this.getParticleZ(0.5), (this.random.nextDouble() - 0.5) * 2.0, -this.random.nextDouble(), (this.random.nextDouble() - 0.5) * 2.0);
             }
-/*
-            BlockPos pos = this.getBlockPos();
-            World world = this.getWorld();
-            Vec3d vec3d = Vec3d.ofCenter(pos);
-            Predicate<LivingEntity> close = (player) -> {
-                return player.getPos().isInRange(vec3d, radius1);
-            };
-            Predicate<LivingEntity> midway = (player) -> {
-                return player.getPos().isInRange(vec3d, radius2);
-            };
-            Predicate<LivingEntity> far = (player) -> {
-                return player.getPos().isInRange(vec3d, radius3);
-            };
-            List<LivingEntity> closeEntities = world.getEntitiesByClass(LivingEntity.class, new Box(pos), close.and(LivingEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
-            List<LivingEntity> midwayEntities = world.getEntitiesByClass(LivingEntity.class, new Box(pos), midway.and(LivingEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
-            List<LivingEntity> farEntities = world.getEntitiesByClass(LivingEntity.class, new Box(pos), far.and(LivingEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
-            for (int i = 0; i < closeEntities.size(); i++){
-
+            life--;
+            if (life == 0){
+                this.discard();
             }
-            
- */
         }
+    }
+
+    public int getLife(){
+        return this.life;
+    }
+    public int getStrength(){
+        return this.strength;
+    }
+    public void setStrength(int s){
+        strength = s;
     }
 
     @Override
