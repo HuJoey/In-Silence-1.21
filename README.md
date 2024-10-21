@@ -1,5 +1,5 @@
 Next Objective:
-Voice Chat Implementation
+
 
 To-do:
 - Full Animations for Rake
@@ -9,10 +9,14 @@ To-do:
 - ~~Sound Events in the HUD~~
 - ~~Sound Strength~~
 - ~~Sound Radii~~
-- Voice Chat Implementation
+- ~~Voice Chat Implementation~~
 - Mice
 - Update HUD Texture for Rake
 - ~~Make Sound HUD only appear for Rakes~~
+- Louder Footsteps for Rake (and general sounds)
+- Flashlight and flash system
+- Noisemakers and Scarecrows
 
 Bugs:
 - Choppy Rake Rotation
+- Sounds seem to come back if you unload and reenter chunks?

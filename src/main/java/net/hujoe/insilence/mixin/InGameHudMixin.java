@@ -92,7 +92,7 @@ public class InGameHudMixin {
             for (SoundEntity temp : closeEntities) {
                 x1 = temp.getX();
                 z1 = temp.getZ();
-                int size = (int) (-0.2285F * clientPlayerEntity.distanceTo(temp) + 18) - (5 - temp.getStrength()/6);
+                int size = (int) (-0.2285F * clientPlayerEntity.distanceTo(temp) + 18) - (5 - temp.getStrength()/10);
 
                 if (x1 - clientPlayerEntity.getX() == 0){
                     x1 += 0.01;

@@ -17,6 +17,9 @@
 	"entrypoints": {
 		"main": [
 			"net.hujoe.insilence.Insilence"
+		],
+		"voicechat": [
+			"net.hujoe.insilence.voicechat.InsilencePlugin"
 		]
 	},
 	"mixins": [

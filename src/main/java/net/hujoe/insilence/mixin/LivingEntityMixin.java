@@ -1,6 +1,7 @@
 package net.hujoe.insilence.mixin;
 
 import com.google.common.base.Objects;
+import net.hujoe.insilence.CanSpeak;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.SoundEntity;
@@ -9,13 +10,9 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,16 +20,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity {
-    @Shadow protected abstract boolean isImmobile();
-
-    @Shadow protected boolean jumping;
-    @Shadow private float movementSpeed;
-    @Shadow public float forwardSpeed;
-    @Shadow public float sidewaysSpeed;
-    @Shadow private BlockPos lastBlockPos;
+public abstract class LivingEntityMixin extends Entity implements CanSpeak {
     private int ticksSinceLastSound = 20;
     private Vec3d lastPos;
+    private float soundLevel = -127;
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -90,8 +81,10 @@ public abstract class LivingEntityMixin extends Entity {
                             soundStrength += 10;
                         }
                     }
-                    if (this.getType() == EntityType.PLAYER) {
-                        Insilence.LOGGER.info(soundStrength + "");
+                    if (soundLevel > -30){
+                        soundStrength += 20;
+                    } else if (soundLevel > -127){
+                        soundStrength += 10;
                     }
                     if (soundStrength > 0) {
                         SoundEntity soundEntity = new SoundEntity(ModEntities.SOUNDENTITY, world);
@@ -106,4 +99,9 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
     }
+
+    public void setSoundLevel(float lvl){
+        soundLevel = lvl;
+    }
 }
+

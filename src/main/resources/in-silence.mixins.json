@@ -3,7 +3,6 @@
   "package": "net.hujoe.insilence.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "GameRendererMixin",
     "LivingEntityMixin",
     "LivingEntityRendererMixin",
     "PlayerEntityRendererMixin"
@@ -12,6 +11,7 @@
     "defaultRequire": 1
   },
   "client": [
+    "GameRendererMixin",
     "InGameHudMixin"
   ]
 }
