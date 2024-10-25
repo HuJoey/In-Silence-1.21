@@ -2,9 +2,17 @@ package net.hujoe.insilence;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.server.RakeManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static net.minecraft.server.command.CommandManager.literal;
 
 public class Insilence implements ModInitializer {
 	public static final String MOD_ID = "in-silence";
@@ -21,8 +29,19 @@ public class Insilence implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
-		InsilenceClient client = new InsilenceClient();
-		client.onInitializeClient();
 		ModEntities.registerModEntities();
+		ModBlocks.registerModBlocks();
+
+		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("rake")
+				.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+				.executes(commandContext -> {
+					ServerCommandSource source = commandContext.getSource();
+					Entity sender = source.getEntity();
+					if (sender != null) {
+						RakeManager.getRakeManager().toggleUser(sender.getNameForScoreboard());
+					}
+					commandContext.getSource().sendFeedback(() -> Text.literal("You Toggled Rake"), false);
+					return 1;
+				}))));
 	}
 }

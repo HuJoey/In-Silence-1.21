@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "in-silence:block/tall_wheat_bottom"
+  }
+}

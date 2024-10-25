@@ -1,10 +1,10 @@
 Next Objective:
-
+Packets
 
 To-do:
 - Full Animations for Rake
 - ~~Camera Adjusts and Hand Render for Rake~~
-- Rake Abilities
+- Rake Abilities and Jumping
 - Rake Blindness
 - ~~Sound Events in the HUD~~
 - ~~Sound Strength~~
@@ -19,4 +19,6 @@ To-do:
 
 Bugs:
 - Choppy Rake Rotation
-- Sounds seem to come back if you unload and reenter chunks?
+- ~~Sounds seem to come back if you unload and reenter chunks?~~
+- Hitbox of Rake doesn't get updated until you crouch
+  - (will be handled in map with autosetting player to crawl then tp them out)

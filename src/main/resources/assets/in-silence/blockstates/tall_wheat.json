@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "in-silence:block/tall_wheat_bottom"
+    },
+    "half=upper": {
+      "model": "in-silence:block/tall_wheat_top"
+    }
+  }
+}
