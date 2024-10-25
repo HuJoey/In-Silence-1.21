@@ -32,6 +32,7 @@ public class SoundEntity extends Entity {
             for(int i = 0; i < 2; ++i) {
                 this.getWorld().addParticle(ParticleTypes.PORTAL, this.getParticleX(0.5), this.getRandomBodyY() - 0.25, this.getParticleZ(0.5), (this.random.nextDouble() - 0.5) * 2.0, -this.random.nextDouble(), (this.random.nextDouble() - 0.5) * 2.0);
             }
+        } else {
             life--;
             if (life == 0){
                 this.discard();
