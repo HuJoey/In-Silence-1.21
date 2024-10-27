@@ -2,6 +2,7 @@ package net.hujoe.insilence.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.client.ModModelLayers;
 import net.hujoe.insilence.client.RakeModel;
 import net.hujoe.insilence.server.RakeManager;
@@ -44,7 +45,7 @@ public class PlayerEntityRendererMixin<T extends LivingEntity> {
 
     @ModifyReturnValue(method = "getTexture(Lnet/minecraft/client/network/AbstractClientPlayerEntity;)Lnet/minecraft/util/Identifier;", at = @At("RETURN"))
 	private Identifier getTexture(Identifier original, AbstractClientPlayerEntity abstractClientPlayerEntity) {
-		if (RakeManager.getRakeManager().isRake(abstractClientPlayerEntity.getNameForScoreboard())) {
+		if (ClientRakeManager.getRakeManager().isRake(abstractClientPlayerEntity.getNameForScoreboard())) {
 			return rakeTexture;
 		}
 		return original;
@@ -52,7 +53,7 @@ public class PlayerEntityRendererMixin<T extends LivingEntity> {
 
 	@Inject(method = "setModelPose", at = @At("HEAD"), cancellable = true)
 	private void setModelPose(AbstractClientPlayerEntity player, CallbackInfo ci) {
-		if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
+		if (ClientRakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
 			ci.cancel();
 		}
 	}
@@ -60,7 +61,7 @@ public class PlayerEntityRendererMixin<T extends LivingEntity> {
 
 	@Inject(method = "renderArm", at = @At("HEAD"), cancellable = true)
 	private void renderArm(MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, AbstractClientPlayerEntity player, ModelPart arm, ModelPart sleeve, CallbackInfo ci) {
-		if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
+		if (ClientRakeManager.getRakeManager().isRake(player.getNameForScoreboard())) {
 			PlayerEntityModel<AbstractClientPlayerEntity> playerEntityModel = ((PlayerEntityRenderer) (Object) this).getModel();
             playerEntityModel.setVisible(!player.isSpectator());
 			matrices.push();

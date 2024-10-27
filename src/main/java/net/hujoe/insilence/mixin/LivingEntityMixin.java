@@ -3,6 +3,7 @@ package net.hujoe.insilence.mixin;
 import com.google.common.base.Objects;
 import net.hujoe.insilence.CanSpeak;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
@@ -46,7 +47,7 @@ public abstract class LivingEntityMixin extends Entity implements CanSpeak {
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if ((Object) this instanceof PlayerEntity player) {
-            if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())){
+            if (ClientRakeManager.getRakeManager().isRake(player.getNameForScoreboard())){
                 switch (pose){
                     case STANDING:
                         cir.setReturnValue(EntityDimensions.changing(0.9F, 2.7F)
