@@ -3,8 +3,10 @@ package net.hujoe.insilence;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
@@ -38,10 +40,12 @@ public class Insilence implements ModInitializer {
 					ServerCommandSource source = commandContext.getSource();
 					Entity sender = source.getEntity();
 					if (sender != null) {
-						RakeManager.getRakeManager().toggleUser(sender.getNameForScoreboard());
+						RakeManager.getRakeManager().toggleUser(sender.getNameForScoreboard(), sender.getWorld());
 					}
 					commandContext.getSource().sendFeedback(() -> Text.literal("You Toggled Rake"), false);
 					return 1;
 				}))));
+
+		PayloadTypeRegistry.playS2C().register(RakeUpdatePayload.ID, RakeUpdatePayload.CODEC);
 	}
 }

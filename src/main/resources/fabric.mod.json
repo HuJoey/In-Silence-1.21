@@ -18,6 +18,9 @@
 		"main": [
 			"net.hujoe.insilence.Insilence"
 		],
+		"client": [
+			"net.hujoe.insilence.InsilenceClient"
+		],
 		"voicechat": [
 			"net.hujoe.insilence.voicechat.InsilencePlugin"
 		]

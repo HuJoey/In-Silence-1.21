@@ -1,7 +1,13 @@
 package net.hujoe.insilence.server;
 
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 
@@ -23,11 +29,14 @@ public class RakeManager {
         return usernames.contains(username);
     }
 
-    public void toggleUser(String username){
+    public void toggleUser(String username, World world){
         if (isRake(username)){
             removeUser(username);
         } else {
             addUser(username);
+        }
+        for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
+            ServerPlayNetworking.send(player, new RakeUpdatePayload(username));
         }
     }
 

@@ -14,13 +14,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.hujoe.insilence.block.ModBlocks;
-import net.hujoe.insilence.client.ModModelLayers;
-import net.hujoe.insilence.client.RakeModel;
-import net.hujoe.insilence.client.RakeRenderer;
-import net.hujoe.insilence.client.SoundEntityRenderer;
+import net.hujoe.insilence.client.*;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.network.InsilenceNetworking;
+import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
@@ -46,10 +44,10 @@ public class InsilenceClient implements ClientModInitializer {
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TALL_WHEAT);
 
-        //ClientPlayNetworking.registerGlobalReceiver(InsilenceNetworking.RAKE_RENDER_PACKET_ID, (client, handler, buf, responseSender) -> {
-        //    client.execute(() -> {
-//
-        //    });
-        //});
+        ClientPlayNetworking.registerGlobalReceiver(RakeUpdatePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                ClientRakeManager.getRakeManager().toggleUser(payload.username());
+            });
+        });
     }
 }

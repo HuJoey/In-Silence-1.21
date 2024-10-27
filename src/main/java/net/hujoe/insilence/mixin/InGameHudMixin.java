@@ -2,6 +2,7 @@ package net.hujoe.insilence.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.MinecraftClient;
@@ -47,7 +48,7 @@ public class InGameHudMixin {
             MinecraftClient minecraftClient = MinecraftClient.getInstance();
             ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
         assert clientPlayerEntity != null;
-        if (RakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard()) && !clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
+        if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard()) && !clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
             // renders wheel hud
                 int x = minecraftClient.getWindow().getScaledWidth() / 2;
                 int y = minecraftClient.getWindow().getScaledHeight();
@@ -120,10 +121,12 @@ public class InGameHudMixin {
                 } else {
                     alpha = 1;
                 }
-                RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-                context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset),0, 0, size,size, size, size);
-                RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-                RenderSystem.disableBlend();
+                if (size > 3) {
+                    RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
+                    context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset), 0, 0, size, size, size, size);
+                    RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+                    RenderSystem.disableBlend();
+                }
             }
         }
     }
