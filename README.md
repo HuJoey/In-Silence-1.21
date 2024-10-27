@@ -1,5 +1,5 @@
 Next Objective:
-Packets
+Rake Blindness
 
 To-do:
 - Full Animations for Rake
@@ -13,9 +13,10 @@ To-do:
 - Mice
 - Update HUD Texture for Rake
 - ~~Make Sound HUD only appear for Rakes~~
-- Louder Footsteps for Rake (and general sounds)
+- Game Sounds
 - Flashlight and flash system
 - Noisemakers and Scarecrows
+- ~~Packets~~
 
 Bugs:
 - Choppy Rake Rotation
