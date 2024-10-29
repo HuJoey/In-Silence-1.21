@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.entity.Entity;
@@ -32,6 +33,7 @@ public class Insilence implements ModInitializer {
 
 		LOGGER.info("Hello Fabric world!");
 		ModEntities.registerModEntities();
+		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("rake")
