@@ -23,4 +23,4 @@ Bugs:
 - ~~Sounds seem to come back if you unload and reenter chunks?~~
 - Hitbox of Rake doesn't get updated until you crouch
   - (will be handled in map with autosetting player to crawl then tp them out)
-- HUD sounds don't fade anymore
+- ~~HUD sounds don't fade anymore~~
