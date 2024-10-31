@@ -35,6 +35,7 @@ import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class InsilenceClient implements ClientModInitializer {
+    private static BlindnessHandler blindnessHandler;
     @Override
     public void onInitializeClient(){
         EntityRendererRegistry.register(ModEntities.SOUNDENTITY, SoundEntityRenderer::new);
@@ -47,7 +48,14 @@ public class InsilenceClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(RakeUpdatePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
                 ClientRakeManager.getRakeManager().toggleUser(payload.username());
+
             });
         });
+
+        blindnessHandler = new BlindnessHandler();
+    }
+
+    public static BlindnessHandler getBlindnessHandler(){
+        return blindnessHandler;
     }
 }
