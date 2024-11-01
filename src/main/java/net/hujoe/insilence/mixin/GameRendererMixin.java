@@ -39,10 +39,15 @@ public abstract class GameRendererMixin {
         blindness.loadProcessor(resourceFactory);
     }
 
+    @Inject(method = "onResized", at = @At("TAIL"))
+    public void onResized(int width, int height, CallbackInfo ci){
+        blindness.setDimensions(width, height);
+    }
+
     @Inject(method = "renderWorld", at = @At("TAIL"))
     public void renderWorld(RenderTickCounter tickCounter, CallbackInfo ci){
         if (this.getClient().player != null && ClientRakeManager.getRakeManager().isRake(this.getClient().player.getNameForScoreboard())) {
-            blindness.renderBlur();
+            blindness.renderBlur(getClient().getRenderTickCounter().getLastDuration());
         }
     }
 }

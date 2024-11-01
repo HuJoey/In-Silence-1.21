@@ -47,11 +47,17 @@ public class BlindnessHandler {
         }
     }
 
-    public void renderBlur(){
+    public void renderBlur(float delta){
         if (this.processor != null) {
-            this.processor.setUniforms("Radius", 16);
-            this.processor.render(0.32F);
+            this.processor.setUniforms("Radius", 32);
+            this.processor.render(delta);
         }
         this.client.getFramebuffer().beginWrite(false);
+    }
+
+    public void setDimensions(int width, int height){
+        if (this.processor != null) {
+            processor.setupDimensions(width, height);
+        }
     }
 }
