@@ -23,7 +23,7 @@ public class ModEntities {
 
     public static final EntityType<RakeEntity> RAKE =
             Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "rake"),
-                    EntityType.Builder.create(RakeEntity::new, SpawnGroup.MISC).dimensions(1f, 1f).build("rake"));
+                    EntityType.Builder.create(RakeEntity::new, SpawnGroup.MISC).dimensions(1f, 3f).build("rake"));
 
     public static void registerModEntities() {
         Insilence.LOGGER.info("Registering ModEntities for " + Insilence.MOD_ID);

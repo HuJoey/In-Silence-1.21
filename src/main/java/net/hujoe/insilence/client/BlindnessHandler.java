@@ -88,12 +88,13 @@ public class BlindnessHandler {
     public void spawnSound(SoundEntity entity){
         if (client.player != null && ClientRakeManager.getRakeManager().isRake(client.player.getNameForScoreboard())) {
             var distance = client.player.distanceTo(entity);
-            float size = (int) (-0.2285F * distance + 18) - (5 - entity.getStrength() / 10);
-            blindnessLevel -= (size / 2);
-            if (blindnessLevel < 6){
-                blindnessLevel = 6;
-            }
             if (distance <= 40){
+                float size = (int) (-0.2285F * distance + 18) - (5 - entity.getStrength() / 10);
+                if (blindnessLevel - (size/2) < 6){
+                    blindnessLevel = 6;
+                } else {
+                    blindnessLevel -= (size / 2);
+                }
                 this.spawnedThisTick = true;
                 var volume = 1 - (distance / 40);
                 ClientPlayNetworking.send(new SignalSoundPayload(client.player.getNameForScoreboard(), volume));

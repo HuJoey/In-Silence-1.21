@@ -282,7 +282,7 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 
 		ModelPartData cube_r84 = claw2.addChild("cube_r84", ModelPartBuilder.create().uv(48, 49).cuboid(1.0F, 0.0F, -1.0F, 1.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 5.0F, -1.0F, -1.9056F, -0.4149F, 0.1393F));
 
-		ModelPartData tail = rake.addChild("tail", ModelPartBuilder.create(), ModelTransform.pivot(-1.0F, -18.0F, -9.0F));
+		ModelPartData tail = rake.addChild("tail", ModelPartBuilder.create(), ModelTransform.pivot(-1.0F, -31.0F, -22.0F));
 
 		ModelPartData cube_r85 = tail.addChild("cube_r85", ModelPartBuilder.create().uv(35, 43).cuboid(-1.0F, -2.0F, -1.0F, 2.0F, 1.0F, 3.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -2.4871F, 0.0F, 0.0F));
 
