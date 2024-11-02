@@ -1,11 +1,11 @@
 Next Objective:
-Rake Blindness
+
 
 To-do:
 - Full Animations for Rake
 - ~~Camera Adjusts and Hand Render for Rake~~
 - Rake Abilities and Jumping
-- Rake Blindness
+- ~~Rake Blindness~~
 - ~~Sound Events in the HUD~~
 - ~~Sound Strength~~
 - ~~Sound Radii~~
