@@ -1,5 +1,8 @@
 package net.hujoe.insilence.entity.custom;
 
+import jdk.jfr.Percentage;
+import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.InsilenceClient;
 import net.hujoe.insilence.entity.ModEntities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -9,6 +12,7 @@ import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.util.math.BlockPos;
@@ -63,5 +67,20 @@ public class SoundEntity extends Entity {
     @Override
     protected void writeCustomDataToNbt(NbtCompound nbt) {
 
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        int i = packet.getEntityId();
+        double d = packet.getX();
+        double e = packet.getY();
+        double f = packet.getZ();
+        this.updateTrackedPosition(d, e, f);
+        this.refreshPositionAfterTeleport(d, e, f);
+        this.setPitch(packet.getPitch());
+        this.setYaw(packet.getYaw());
+        this.setId(i);
+        this.setUuid(packet.getUuid());
+        InsilenceClient.getBlindnessHandler().spawnSound(this);
     }
 }

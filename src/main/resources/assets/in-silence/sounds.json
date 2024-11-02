@@ -1,0 +1,8 @@
+{
+  "signal": {
+    "subtitle": "Sound Signal",
+    "sounds": [
+      "in-silence:signal"
+    ]
+  }
+}
