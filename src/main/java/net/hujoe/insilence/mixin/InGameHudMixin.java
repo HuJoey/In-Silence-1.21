@@ -41,7 +41,10 @@ public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
     @Unique
     private static final net.minecraft.util.Identifier RAKE_WHEEL = Identifier.of(Insilence.MOD_ID,"textures/gui/sprites/wheel.png");
+    @Unique
     private static final net.minecraft.util.Identifier SOUND = Identifier.of(Insilence.MOD_ID,"textures/gui/point.png");
+    @Unique
+    private static final Identifier VISION_TINT = Identifier.of(Insilence.MOD_ID,"textures/misc/rake_vision.png");
 
     @Inject(method="render", at = @At("HEAD"))
     public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci){
@@ -53,8 +56,10 @@ public class InGameHudMixin {
                 int x = minecraftClient.getWindow().getScaledWidth() / 2;
                 int y = minecraftClient.getWindow().getScaledHeight();
                 RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
-                RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
+                RenderSystem.setShaderColor(1.0F,1.0F,1.0F,0.1F);
                 RenderSystem.enableBlend(); // allows wheel to be transparent
+                context.drawTexture(VISION_TINT, x - 512, y - 512,0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
+                RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
                 context.drawTexture(RAKE_WHEEL, x - 78, y - 110,0, 0, 156, 64, 156, 64); // draws the rake wheel texture
                 RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
 
