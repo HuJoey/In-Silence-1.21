@@ -9,9 +9,10 @@
     "defaultRequire": 1
   },
   "client": [
+    "GameRendererMixin",
+    "InGameHudMixin",
     "LivingEntityRendererMixin",
     "PlayerEntityRendererMixin",
-    "GameRendererMixin",
-    "InGameHudMixin"
+    "ClientWorldMixin"
   ]
 }

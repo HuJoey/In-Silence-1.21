@@ -2,11 +2,17 @@ package net.hujoe.insilence.client;
 
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.entity.custom.SoundEntity;
+import net.hujoe.insilence.network.payloads.SignalSoundPayload;
+import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.PostEffectProcessor;
 import net.minecraft.resource.ResourceFactory;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
@@ -23,6 +29,9 @@ public class BlindnessHandler {
     private final MinecraftClient client;
     private PostEffectProcessor processor;
     private static final Identifier BLUR_PROCESSOR = Identifier.ofVanilla("shaders/post/blur.json");
+    private boolean spawnedThisTick;
+    private float blindnessLevel = 32F;
+    private int ticksSinceSound = 100;
 
     public BlindnessHandler() {
         client = MinecraftClient.getInstance();
@@ -49,7 +58,7 @@ public class BlindnessHandler {
 
     public void renderBlur(float delta){
         if (this.processor != null) {
-            this.processor.setUniforms("Radius", 32);
+            this.processor.setUniforms("Radius", blindnessLevel);
             this.processor.render(delta);
         }
         this.client.getFramebuffer().beginWrite(false);
@@ -58,6 +67,37 @@ public class BlindnessHandler {
     public void setDimensions(int width, int height){
         if (this.processor != null) {
             processor.setupDimensions(width, height);
+        }
+    }
+
+    public void tick(){
+        if (spawnedThisTick){
+            ticksSinceSound = 0;
+        } else {
+            ticksSinceSound++;
+        }
+        if (ticksSinceSound > 100){
+            blindnessLevel += 1F;
+            if (blindnessLevel > 32){
+                blindnessLevel = 32;
+            }
+        }
+        spawnedThisTick = false;
+    }
+
+    public void spawnSound(SoundEntity entity){
+        if (client.player != null && ClientRakeManager.getRakeManager().isRake(client.player.getNameForScoreboard())) {
+            var distance = client.player.distanceTo(entity);
+            float size = (int) (-0.2285F * distance + 18) - (5 - entity.getStrength() / 10);
+            blindnessLevel -= (size / 2);
+            if (blindnessLevel < 6){
+                blindnessLevel = 6;
+            }
+            if (distance <= 40){
+                this.spawnedThisTick = true;
+                var volume = 1 - (distance / 40);
+                ClientPlayNetworking.send(new SignalSoundPayload(client.player.getNameForScoreboard(), volume));
+            }
         }
     }
 }

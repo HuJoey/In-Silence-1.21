@@ -47,20 +47,26 @@ public class InGameHudMixin {
     private static final Identifier VISION_TINT = Identifier.of(Insilence.MOD_ID,"textures/misc/rake_vision.png");
 
     @Inject(method="render", at = @At("HEAD"))
-    public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci){
-            MinecraftClient minecraftClient = MinecraftClient.getInstance();
-            ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
+    public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
         assert clientPlayerEntity != null;
-        if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard()) && !clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
-            // renders wheel hud
-                int x = minecraftClient.getWindow().getScaledWidth() / 2;
-                int y = minecraftClient.getWindow().getScaledHeight();
+        if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
+            int x = minecraftClient.getWindow().getScaledWidth() / 2;
+            int y = minecraftClient.getWindow().getScaledHeight();
+            RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
+            RenderSystem.enableBlend();
+            context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
+            RenderSystem.disableBlend();
+            if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
+                // renders wheel hud
                 RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
-                RenderSystem.setShaderColor(1.0F,1.0F,1.0F,0.1F);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
                 RenderSystem.enableBlend(); // allows wheel to be transparent
-                context.drawTexture(VISION_TINT, x - 512, y - 512,0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
-                RenderSystem.setShaderColor(1.0F,1.0F,1.0F,1.0F);
-                context.drawTexture(RAKE_WHEEL, x - 78, y - 110,0, 0, 156, 64, 156, 64); // draws the rake wheel texture
+                context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                context.drawTexture(RAKE_WHEEL, x - 78, y - 110, 0, 0, 156, 64, 156, 64); // draws the rake wheel texture
                 RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
 
             /*
@@ -69,68 +75,69 @@ public class InGameHudMixin {
             RenderSystem.disableBlend();
              */
 
-            // renders all sound events
-            BlockPos pos = clientPlayerEntity.getBlockPos();
-            World world = clientPlayerEntity.getWorld();
-            Vec3d vec3d = Vec3d.ofCenter(pos);
-            Predicate<SoundEntity> close = (soundEntity) -> {
-                return soundEntity.getPos().isInRange(vec3d, 100);
-            };
-            List<SoundEntity> closeEntities = world.getEntitiesByClass(SoundEntity.class, new Box(pos.getX() - 50, pos.getY() - 50, pos.getZ() - 50, pos.getX() + 50, pos.getY() + 50, pos.getZ() + 50), close.and(SoundEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
-            var facing = clientPlayerEntity.getRotationVector();
-            var offset = new Vec3d(50 * facing.getX(), facing.getY(), 50 * facing.getZ());
+                // renders all sound events
+                BlockPos pos = clientPlayerEntity.getBlockPos();
+                World world = clientPlayerEntity.getWorld();
+                Vec3d vec3d = Vec3d.ofCenter(pos);
+                Predicate<SoundEntity> close = (soundEntity) -> {
+                    return soundEntity.getPos().isInRange(vec3d, 100);
+                };
+                List<SoundEntity> closeEntities = world.getEntitiesByClass(SoundEntity.class, new Box(pos.getX() - 50, pos.getY() - 50, pos.getZ() - 50, pos.getX() + 50, pos.getY() + 50, pos.getZ() + 50), close.and(SoundEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
+                var facing = clientPlayerEntity.getRotationVector();
+                var offset = new Vec3d(50 * facing.getX(), facing.getY(), 50 * facing.getZ());
 
-            double x1 = offset.getX() + clientPlayerEntity.getX();
-            double z1 = offset.getZ() + clientPlayerEntity.getZ();
+                double x1 = offset.getX() + clientPlayerEntity.getX();
+                double z1 = offset.getZ() + clientPlayerEntity.getZ();
 
-            if (x1 - clientPlayerEntity.getX() == 0){
-                x1 += 0.01;
-            }
-            double m2 = (z1 - clientPlayerEntity.getZ()) / (x1 - clientPlayerEntity.getX());
-            double facingAngle = Math.atan(m2);
-            if (facingAngle < 0){
-                facingAngle *= -1;
-                facingAngle = Math.PI - facingAngle;
-            }
-            if (z1 < clientPlayerEntity.getZ()){
-                facingAngle = Math.PI + facingAngle;
-            }
-            for (SoundEntity temp : closeEntities) {
-                x1 = temp.getX();
-                z1 = temp.getZ();
-                int size = (int) (-0.2285F * clientPlayerEntity.distanceTo(temp) + 18) - (5 - temp.getStrength()/10);
-
-                if (x1 - clientPlayerEntity.getX() == 0){
+                if (x1 - clientPlayerEntity.getX() == 0) {
                     x1 += 0.01;
                 }
-                double m1 = (z1 - clientPlayerEntity.getZ()) / (x1 - clientPlayerEntity.getX());
-                double soundAngle = Math.atan(m1);
-                if (soundAngle < 0){
-                    soundAngle *= -1;
-                    soundAngle = Math.PI - soundAngle;
+                double m2 = (z1 - clientPlayerEntity.getZ()) / (x1 - clientPlayerEntity.getX());
+                double facingAngle = Math.atan(m2);
+                if (facingAngle < 0) {
+                    facingAngle *= -1;
+                    facingAngle = Math.PI - facingAngle;
                 }
-                if (z1 < clientPlayerEntity.getZ()){
-                    soundAngle = Math.PI + soundAngle;
+                if (z1 < clientPlayerEntity.getZ()) {
+                    facingAngle = Math.PI + facingAngle;
                 }
-                soundAngle -= facingAngle;
+                for (SoundEntity temp : closeEntities) {
+                    x1 = temp.getX();
+                    z1 = temp.getZ();
+                    int size = (int) (-0.2285F * clientPlayerEntity.distanceTo(temp) + 18) - (5 - temp.getStrength() / 10);
 
-                double xOffset = 78 * Math.sin(soundAngle);
-                double yOffset = -78 * Math.cos(soundAngle) / 2.55;
+                    if (x1 - clientPlayerEntity.getX() == 0) {
+                        x1 += 0.01;
+                    }
+                    double m1 = (z1 - clientPlayerEntity.getZ()) / (x1 - clientPlayerEntity.getX());
+                    double soundAngle = Math.atan(m1);
+                    if (soundAngle < 0) {
+                        soundAngle *= -1;
+                        soundAngle = Math.PI - soundAngle;
+                    }
+                    if (z1 < clientPlayerEntity.getZ()) {
+                        soundAngle = Math.PI + soundAngle;
+                    }
+                    soundAngle -= facingAngle;
 
-                RenderSystem.enableBlend();
-                float alpha;
-                if (temp.getLife() <= 30){
-                    float life = temp.getLife();
-                    life = life / 30;
-                    alpha = life - 0.1F;
-                } else {
-                    alpha = 1;
-                }
-                if (size > 3) {
-                    RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-                    context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset), 0, 0, size, size, size, size);
-                    RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-                    RenderSystem.disableBlend();
+                    double xOffset = 78 * Math.sin(soundAngle);
+                    double yOffset = -78 * Math.cos(soundAngle) / 2.55;
+
+                    RenderSystem.enableBlend();
+                    float alpha;
+                    if (temp.getLife() <= 30) {
+                        float life = temp.getLife();
+                        life = life / 30;
+                        alpha = life - 0.1F;
+                    } else {
+                        alpha = 1;
+                    }
+                    if (size > 3) {
+                        RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
+                        context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset), 0, 0, size, size, size, size);
+                        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+                        RenderSystem.disableBlend();
+                    }
                 }
             }
         }

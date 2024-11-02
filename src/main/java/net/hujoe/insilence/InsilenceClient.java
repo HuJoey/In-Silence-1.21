@@ -12,6 +12,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.client.*;
@@ -19,6 +20,7 @@ import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.network.InsilenceNetworking;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
+import net.hujoe.insilence.network.payloads.SignalSoundPayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.GameRenderer;
@@ -48,7 +50,6 @@ public class InsilenceClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(RakeUpdatePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
                 ClientRakeManager.getRakeManager().toggleUser(payload.username());
-
             });
         });
 

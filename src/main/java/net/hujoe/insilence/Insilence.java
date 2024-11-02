@@ -2,15 +2,21 @@ package net.hujoe.insilence;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
+import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
+import net.hujoe.insilence.network.payloads.SignalSoundPayload;
 import net.hujoe.insilence.server.RakeManager;
+import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +41,7 @@ public class Insilence implements ModInitializer {
 		ModEntities.registerModEntities();
 		ModItems.registerModItems();
 		ModBlocks.registerModBlocks();
+		ModSounds.registerModSounds();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("rake")
 				.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
@@ -49,5 +56,15 @@ public class Insilence implements ModInitializer {
 				}))));
 
 		PayloadTypeRegistry.playS2C().register(RakeUpdatePayload.ID, RakeUpdatePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(SignalSoundPayload.ID, SignalSoundPayload.CODEC);
+
+		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
+					context.server().getPlayerManager().getPlayer(payload.username()).playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, payload.volume(), 1);
+				}
+				Insilence.LOGGER.info("result: " + payload.volume());
+			});
+		});
 	}
 }
