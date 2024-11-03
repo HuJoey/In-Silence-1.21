@@ -1,13 +1,11 @@
-package net.hujoe.insilence.client;
+package net.hujoe.insilence.entity.client;
 
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.Identifier;
 
 public class RakeRenderer extends LivingEntityRenderer<RakeEntity, RakeModel<RakeEntity>> {

@@ -1,4 +1,4 @@
-package net.hujoe.insilence.client;
+package net.hujoe.insilence.entity.client;
 
 import net.hujoe.insilence.Insilence;
 import net.minecraft.client.render.entity.model.EntityModelLayer;

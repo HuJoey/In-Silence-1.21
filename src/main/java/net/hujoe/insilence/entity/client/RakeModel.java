@@ -1,4 +1,4 @@
-package net.hujoe.insilence.client;
+package net.hujoe.insilence.entity.client;
 
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.minecraft.client.model.*;

@@ -1,4 +1,4 @@
-package net.hujoe.insilence.client;
+package net.hujoe.insilence.entity.client;
 
 import net.minecraft.client.render.Frustum;
 import net.minecraft.client.render.entity.EntityRenderer;
