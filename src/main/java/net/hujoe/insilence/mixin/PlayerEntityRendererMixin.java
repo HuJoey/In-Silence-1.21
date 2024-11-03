@@ -3,9 +3,8 @@ package net.hujoe.insilence.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
-import net.hujoe.insilence.client.ModModelLayers;
-import net.hujoe.insilence.client.RakeModel;
-import net.hujoe.insilence.server.RakeManager;
+import net.hujoe.insilence.entity.client.ModModelLayers;
+import net.hujoe.insilence.entity.client.RakeModel;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
@@ -13,28 +12,16 @@ import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.PlayerEntityRenderer;
-import net.minecraft.client.render.entity.model.BipedEntityModel;
-import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.PlayerEntityModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerModelPart;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
-import org.jetbrains.annotations.Nullable;
-import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Accessor;
-import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import static net.hujoe.insilence.Insilence.LOGGER;
 
 @Mixin(PlayerEntityRenderer.class)
 public class PlayerEntityRendererMixin<T extends LivingEntity> {

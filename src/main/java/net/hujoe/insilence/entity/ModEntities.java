@@ -27,5 +27,6 @@ public class ModEntities {
 
     public static void registerModEntities() {
         Insilence.LOGGER.info("Registering ModEntities for " + Insilence.MOD_ID);
+        FabricDefaultAttributeRegistry.register(RAKE, RakeEntity.createRakeAttributes());
     }
 }
