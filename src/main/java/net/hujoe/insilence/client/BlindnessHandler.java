@@ -16,15 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-/** <a href="https://github.com/croissantnova/SanityDescentIntoMadness/blob/main/src/main/java/croissantnova/sanitydim/client/GuiHandler.java#L93">...</a>
- * ^ Reference for this class in the Insanity Mod
- * <p>
- * initSanityPostProcess() is where you will find information about rendering screen effects (keep in mind that its forge)
- * every time a sound spawns, check if it's in range, and if so then change blindness down a little
- * have a counter (check length in game) for how long until returning to regular (and does it return stage by stage or all at once)
- * check if it works by volume or by amount (so if a sound is really close, does it count the same as one far?)
- */
-
 public class BlindnessHandler {
     private final MinecraftClient client;
     private PostEffectProcessor processor;
