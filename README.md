@@ -1,5 +1,5 @@
 Next Objective:
-
+Full Animations for Rake
 
 To-do:
 - Full Animations for Rake
@@ -24,3 +24,5 @@ Bugs:
 - Hitbox of Rake doesn't get updated until you crouch
   - (will be handled in map with autosetting player to crawl then tp them out)
 - ~~HUD sounds don't fade anymore~~
+- Rakes need to be synced between client and server when leaving and rejoining
+- Red vision goes away by hitting F1

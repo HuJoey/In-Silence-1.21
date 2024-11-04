@@ -7,6 +7,7 @@ import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import org.joml.Quaternionf;
 
 public class RakeRenderer extends LivingEntityRenderer<RakeEntity, RakeModel<RakeEntity>> {
     private static final Identifier TEXTURE = Identifier.of(Insilence.MOD_ID, "textures/rake/rake.png");

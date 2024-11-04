@@ -29,21 +29,6 @@ public abstract class LivingEntityMixin extends Entity implements CanSpeak {
         super(type, world);
     }
 
-    @Unique
-    @Override
-    protected void initDataTracker(DataTracker.Builder builder) {
-    }
-
-    @Unique
-    @Override
-    protected void readCustomDataFromNbt(NbtCompound nbt) {
-    }
-
-    @Unique
-    @Override
-    protected void writeCustomDataToNbt(NbtCompound nbt) {
-    }
-
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if ((Object) this instanceof PlayerEntity player) {

@@ -323,24 +323,11 @@ public class RakeModel<T extends LivingEntity> extends EntityModel<T> {
 
 	@Override
 	public void render(MatrixStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-		matrices.push();
-		rotate(matrices);
-		matrices.translate(0.0F, -1.5F, 0.0F);
 		rake.render(matrices, vertices, light, overlay);
-		matrices.pop();
 	}
 
 	@Override
 	public void setAngles(T entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
 		this.yaw = headYaw;
-	}
-
-	public void rotate(MatrixStack matrices) {
-		this.yaw += 180;
-		this.yaw = this.yaw % 360;
-		this.yaw -= 180;
-		if (this.yaw != 0.0F) {
-			matrices.multiply(new Quaternionf().rotationZYX(0F, (float) (-(this.yaw * Math.PI)/180), -110F));
-		}
 	}
 }

@@ -63,7 +63,6 @@ public class Insilence implements ModInitializer {
 				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
 					context.server().getPlayerManager().getPlayer(payload.username()).playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, payload.volume(), 1);
 				}
-				Insilence.LOGGER.info("result: " + payload.volume());
 			});
 		});
 	}
