@@ -40,6 +40,10 @@ public class RakeManager {
         }
     }
 
+    public ArrayList<String> getList(){
+        return usernames;
+    }
+
     private static final RakeManager rakeManager = new RakeManager();
 
     public static RakeManager getRakeManager(){

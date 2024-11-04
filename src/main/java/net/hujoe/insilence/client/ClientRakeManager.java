@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class ClientRakeManager {
     private ArrayList<String> usernames;
     public ClientRakeManager(){
-        usernames = new ArrayList<String>();
+        usernames = new ArrayList<>();
     }
 
     public void addUser(String username){
@@ -26,6 +26,22 @@ public class ClientRakeManager {
         } else {
             addUser(username);
         }
+    }
+
+    public void shouldBeRake(String username, boolean s){
+        if (isRake(username)){
+            if (!s){
+                removeUser(username);
+            }
+        } else {
+            if (s){
+                addUser(username);
+            }
+        }
+    }
+
+    public void receiveList(ArrayList<String> names){
+        usernames = names;
     }
 
     private static final ClientRakeManager rakeManager = new ClientRakeManager();
