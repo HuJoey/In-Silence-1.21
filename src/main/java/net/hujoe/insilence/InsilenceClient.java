@@ -14,8 +14,13 @@ import net.hujoe.insilence.entity.client.ModModelLayers;
 import net.hujoe.insilence.entity.client.RakeModel;
 import net.hujoe.insilence.entity.client.RakeRenderer;
 import net.hujoe.insilence.entity.client.SoundEntityRenderer;
+import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
+import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.render.RenderLayer;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class InsilenceClient implements ClientModInitializer {
     private static BlindnessHandler blindnessHandler;
@@ -34,9 +39,10 @@ public class InsilenceClient implements ClientModInitializer {
             });
         });
 
-        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-            HasRakeManager s = (HasRakeManager) server;
-            ClientRakeManager.getRakeManager().receiveList(s.getRakeManager().getList());
+        ClientPlayNetworking.registerGlobalReceiver(RakeListReceivePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                ClientRakeManager.getRakeManager().receiveList((ArrayList<String>) payload.list());
+            });
         });
 
         blindnessHandler = new BlindnessHandler();
