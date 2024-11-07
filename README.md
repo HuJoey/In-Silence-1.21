@@ -19,10 +19,10 @@ To-do:
 - ~~Packets~~
 
 Bugs:
-- Choppy Rake Rotation
+- ~~Choppy Rake Rotation~~
 - ~~Sounds seem to come back if you unload and reenter chunks?~~
 - Hitbox of Rake doesn't get updated until you crouch
   - (will be handled in map with autosetting player to crawl then tp them out)
 - ~~HUD sounds don't fade anymore~~
-- Rakes need to be synced between client and server when leaving and rejoining
+- ~~Rakes need to be synced between client and server when leaving and rejoining~~
 - Red vision goes away by hitting F1

@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.client.ModModelLayers;
+import net.hujoe.insilence.entity.client.RakeArmModel;
 import net.hujoe.insilence.entity.client.RakeModel;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.model.ModelPart;
@@ -24,11 +25,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntityRenderer.class)
-public class PlayerEntityRendererMixin<T extends LivingEntity> {
+public class PlayerEntityRendererMixin {
 	@Unique
-	private static final Identifier rakeTexture = Identifier.of(Insilence.MOD_ID, "textures/rake/rake.png");
-	private final ModelPart leftArm = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE)).leftwrist;
-	private final ModelPart rightArm = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE)).rightwrist;
+	private static final Identifier rakeTexture = Identifier.of(Insilence.MOD_ID, "textures/entity/rake.png");
+	private final ModelPart leftArm = new RakeArmModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE_ARMS)).leftwrist;
+	private final ModelPart rightArm = new RakeArmModel(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE_ARMS)).rightwrist;
 
     @ModifyReturnValue(method = "getTexture(Lnet/minecraft/client/network/AbstractClientPlayerEntity;)Lnet/minecraft/util/Identifier;", at = @At("RETURN"))
 	private Identifier getTexture(Identifier original, AbstractClientPlayerEntity abstractClientPlayerEntity) {

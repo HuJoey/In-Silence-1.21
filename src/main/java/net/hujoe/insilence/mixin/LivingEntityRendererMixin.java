@@ -18,6 +18,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,24 +28,16 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.nio.file.Path;
+
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
-	@Shadow @Nullable protected abstract RenderLayer getRenderLayer(T entity, boolean showBody, boolean translucent, boolean showOutline);
-
-	@Shadow
-	public static int getOverlay(LivingEntity entity, float whiteOverlayProgress) {
-		return 0;
-	}
-
-	@Unique
-	private final EntityModel<T> model = new RakeModel<>(MinecraftClient.getInstance().getEntityModelLoader().getModelPart(ModModelLayers.RAKE));
-
 	@Inject(method="render", at = @At("HEAD"), cancellable = true)
 	public void render(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
 			if (livingEntity.getType() == EntityType.PLAYER) {
 				if (ClientRakeManager.getRakeManager().isRake(livingEntity.getNameForScoreboard())) {
 
-					MobEntity rake = new RakeEntity(ModEntities.RAKE, livingEntity.getWorld());
+					PathAwareEntity rake = new RakeEntity(ModEntities.RAKE, livingEntity.getWorld());
 					rake.handSwinging = livingEntity.handSwinging;
 					rake.handSwingTicks = livingEntity.handSwingTicks;
 					rake.lastHandSwingProgress = livingEntity.lastHandSwingProgress;
@@ -60,7 +53,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 					rake.setAttacking(livingEntity.isUsingItem());
 					rake.setPose(livingEntity.getPose());
 
-					EntityRenderer<? super MobEntity> rakeRenderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(rake);
+					EntityRenderer<? super PathAwareEntity> rakeRenderer = MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(rake);
 					rakeRenderer.render(rake, f, g, matrixStack, vertexConsumerProvider, i);
 
 					int light;

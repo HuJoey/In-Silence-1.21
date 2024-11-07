@@ -8,12 +8,13 @@ import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.joml.Quaternionf;
+import software.bernie.geckolib.model.GeoModel;
+import software.bernie.geckolib.renderer.GeoEntityRenderer;
 
-public class RakeRenderer extends LivingEntityRenderer<RakeEntity, RakeModel<RakeEntity>> {
-    private static final Identifier TEXTURE = Identifier.of(Insilence.MOD_ID, "textures/rake/rake.png");
+public class RakeRenderer extends GeoEntityRenderer<RakeEntity> {
 
     public RakeRenderer(EntityRendererFactory.Context context){
-        super(context, new RakeModel<>(context.getPart(ModModelLayers.RAKE)), 0.6f);
+        super(context, new RakeModel());
     }
 
     @Override
@@ -22,7 +23,8 @@ public class RakeRenderer extends LivingEntityRenderer<RakeEntity, RakeModel<Rak
         super.render(rake, f, g, matrixStack, vertexConsumerProvider, i);
     }
 
-    public Identifier getTexture(RakeEntity entity) {
-        return TEXTURE;
+    @Override
+    public Identifier getTextureLocation(RakeEntity animatable) {
+        return Identifier.of(Insilence.MOD_ID, "textures/entity/rake.png");
     }
 }

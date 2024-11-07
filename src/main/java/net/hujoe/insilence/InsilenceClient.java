@@ -10,10 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.client.*;
 import net.hujoe.insilence.entity.ModEntities;
-import net.hujoe.insilence.entity.client.ModModelLayers;
-import net.hujoe.insilence.entity.client.RakeModel;
-import net.hujoe.insilence.entity.client.RakeRenderer;
-import net.hujoe.insilence.entity.client.SoundEntityRenderer;
+import net.hujoe.insilence.entity.client.*;
 import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
@@ -27,9 +24,8 @@ public class InsilenceClient implements ClientModInitializer {
     @Override
     public void onInitializeClient(){
         EntityRendererRegistry.register(ModEntities.SOUNDENTITY, SoundEntityRenderer::new);
-
-        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE, RakeModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.RAKE, RakeRenderer::new);
+        EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE_ARMS, RakeArmModel::getTexturedModelData);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TALL_WHEAT);
 
