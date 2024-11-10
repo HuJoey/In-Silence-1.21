@@ -10,6 +10,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
@@ -20,10 +21,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.Box;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
+import java.util.List;
 
 import static net.minecraft.server.command.CommandManager.literal;
 

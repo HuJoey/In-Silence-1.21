@@ -15,6 +15,7 @@ import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.EntityType;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
