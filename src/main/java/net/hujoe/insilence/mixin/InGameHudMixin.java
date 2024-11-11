@@ -59,21 +59,28 @@ public class InGameHudMixin {
             RenderSystem.enableBlend();
             context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
             RenderSystem.disableBlend();
+
+
             if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
                 // renders wheel hud
                 RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
                 RenderSystem.enableBlend(); // allows wheel to be transparent
                 context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                context.drawTexture(RAKE_WHEEL, x - 78, y - 110, 0, 0, 156, 64, 156, 64); // draws the rake wheel texture
+                if (minecraftClient.world.isRaining()) {
+                    RenderSystem.setShaderColor(1.0F, 0F, 0F, 0.5F);
+                } else {
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
+                }
+                context.drawTexture(RAKE_WHEEL, x - 78, y - 78, 0, 0, 156, 64, 156, 64); // draws the rake wheel texture
                 RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
 
-            /*
-            RenderSystem.enableBlend();
-            context.drawTexture(SOUND, x - 6, y - 84,0, 0, 12, 12, 12, 12);
-            RenderSystem.disableBlend();
-             */
+                if (minecraftClient.world.isRaining()){
+                RenderSystem.enableBlend();
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                context.drawTexture(SOUND, x - 6, y - 52,0, 0, 12, 12, 12, 12);
+                RenderSystem.disableBlend();
+                }
 
                 // renders all sound events
                 BlockPos pos = clientPlayerEntity.getBlockPos();
@@ -134,7 +141,7 @@ public class InGameHudMixin {
                     }
                     if (size > 3) {
                         RenderSystem.setShaderColor(1F, 1F, 1F, alpha);
-                        context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 78 + yOffset), 0, 0, size, size, size, size);
+                        context.drawTexture(SOUND, (int) (x - 1 + xOffset), (int) (y - 46 + yOffset), 0, 0, size, size, size, size);
                         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
                         RenderSystem.disableBlend();
                     }
@@ -142,4 +149,16 @@ public class InGameHudMixin {
             }
         }
     }
+
+    @Inject(method="renderHotbar", at = @At("HEAD"), cancellable = true)
+    private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
+        assert clientPlayerEntity != null;
+        if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
+            ci.cancel();
+        }
+    }
+
+    // Need to do the above with health, exp, bubbles, item names, and hunger too
 }
