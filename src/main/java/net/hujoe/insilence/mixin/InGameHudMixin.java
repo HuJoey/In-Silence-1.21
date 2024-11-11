@@ -68,7 +68,7 @@ public class InGameHudMixin {
                 RenderSystem.enableBlend(); // allows wheel to be transparent
                 context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
                 if (minecraftClient.world.isRaining()) {
-                    RenderSystem.setShaderColor(1.0F, 0F, 0F, 0.5F);
+                    RenderSystem.setShaderColor(1.0F, 0F, 0F, 1.0F);
                 } else {
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
                 }
@@ -78,9 +78,9 @@ public class InGameHudMixin {
                 if (minecraftClient.world.isRaining()){
                 RenderSystem.enableBlend();
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                context.drawTexture(SOUND, x - 6, y - 52,0, 0, 12, 12, 12, 12);
+                context.drawTexture(SOUND, x - 12, y - 58,0, 0, 24, 24, 24, 24);
                 RenderSystem.disableBlend();
-                }
+                } else {
 
                 // renders all sound events
                 BlockPos pos = clientPlayerEntity.getBlockPos();
@@ -146,12 +146,33 @@ public class InGameHudMixin {
                         RenderSystem.disableBlend();
                     }
                 }
+                }
             }
         }
     }
 
     @Inject(method="renderHotbar", at = @At("HEAD"), cancellable = true)
     private void renderHotbar(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
+        assert clientPlayerEntity != null;
+        if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method="renderMainHud", at = @At("HEAD"), cancellable = true)
+    private void renderMainHud(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        MinecraftClient minecraftClient = MinecraftClient.getInstance();
+        ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
+        assert clientPlayerEntity != null;
+        if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(method="renderExperienceLevel", at = @At("HEAD"), cancellable = true)
+    private void renderExperienceLevel(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
         assert clientPlayerEntity != null;

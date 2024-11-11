@@ -11,7 +11,7 @@ To-do:
 - ~~Sound Radii~~
 - ~~Voice Chat Implementation~~
 - Mice
-- Update HUD Texture for Rake
+- ~~Update HUD Texture for Rake~~ (work on what happens during a rain section)
 - ~~Make Sound HUD only appear for Rakes~~
 - Game Sounds
 - Flashlight and flash system
