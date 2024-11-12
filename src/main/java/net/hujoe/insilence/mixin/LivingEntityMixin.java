@@ -8,12 +8,19 @@ import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.entity.*;
+import net.minecraft.entity.attribute.AttributeContainer;
+import net.minecraft.entity.attribute.EntityAttributeInstance;
+import net.minecraft.entity.attribute.EntityAttributeModifier;
+import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.util.Identifier;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,6 +32,8 @@ public abstract class LivingEntityMixin extends Entity implements CanSpeak {
     private int ticksSinceLastSound = 20;
     private Vec3d lastPos;
     private float soundLevel = -127;
+    private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final EntityAttributeModifier RAKE_SPRINT = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"), 2.67, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -83,6 +92,23 @@ public abstract class LivingEntityMixin extends Entity implements CanSpeak {
                 }
                 lastPos = this.getPos();
             }
+        }
+        EntityAttributeInstance entityAttributeInstance = ((LivingEntity) (Object) this).getAttributeInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
+        if(ClientRakeManager.getRakeManager().isRake(this.getNameForScoreboard())){
+            if (!entityAttributeInstance.hasModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"))) {
+                entityAttributeInstance.addTemporaryModifier(RAKE_WALK_SLOW);
+            }
+            if (entityAttributeInstance.hasModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"))) {
+                if (!this.isSprinting()) {
+                    entityAttributeInstance.removeModifier(RAKE_SPRINT);
+                }
+            } else {
+                if (this.isSprinting()) {
+                    entityAttributeInstance.addTemporaryModifier(RAKE_SPRINT);
+                }
+            }
+        } else if (entityAttributeInstance.hasModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"))) {
+            entityAttributeInstance.removeModifier(RAKE_WALK_SLOW);
         }
     }
 
