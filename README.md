@@ -26,5 +26,3 @@ Bugs:
 - ~~HUD sounds don't fade anymore~~
 - ~~Rakes need to be synced between client and server when leaving and rejoining~~
 - Red vision goes away by hitting F1
-
-tweak volume of signals please
