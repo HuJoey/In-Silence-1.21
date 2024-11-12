@@ -69,7 +69,7 @@ public class Insilence implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
 				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
-					context.server().getPlayerManager().getPlayer(payload.username()).playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, payload.volume(), 1);
+					context.server().getPlayerManager().getPlayer(payload.username()).playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, payload.volume() / 2, 1);
 				}
 			});
 		});
