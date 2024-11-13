@@ -25,4 +25,7 @@ Bugs:
   - (will be handled in map with autosetting player to crawl then tp them out)
 - ~~HUD sounds don't fade anymore~~
 - ~~Rakes need to be synced between client and server when leaving and rejoining~~
-- Red vision goes away by hitting F1
+- ~~Red vision goes away by hitting F1~~
+- ~~UI can bug and become transparent~~
+
+recommend that FOV Effects be turned down for the mod

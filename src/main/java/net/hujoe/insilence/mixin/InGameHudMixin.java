@@ -43,8 +43,6 @@ public class InGameHudMixin {
     private static final net.minecraft.util.Identifier RAKE_WHEEL = Identifier.of(Insilence.MOD_ID,"textures/gui/sprites/wheel.png");
     @Unique
     private static final net.minecraft.util.Identifier SOUND = Identifier.of(Insilence.MOD_ID,"textures/gui/point.png");
-    @Unique
-    private static final Identifier VISION_TINT = Identifier.of(Insilence.MOD_ID,"textures/misc/rake_vision.png");
 
     @Inject(method="render", at = @At("HEAD"))
     public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
@@ -54,11 +52,11 @@ public class InGameHudMixin {
         if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
             int x = minecraftClient.getWindow().getScaledWidth() / 2;
             int y = minecraftClient.getWindow().getScaledHeight();
-            RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
-            RenderSystem.enableBlend();
-            context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
-            RenderSystem.disableBlend();
+            //RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+            //RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
+            //RenderSystem.enableBlend();
+            //context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
+            //RenderSystem.disableBlend();
 
 
             if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
@@ -66,7 +64,6 @@ public class InGameHudMixin {
                 RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
                 RenderSystem.enableBlend(); // allows wheel to be transparent
-                context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
                 if (minecraftClient.world.isRaining()) {
                     RenderSystem.setShaderColor(1.0F, 0F, 0F, 1.0F);
                 } else {
@@ -180,6 +177,4 @@ public class InGameHudMixin {
             ci.cancel();
         }
     }
-
-    // Need to do the above with health, exp, bubbles, item names, and hunger too
 }
