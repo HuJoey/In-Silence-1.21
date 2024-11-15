@@ -30,6 +30,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.cache.GeckoLibCache;
 
 import java.nio.file.Path;
 
@@ -69,7 +70,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 
 					if (isMoving(livingEntity)){
 						if (livingEntity.isSprinting()){
-							rake.getAnimatableInstanceCache().getManagerForId(rake.getId()).tryTriggerAnimation("controller", "sprint");
+							rake.getAnimatableInstanceCache().getManagerForId(rake.getId()).tryTriggerAnimation("controller", "run");
 						} else {
 							rake.getAnimatableInstanceCache().getManagerForId(rake.getId()).tryTriggerAnimation("controller", "walk");
 						}

@@ -50,6 +50,7 @@ public class RakeEntity extends PathAwareEntity implements GeoEntity {
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
         tAnimationState.getController().triggerableAnim("idle", RawAnimation.begin().then("idle", Animation.LoopType.LOOP));
         tAnimationState.getController().triggerableAnim("sprint", RawAnimation.begin().then("sprint", Animation.LoopType.LOOP));
+        tAnimationState.getController().triggerableAnim("run", RawAnimation.begin().then("run", Animation.LoopType.LOOP));
         tAnimationState.getController().triggerableAnim("walk", RawAnimation.begin().then("walk", Animation.LoopType.LOOP));
         if(tAnimationState.isMoving()){
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("walk", Animation.LoopType.LOOP));
