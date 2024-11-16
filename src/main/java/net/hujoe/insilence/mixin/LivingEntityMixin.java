@@ -1,35 +1,31 @@
 package net.hujoe.insilence.mixin;
 
 import com.google.common.base.Objects;
-import net.hujoe.insilence.CanSpeak;
+import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.AttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements CanSpeak {
+public abstract class LivingEntityMixin extends Entity implements InSilenceEssentials {
     private int ticksSinceLastSound = 20;
+    private RakeEntity rakeEntity;
     private Vec3d lastPos;
     private float soundLevel = -127;
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
@@ -115,5 +111,8 @@ public abstract class LivingEntityMixin extends Entity implements CanSpeak {
     public void setSoundLevel(float lvl){
         soundLevel = lvl;
     }
+
+    public RakeEntity getRakeEntity(){return rakeEntity;}
+    public void setRakeEntity(RakeEntity r){rakeEntity = r;}
 }
 

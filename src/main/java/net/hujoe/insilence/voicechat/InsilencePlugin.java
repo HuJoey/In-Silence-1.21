@@ -8,7 +8,7 @@ import de.maxhenkel.voicechat.api.events.EventRegistration;
 import de.maxhenkel.voicechat.api.events.MicrophonePacketEvent;
 import de.maxhenkel.voicechat.api.events.VoicechatServerStartedEvent;
 import de.maxhenkel.voicechat.api.opus.OpusDecoder;
-import net.hujoe.insilence.CanSpeak;
+import net.hujoe.insilence.InSilenceEssentials;
 import org.jetbrains.annotations.Nullable;
 
 // ALMOST ALL CODE HERE IS FROM THE henkelmax/voicechat-interaction repository (i couldnt understand much of this code myself)
@@ -42,7 +42,7 @@ public class InsilencePlugin implements VoicechatPlugin {
 		short[] decoded = decoder.decode(event.getPacket().getOpusEncodedData());
 
         if (player != null){
-            CanSpeak p = (CanSpeak) player.getEntity();
+            InSilenceEssentials p = (InSilenceEssentials) player.getEntity();
             p.setSoundLevel((float) calculateAudioLevel(decoded));
         }
     }

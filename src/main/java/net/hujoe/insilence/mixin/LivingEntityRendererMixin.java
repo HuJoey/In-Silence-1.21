@@ -1,6 +1,7 @@
 package net.hujoe.insilence.mixin;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
@@ -36,46 +37,44 @@ import java.nio.file.Path;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
-	@Unique
-	RakeEntity rake;
-	@Unique
-	RakeRenderer rakeRenderer;
 
 	@Inject(method="render", at = @At("HEAD"), cancellable = true)
 	public void render(T livingEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, CallbackInfo ci) {
 			if (livingEntity.getType() == EntityType.PLAYER) {
 				if (ClientRakeManager.getRakeManager().isRake(livingEntity.getNameForScoreboard())) {
 
-					if (rake == null){
-						rake = new RakeEntity(ModEntities.RAKE, livingEntity.getWorld());
-						rakeRenderer = (RakeRenderer) MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(rake);
+					InSilenceEssentials p = (InSilenceEssentials) livingEntity;
+					if (p.getRakeEntity() == null){
+						p.setRakeEntity(new RakeEntity(ModEntities.RAKE, livingEntity.getWorld()));
 					}
+					RakeEntity r = p.getRakeEntity();
+					RakeRenderer rRenderer = (RakeRenderer) MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(r);
 
-					rake.handSwinging = livingEntity.handSwinging;
-					rake.handSwingTicks = livingEntity.handSwingTicks;
-					rake.lastHandSwingProgress = livingEntity.lastHandSwingProgress;
-					rake.handSwingProgress = livingEntity.handSwingProgress;
-					rake.bodyYaw = livingEntity.bodyYaw;
-					rake.prevBodyYaw = livingEntity.prevBodyYaw;
-					rake.headYaw = livingEntity.headYaw;
-					rake.prevHeadYaw = livingEntity.prevHeadYaw;
-					rake.age = livingEntity.age;
-					rake.preferredHand = livingEntity.preferredHand;
-					rake.setOnGround(livingEntity.isOnGround());
-					rake.setVelocity(livingEntity.getVelocity());
-					rake.setAttacking(livingEntity.isUsingItem());
-					rake.setPose(livingEntity.getPose());
+					r.handSwinging = livingEntity.handSwinging;
+					r.handSwingTicks = livingEntity.handSwingTicks;
+					r.lastHandSwingProgress = livingEntity.lastHandSwingProgress;
+					r.handSwingProgress = livingEntity.handSwingProgress;
+					r.bodyYaw = livingEntity.bodyYaw;
+					r.prevBodyYaw = livingEntity.prevBodyYaw;
+					r.headYaw = livingEntity.headYaw;
+					r.prevHeadYaw = livingEntity.prevHeadYaw;
+					r.age = livingEntity.age;
+					r.preferredHand = livingEntity.preferredHand;
+					r.setOnGround(livingEntity.isOnGround());
+					r.setVelocity(livingEntity.getVelocity());
+					r.setAttacking(livingEntity.isUsingItem());
+					r.setPose(livingEntity.getPose());
 
-					rakeRenderer.render(rake, f, g, matrixStack, vertexConsumerProvider, i);
+					rRenderer.render(r, f, g, matrixStack, vertexConsumerProvider, i);
 
 					if (isMoving(livingEntity)){
 						if (livingEntity.isSprinting()){
-							rake.getAnimatableInstanceCache().getManagerForId(rake.getId()).tryTriggerAnimation("controller", "run");
+							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "run");
 						} else {
-							rake.getAnimatableInstanceCache().getManagerForId(rake.getId()).tryTriggerAnimation("controller", "walk");
+							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "walk");
 						}
 					} else {
-						rake.getAnimatableInstanceCache().getManagerForId(rake.getId()).tryTriggerAnimation("controller", "idle");
+						r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "idle");
 					}
 					ci.cancel();
 			}

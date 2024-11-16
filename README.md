@@ -27,7 +27,7 @@ Bugs:
 - ~~Rakes need to be synced between client and server when leaving and rejoining~~
 - ~~Red vision goes away by hitting F1~~
 - ~~UI can bug and become transparent~~
-- Rake animations shared between players
-- Speed modifiers do not appear to work server side (this could be carpet's fault?)
+- ~~Rake animations shared between players~~
 
 recommend that FOV Effects be turned down for the mod
+give rake step height of 1 block at least
