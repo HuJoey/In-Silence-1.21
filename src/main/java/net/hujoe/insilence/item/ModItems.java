@@ -2,6 +2,7 @@ package net.hujoe.insilence.item;
 
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.item.custom.CarPartItem;
+import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
@@ -12,6 +13,7 @@ public class ModItems {
     public static final Item CAR_BATTERY = registerItem("car_battery", new CarPartItem(new Item.Settings().maxCount(1)));
     public static final Item KEY = registerItem("key", new CarPartItem(new Item.Settings().maxCount(1)));
     public static final Item TIRE = registerItem("tire", new CarPartItem(new Item.Settings().maxCount(1)));
+    public static final Item FLASHLIGHT = registerItem("flashlight", new FlashlightItem(new Item.Settings().maxCount(1).maxDamage(100)));
 
     private static Item registerItem(String name, Item item){
         return Registry.register(Registries.ITEM, Identifier.of(Insilence.MOD_ID, name), item);
