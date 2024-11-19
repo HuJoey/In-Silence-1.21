@@ -13,6 +13,7 @@ import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.client.*;
 import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
+import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.EntityType;
@@ -28,7 +29,7 @@ public class InsilenceClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.RAKE, RakeRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE_ARMS, RakeArmModel::getTexturedModelData);
 
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TALL_WHEAT);
+        //BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TALL_WHEAT);
 
         ClientPlayNetworking.registerGlobalReceiver(RakeUpdatePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
@@ -39,6 +40,13 @@ public class InsilenceClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(RakeListReceivePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
                 ClientRakeManager.getRakeManager().receiveList((ArrayList<String>) payload.list());
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(VolumeUpdatePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                InSilenceEssentials player = (InSilenceEssentials) context.player();
+                player.setLastVolume(payload.volume());
             });
         });
 

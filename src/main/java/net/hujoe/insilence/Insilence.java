@@ -15,6 +15,7 @@ import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.network.payloads.SignalSoundPayload;
+import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.Entity;
@@ -47,7 +48,7 @@ public class Insilence implements ModInitializer {
 		LOGGER.info("Hello Fabric world!");
 		ModEntities.registerModEntities();
 		ModItems.registerModItems();
-		ModBlocks.registerModBlocks();
+		//ModBlocks.registerModBlocks();
 		ModSounds.registerModSounds();
 
 		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("rake")
@@ -65,6 +66,7 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playS2C().register(RakeUpdatePayload.ID, RakeUpdatePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(RakeListReceivePayload.ID, RakeListReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SignalSoundPayload.ID, SignalSoundPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(VolumeUpdatePayload.ID, VolumeUpdatePayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {

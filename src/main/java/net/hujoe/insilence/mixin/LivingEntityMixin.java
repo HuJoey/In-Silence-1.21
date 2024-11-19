@@ -1,18 +1,23 @@
 package net.hujoe.insilence.mixin;
 
 import com.google.common.base.Objects;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
+import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
+import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -28,6 +33,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private RakeEntity rakeEntity;
     private Vec3d lastPos;
     private float soundLevel = -127;
+    private int lastVolume = 0;
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_SPRINT = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"), 2.67, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     public LivingEntityMixin(EntityType<?> type, World world) {
@@ -74,7 +80,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                     }
                     if (soundLevel > -30){
                         soundStrength += 20;
-                    } else if (soundLevel > -127){
+                    } else if (soundLevel > -60){
                         soundStrength += 10;
                     }
                     if (soundStrength > 0) {
@@ -83,6 +89,12 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                         soundEntity.setPosition(this.getPos());
                         world.spawnEntity(soundEntity);
                     }
+                    if(this.getType() == EntityType.PLAYER){
+                        if (soundStrength != this.lastVolume) {
+                            ServerPlayNetworking.send(((ServerPlayerEntity) (Object) this), new VolumeUpdatePayload(soundStrength));
+                        }
+                    }
+                    this.lastVolume = soundStrength;
                 } else {
                     ticksSinceLastSound--;
                 }
@@ -110,6 +122,13 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public void setSoundLevel(float lvl){
         soundLevel = lvl;
+    }
+    public int getLastVolume(){
+        return lastVolume;
+    }
+
+    public void setLastVolume(int lvl){
+        lastVolume = lvl;
     }
 
     public RakeEntity getRakeEntity(){return rakeEntity;}

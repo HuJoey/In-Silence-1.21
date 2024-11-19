@@ -1,11 +1,13 @@
 package net.hujoe.insilence.mixin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -16,7 +18,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -40,24 +41,31 @@ import static net.minecraft.data.DataProvider.LOGGER;
 public class InGameHudMixin {
     @Shadow @Final private MinecraftClient client;
     @Unique
-    private static final net.minecraft.util.Identifier RAKE_WHEEL = Identifier.of(Insilence.MOD_ID,"textures/gui/sprites/wheel.png");
+    private static final Identifier RAKE_WHEEL = Identifier.of(Insilence.MOD_ID,"textures/gui/sprites/wheel.png");
     @Unique
-    private static final net.minecraft.util.Identifier SOUND = Identifier.of(Insilence.MOD_ID,"textures/gui/point.png");
+    private static final Identifier SOUND = Identifier.of(Insilence.MOD_ID,"textures/gui/point.png");
+    private static final Identifier BAR_EMPTY = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_empty.png");
+    private static final Identifier BAR_FILLED_1 = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_filled1.png");
+
+    private static final Identifier BAR_FILLED_2 = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_filled2.png");
+
+    private static final Identifier BAR_FILLED_3 = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_filled3.png");
+
+    private static final Identifier BAR_FILLED_4 = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_filled4.png");
+
+    private static final Identifier BAR_FILLED_5 = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_filled5.png");
+
+    private static final Identifier BAR_FILLED_RAIN = Identifier.of(Insilence.MOD_ID, "textures/gui/volume_filledred.png");
+
 
     @Inject(method="render", at = @At("HEAD"))
     public void render(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
         MinecraftClient minecraftClient = MinecraftClient.getInstance();
         ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
         assert clientPlayerEntity != null;
+        int x = minecraftClient.getWindow().getScaledWidth() / 2;
+        int y = minecraftClient.getWindow().getScaledHeight();
         if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
-            int x = minecraftClient.getWindow().getScaledWidth() / 2;
-            int y = minecraftClient.getWindow().getScaledHeight();
-            //RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
-            //RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
-            //RenderSystem.enableBlend();
-            //context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024); // draws the rake wheel texture
-            //RenderSystem.disableBlend();
-
 
             if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
                 // renders wheel hud
@@ -144,6 +152,37 @@ public class InGameHudMixin {
                     }
                 }
                 }
+            }
+        } else {
+            if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
+                RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                RenderSystem.enableBlend();
+                if (minecraftClient.world.isRaining()) {
+                    context.drawTexture(BAR_FILLED_RAIN, x + 97, y - 21, 0, 0, 4, 20, 4, 20);
+                } else {
+                    switch (((InSilenceEssentials) clientPlayerEntity).getLastVolume()){
+                        case 0:
+                            context.drawTexture(BAR_EMPTY, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
+                            break;
+                        case 10:
+                            context.drawTexture(BAR_FILLED_1, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
+                            break;
+                        case 20:
+                            context.drawTexture(BAR_FILLED_2, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
+                            break;
+                        case 30:
+                            context.drawTexture(BAR_FILLED_3, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
+                            break;
+                        case 40:
+                            context.drawTexture(BAR_FILLED_4, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
+                            break;
+                        case 50:
+                            context.drawTexture(BAR_FILLED_5, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
+                            break;
+                    }
+                }
+                RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
             }
         }
     }
