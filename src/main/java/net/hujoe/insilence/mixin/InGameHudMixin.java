@@ -159,7 +159,7 @@ public class InGameHudMixin {
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.enableBlend();
                 if (minecraftClient.world.isRaining()) {
-                    context.drawTexture(BAR_FILLED_RAIN, x + 97, y - 21, 0, 0, 4, 20, 4, 20);
+                    context.drawTexture(BAR_FILLED_RAIN, x - 97, y - 21, 0, 0, 4, 20, 4, 20);
                 } else {
                     switch (((InSilenceEssentials) clientPlayerEntity).getLastVolume()){
                         case 0:
