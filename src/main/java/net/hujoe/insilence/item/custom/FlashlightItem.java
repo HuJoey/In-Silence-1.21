@@ -31,10 +31,6 @@ public class FlashlightItem extends Item {
             case 3:
                 stack.setDamage(0);
         }
-
-        if (!world.isClient && active){
-            Insilence.LOGGER.info("AKLJBHSFASLKDFH");
-        }
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
