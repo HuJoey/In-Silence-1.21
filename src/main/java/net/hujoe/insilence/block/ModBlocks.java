@@ -28,7 +28,7 @@ public class ModBlocks {
             .replaceable()
             .strength(-1.0F, 3600000F)
             .dropsNothing()
-            .nonOpaque()
+            .noCollision()
             .luminance(FlashlightLightBlock.STATE_TO_LUMINANCE));
     public static void registerModBlocks(){
         Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "flashlight_light"), FLASHLIGHT_LIGHT);
