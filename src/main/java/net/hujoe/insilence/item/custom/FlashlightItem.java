@@ -42,11 +42,10 @@ public class FlashlightItem extends Item {
         }
 
         if (active){
-            HitResult result = entity.raycast(5, MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(true), false);
+            HitResult result = entity.raycast(4, MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(true), false);
             BlockPos pos = new BlockPos((int) result.getPos().getX(),(int) result.getPos().getY(),(int) result.getPos().getZ() -1);
             if (entity.getHorizontalFacing() == Direction.EAST){
                 pos = pos.add(-1, 0 ,0);
-                Insilence.LOGGER.info("happening");
             } else if (entity.getHorizontalFacing() == Direction.NORTH){
                 pos = pos.add(0, 0, -1);
             }

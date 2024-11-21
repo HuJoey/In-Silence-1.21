@@ -28,7 +28,7 @@ public class FlashlightLightBlock extends BlockWithEntity implements BlockEntity
     public static final ToIntFunction<BlockState> STATE_TO_LUMINANCE;
     public FlashlightLightBlock(Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(LEVEL_15, 15)));
+        this.setDefaultState((BlockState)((BlockState)((BlockState)this.stateManager.getDefaultState()).with(LEVEL_15, 10)));
     }
 
     @Override
