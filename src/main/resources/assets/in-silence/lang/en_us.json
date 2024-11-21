@@ -3,5 +3,7 @@
   "item.in-silence.car_battery": "Car Battery",
   "item.in-silence.key": "Car Key",
   "item.in-silence.tire": "Dirty Tire",
-  "item.in-silence.flashlight": "Flashlight"
+  "item.in-silence.flashlight": "Flashlight",
+  "category.in-silence.in-silence": "In Silence",
+  "key.in-silence.flash": "Flash"
 }

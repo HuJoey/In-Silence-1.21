@@ -13,10 +13,7 @@ import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.item.ModItems;
-import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
-import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
-import net.hujoe.insilence.network.payloads.SignalSoundPayload;
-import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
+import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.Entity;
@@ -69,12 +66,20 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playS2C().register(RakeListReceivePayload.ID, RakeListReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SignalSoundPayload.ID, SignalSoundPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(VolumeUpdatePayload.ID, VolumeUpdatePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(FlashReceivePayload.ID, FlashReceivePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(FlashSendPayload.ID, FlashSendPayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
 				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
 					context.server().getPlayerManager().getPlayer(payload.username()).playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, payload.volume() / 2, 1);
 				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(FlashSendPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				// add flash implementation (get player from ID then get location of player to decide who around should be affected)
 			});
 		});
 

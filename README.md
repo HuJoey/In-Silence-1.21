@@ -1,5 +1,5 @@
 Next Objective:
-~~Flashlight~~ and flash system
+~~Flashlight~~ and flash system (should add visible light too?)
 
 To-do:
 - Full Animations for Rake
