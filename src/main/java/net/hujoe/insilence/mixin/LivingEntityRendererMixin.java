@@ -10,6 +10,7 @@ import net.hujoe.insilence.entity.client.RakeModel;
 import net.hujoe.insilence.entity.client.RakeRenderer;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -30,6 +31,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.cache.GeckoLibCache;
 
@@ -77,6 +79,19 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 						r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "idle");
 					}
 					ci.cancel();
+			}
+		}
+	}
+
+	@Inject(method="hasLabel", at = @At("HEAD"), cancellable = true)
+	public void hasLabel(T livingEntity, CallbackInfoReturnable<Boolean> ci){
+		if (livingEntity.getType() == EntityType.PLAYER && ClientRakeManager.getRakeManager().isRake(livingEntity.getNameForScoreboard())){
+			ci.setReturnValue(false);
+		} else {
+			MinecraftClient minecraftClient = MinecraftClient.getInstance();
+			ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
+			if (clientPlayerEntity != null && ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())){
+				ci.setReturnValue(false);
 			}
 		}
 	}
