@@ -23,6 +23,8 @@ public class BlindnessHandler {
     private boolean spawnedThisTick;
     private float blindnessLevel = 32F;
     private int ticksSinceSound = 100;
+    private boolean lockInActive = false;
+    private int lockInTimer = 0;
 
     public BlindnessHandler() {
         client = MinecraftClient.getInstance();
@@ -62,18 +64,32 @@ public class BlindnessHandler {
     }
 
     public void tick(){
-        if (spawnedThisTick){
-            ticksSinceSound = 0;
+        if (!lockInActive) {
+            if (spawnedThisTick) {
+                ticksSinceSound = 0;
+            } else {
+                ticksSinceSound++;
+            }
+            if (ticksSinceSound > 100) {
+                blindnessLevel += 1F;
+                if (blindnessLevel > 32) {
+                    blindnessLevel = 32;
+                }
+            }
+            spawnedThisTick = false;
         } else {
-            ticksSinceSound++;
-        }
-        if (ticksSinceSound > 100){
-            blindnessLevel += 1F;
-            if (blindnessLevel > 32){
-                blindnessLevel = 32;
+            if (blindnessLevel > 2){
+                blindnessLevel -= 2;
+            } else if (blindnessLevel < 2){
+                blindnessLevel = 2;
+            }
+
+            if (lockInTimer != 0){
+                lockInTimer--;
+            } else {
+                lockInActive = false;
             }
         }
-        spawnedThisTick = false;
     }
 
     public void spawnSound(SoundEntity entity){
@@ -81,15 +97,22 @@ public class BlindnessHandler {
             var distance = client.player.distanceTo(entity);
             if (distance <= 40){
                 float size = (int) (-0.2285F * distance + 18) - (5 - entity.getStrength() / 10);
-                if (blindnessLevel - (size/2) < 6){
-                    blindnessLevel = 6;
-                } else {
-                    blindnessLevel -= (size / 2);
+                if (!lockInActive) {
+                    if (blindnessLevel - (size / 2) < 6) {
+                        blindnessLevel = 6;
+                    } else {
+                        blindnessLevel -= (size / 2);
+                    }
+                    this.spawnedThisTick = true;
                 }
-                this.spawnedThisTick = true;
                 var volume = 1 - (distance / 40);
                 ClientPlayNetworking.send(new SignalSoundPayload(client.player.getNameForScoreboard(), volume));
             }
         }
+    }
+
+    public void lockIn(){
+        lockInActive = true;
+        lockInTimer = 300;
     }
 }

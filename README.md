@@ -4,7 +4,9 @@ Next Objective:
 To-do:
 - Full Animations for Rake
 - ~~Camera Adjusts and Hand Render for Rake~~
-- Rake Abilities and Jumping
+- ~~Rake Abilities and Jumping~~
+- Rake Attack
+- Abilities UI?
 - ~~Rake Blindness~~
 - ~~Sound Events in the HUD~~
 - ~~Sound Strength~~
@@ -14,7 +16,8 @@ To-do:
 - ~~Update HUD Texture for Rake~~ (work on what happens during a rain section)
 - ~~Make Sound HUD only appear for Rakes~~
 - Game Sounds
-- Flashlight and flash system
+- ~~Flashlight~~ and flash system
+- Batteries
 - Noisemakers and Scarecrows
 - ~~Packets~~
 

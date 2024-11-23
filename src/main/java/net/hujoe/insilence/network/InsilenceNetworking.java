@@ -9,4 +9,6 @@ public class InsilenceNetworking {
     public static final Identifier VOLUME_UPDATE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "volume_update");
     public static final Identifier FLASH_RECEIVE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "flash_receive");
     public static final Identifier FLASH_SEND_PACKET_ID = Identifier.of(Insilence.MOD_ID, "flash_send");
+    public static final Identifier DASH_PACKET_ID = Identifier.of(Insilence.MOD_ID, "dash");
+    public static final Identifier LOCK_IN_PACKET_ID = Identifier.of(Insilence.MOD_ID, "lock_in");
 }

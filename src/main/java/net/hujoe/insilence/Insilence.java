@@ -17,6 +17,7 @@ import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -68,11 +69,33 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playS2C().register(VolumeUpdatePayload.ID, VolumeUpdatePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(FlashReceivePayload.ID, FlashReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(FlashSendPayload.ID, FlashSendPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(DashPayload.ID, DashPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(LockInPayload.ID, LockInPayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
 				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
 					context.server().getPlayerManager().getPlayer(payload.username()).playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, payload.volume() / 2, 1);
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(DashPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
+					PlayerEntity player = context.server().getPlayerManager().getPlayer(payload.username());
+					InSilenceEssentials p = (InSilenceEssentials) player;
+					p.dash();
+					//player.getWorld().playSound(player, player.getBlockPos(), ModSounds.DASH_ROAR_EVENT, SoundCategory.PLAYERS);
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(LockInPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
+					PlayerEntity player = context.server().getPlayerManager().getPlayer(payload.username());
+					//player.getWorld().playSound(player, player.getBlockPos(), ModSounds.SCREECH_EVENT, SoundCategory.PLAYERS);
 				}
 			});
 		});

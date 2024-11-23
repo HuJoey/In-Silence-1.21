@@ -33,6 +33,8 @@ import java.util.ArrayList;
 public class InsilenceClient implements ClientModInitializer {
     private static BlindnessHandler blindnessHandler;
     private static KeyBinding flashKeyBinding;
+    private static KeyBinding lockInKeyBinding;
+    private static KeyBinding dashKeyBinding;
     @Override
     public void onInitializeClient(){
         EntityRendererRegistry.register(ModEntities.SOUNDENTITY, SoundEntityRenderer::new);
@@ -75,11 +77,45 @@ public class InsilenceClient implements ClientModInitializer {
                 "category.in-silence.in-silence" // The translation key of the keybinding's category.
         ));
 
+        lockInKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.in-silence.lockIn",
+                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_Y, // The keycode of the key
+                "category.in-silence.in-silence" // The translation key of the keybinding's category.
+        ));
+
+        dashKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+                "key.in-silence.dash",
+                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                GLFW.GLFW_KEY_R, // The keycode of the key
+                "category.in-silence.in-silence" // The translation key of the keybinding's category.
+        ));
+
+
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (flashKeyBinding.wasPressed()) {
                 ItemStack stack = client.player.getMainHandStack();
                 if(stack.getItem() == ModItems.FLASHLIGHT){
                     ((FlashlightItem) stack.getItem()).flash(client.world, stack, client.player);
+                }
+            }
+
+            while (lockInKeyBinding.wasPressed()) {
+                if (ClientRakeManager.getRakeManager().isRake(client.player.getNameForScoreboard())) {
+                    InSilenceEssentials player = (InSilenceEssentials) client.player;
+                    if (player.canLockIn()) {
+                        player.lockIn();
+                        blindnessHandler.lockIn();
+                    }
+                }
+            }
+
+            while (dashKeyBinding.wasPressed()) {
+                if (ClientRakeManager.getRakeManager().isRake(client.player.getNameForScoreboard())) {
+                    InSilenceEssentials player = (InSilenceEssentials) client.player;
+                    if (player.canDash() && client.player.isOnGround()) {
+                        player.dash();
+                    }
                 }
             }
         });

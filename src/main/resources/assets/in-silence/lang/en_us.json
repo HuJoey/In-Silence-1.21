@@ -5,5 +5,7 @@
   "item.in-silence.tire": "Dirty Tire",
   "item.in-silence.flashlight": "Flashlight",
   "category.in-silence.in-silence": "In Silence",
-  "key.in-silence.flash": "Flash"
+  "key.in-silence.flash": "Flash",
+  "key.in-silence.lockIn": "Rake Screech",
+  "key.in-silence.dash": "Rake Dash"
 }

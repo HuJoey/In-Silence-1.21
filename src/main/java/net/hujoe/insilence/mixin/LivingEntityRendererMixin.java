@@ -72,6 +72,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 					if (isMoving(livingEntity)){
 						if (livingEntity.isSprinting()){
 							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "run");
+						} else if (livingEntity.isSwimming()) {
+							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "sprint");
 						} else {
 							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "walk");
 						}
