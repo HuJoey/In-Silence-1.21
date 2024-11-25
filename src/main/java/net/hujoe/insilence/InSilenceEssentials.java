@@ -15,4 +15,5 @@ public interface InSilenceEssentials {
     boolean isStunned();
     void lockIn();
     void dash();
+    void jumpCooldown();
 }

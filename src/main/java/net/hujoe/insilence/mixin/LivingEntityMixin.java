@@ -1,6 +1,8 @@
 package net.hujoe.insilence.mixin;
 
 import com.google.common.base.Objects;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
@@ -10,6 +12,8 @@ import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
+import net.hujoe.insilence.network.InsilenceNetworking;
+import net.hujoe.insilence.network.payloads.RakeJumpPayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
@@ -38,9 +42,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements InSilenceEssentials {
     @Shadow public abstract float getHeadYaw();
-
-    @Shadow public abstract void setHealth(float health);
-
     private int ticksSinceLastSound = 20;
     private RakeEntity rakeEntity;
     private Vec3d lastPos;
@@ -170,8 +171,6 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         }
 
         if (dashActive){
-            Insilence.LOGGER.info(this.getHeadYaw() + " " + this.getPitch());
-            Insilence.LOGGER.info("" + lastHeadYaw);
             if (dashingTicks != 0){
                 this.setSwimming(true);
                 this.setPitch(0);
@@ -189,7 +188,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                 dashingTicks = 100;
                 dashActive = false;
             }
-            HitResult result = raycast(2, MinecraftClient.getInstance().getRenderTickCounter().getTickDelta(true), false);
+            HitResult result = raycast(2, 0, false);
             if (result.getType() == HitResult.Type.ENTITY){
                 EntityHitResult entityHitResult = (EntityHitResult) result;
                 Entity entity = entityHitResult.getEntity();
@@ -203,11 +202,12 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     @Inject(method="jump", at = @At("HEAD"), cancellable = true)
     public void jump(CallbackInfo ci){
-        if (RakeManager.getRakeManager().isRake(this.getNameForScoreboard())) {
+        if (ClientRakeManager.getRakeManager().isRake(this.getNameForScoreboard())) {
             if (!canJump()) {
                 ci.cancel();
             } else {
-                jumpCooldown = 60;
+                jumpCooldown();
+                //ClientPlayNetworking.send(new RakeJumpPayload());
             }
         }
     }
@@ -231,7 +231,6 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     public boolean canLockIn(){return lockInCooldown == 0;}
     public void lockIn(){
         lockInCooldown = 400;
-        // should play scream
     }
 
     public void dash(){
@@ -240,13 +239,17 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         dashActive = true;
     }
 
-    public void setDash(){
+    private void setDash(){
         float f = -MathHelper.sin(this.getYaw() * 0.017453292F) * MathHelper.cos(this.getPitch() * 0.017453292F);
         float g = -MathHelper.sin((this.getPitch()) * 0.017453292F);
         float h = MathHelper.cos(this.getYaw() * 0.017453292F) * MathHelper.cos(this.getPitch() * 0.017453292F);
         Vec3d vec3d = (new Vec3d(f, g, h)).normalize().multiply( 1);
         Vec3d realVec = new Vec3d(vec3d.x, -1, vec3d.z);
         this.setVelocity(realVec);
+    }
+
+    public void jumpCooldown(){
+        this.jumpCooldown = 60;
     }
 }
 

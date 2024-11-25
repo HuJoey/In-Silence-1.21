@@ -13,11 +13,13 @@ import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.item.ModItems;
+import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -71,6 +73,9 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playC2S().register(FlashSendPayload.ID, FlashSendPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DashPayload.ID, DashPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(LockInPayload.ID, LockInPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(FlashlightActivatePayload.ID, FlashlightActivatePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(RakeJumpPayload.ID, RakeJumpPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(LightRestartPayload.ID, LightRestartPayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
@@ -102,7 +107,30 @@ public class Insilence implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(FlashSendPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
+				ItemStack stack = context.player().getMainHandStack();
+				if(stack.getItem() == ModItems.FLASHLIGHT){
+					((FlashlightItem) stack.getItem()).flash(context.player().getWorld(), stack, context.player());
+				}
 				// add flash implementation (get player from ID then get location of player to decide who around should be affected)
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(FlashlightActivatePayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				ItemStack stack = context.player().getMainHandStack();
+				if(stack.getItem() == ModItems.FLASHLIGHT){
+					stack.set(ModItems.FLASH_ACTIVE, payload.state());
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(RakeJumpPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				if (context.server().getPlayerManager().getPlayer(context.player().getNameForScoreboard()) != null) {
+					PlayerEntity player = context.server().getPlayerManager().getPlayer(context.player().getNameForScoreboard());
+					InSilenceEssentials p = (InSilenceEssentials) player;
+					p.jumpCooldown();
+				}
 			});
 		});
 

@@ -11,4 +11,7 @@ public class InsilenceNetworking {
     public static final Identifier FLASH_SEND_PACKET_ID = Identifier.of(Insilence.MOD_ID, "flash_send");
     public static final Identifier DASH_PACKET_ID = Identifier.of(Insilence.MOD_ID, "dash");
     public static final Identifier LOCK_IN_PACKET_ID = Identifier.of(Insilence.MOD_ID, "lock_in");
+    public static final Identifier FLASHLIGHT_ACTIVATE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "flashlight_activate");
+    public static final Identifier RAKE_JUMP_PACKET_ID = Identifier.of(Insilence.MOD_ID, "rake_jump");
+    public static final Identifier LIGHT_RESTART_PACKET_ID = Identifier.of(Insilence.MOD_ID, "light_restart");
 }

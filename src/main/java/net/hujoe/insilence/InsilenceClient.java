@@ -9,22 +9,25 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
+import net.hujoe.insilence.block.entity.FlashlightLightBlockEntity;
+import net.hujoe.insilence.block.entity.ModBlockEntities;
 import net.hujoe.insilence.client.*;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.client.*;
 import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.item.custom.FlashlightItem;
-import net.hujoe.insilence.network.payloads.FlashReceivePayload;
-import net.hujoe.insilence.network.payloads.RakeListReceivePayload;
-import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
-import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
+import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Array;
@@ -68,6 +71,15 @@ public class InsilenceClient implements ClientModInitializer {
             });
         });
 
+        ClientPlayNetworking.registerGlobalReceiver(LightRestartPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                World world = context.player().getWorld();
+                if (world.getBlockEntity(new BlockPos(payload.x(), payload.y(), payload.z())) != null) {
+                    ((FlashlightLightBlockEntity) world.getBlockEntity(new BlockPos(payload.x(), payload.y(), payload.z()))).restartLife();
+                }
+            });
+        });
+
         blindnessHandler = new BlindnessHandler();
 
         flashKeyBinding = KeyBindingHelper.registerKeyBinding(new KeyBinding(
@@ -106,6 +118,7 @@ public class InsilenceClient implements ClientModInitializer {
                     if (player.canLockIn()) {
                         player.lockIn();
                         blindnessHandler.lockIn();
+                        ClientPlayNetworking.send(new LockInPayload(client.player.getNameForScoreboard()));
                     }
                 }
             }
@@ -115,6 +128,7 @@ public class InsilenceClient implements ClientModInitializer {
                     InSilenceEssentials player = (InSilenceEssentials) client.player;
                     if (player.canDash() && client.player.isOnGround()) {
                         player.dash();
+                        ClientPlayNetworking.send(new DashPayload(client.player.getNameForScoreboard()));
                     }
                 }
             }
