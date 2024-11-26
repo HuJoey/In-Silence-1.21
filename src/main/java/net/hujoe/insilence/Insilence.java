@@ -81,6 +81,7 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playS2C().register(FlashReceivePayload.ID, FlashReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(FlashSendPayload.ID, FlashSendPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DashPayload.ID, DashPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(DashClientPayload.ID, DashClientPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(LockInPayload.ID, LockInPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(RakeJumpPayload.ID, RakeJumpPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(LightRestartPayload.ID, LightRestartPayload.CODEC);
@@ -101,6 +102,9 @@ public class Insilence implements ModInitializer {
 					InSilenceEssentials p = (InSilenceEssentials) player;
 					p.dash();
 					//player.getWorld().playSound(player, player.getBlockPos(), ModSounds.DASH_ROAR_EVENT, SoundCategory.PLAYERS);
+					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
+						ServerPlayNetworking.send(sp, new DashClientPayload(player.getId()));
+					}
 				}
 			});
 		});

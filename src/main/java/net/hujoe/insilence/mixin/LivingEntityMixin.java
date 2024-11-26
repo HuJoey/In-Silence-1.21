@@ -51,10 +51,10 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private int dashCooldown;
     private int lockInCooldown;
     private boolean dashActive = false;
-    private int dashingTicks = 100;
+    private int dashingTicks = 80;
     private float lastHeadYaw;
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-    private static final EntityAttributeModifier RAKE_SPRINT = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"), 2.67, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final EntityAttributeModifier RAKE_SPRINT = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"), 2, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_JUMP = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_jump"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_STEP = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_step"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     public LivingEntityMixin(EntityType<?> type, World world) {
@@ -185,7 +185,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                 setDash();
                 jumpCooldown++;
             } else {
-                dashingTicks = 100;
+                dashingTicks = 80;
                 dashActive = false;
             }
             HitResult result = raycast(2, 0, false);

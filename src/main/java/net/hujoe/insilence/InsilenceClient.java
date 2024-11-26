@@ -24,6 +24,7 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -77,6 +78,16 @@ public class InsilenceClient implements ClientModInitializer {
                 World world = context.player().getWorld();
                 if (world.getBlockEntity(new BlockPos(payload.x(), payload.y(), payload.z())) != null) {
                     ((FlashlightLightBlockEntity) world.getBlockEntity(new BlockPos(payload.x(), payload.y(), payload.z()))).restartLife();
+                }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(DashClientPayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                if (context.player().getWorld().getEntityById(payload.id()) != null) {
+                    LivingEntity player = (LivingEntity) context.player().getWorld().getEntityById(payload.id());
+                    InSilenceEssentials p = (InSilenceEssentials) player;
+                    p.dash();
                 }
             });
         });
