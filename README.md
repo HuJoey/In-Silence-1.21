@@ -31,6 +31,8 @@ Bugs:
 - ~~Red vision goes away by hitting F1~~
 - ~~UI can bug and become transparent~~
 - ~~Rake animations shared between players~~
+- Durability and flash stage are server side ?
+- animations on dash flicker a bit
 
 recommend that FOV Effects be turned down for the mod
 give rake step height of 1 block at least

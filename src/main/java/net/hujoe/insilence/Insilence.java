@@ -20,6 +20,7 @@ import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -109,7 +110,8 @@ public class Insilence implements ModInitializer {
 			context.server().execute(() -> {
 				ItemStack stack = context.player().getMainHandStack();
 				if(stack.getItem() == ModItems.FLASHLIGHT){
-					((FlashlightItem) stack.getItem()).flash(context.player().getWorld(), stack, context.player());
+					stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
+					context.player().getServerWorld().addParticle(ParticleTypes.FLASH, true, context.player().getX(), context.player().getY() + 1, context.player().getZ(), 0, 0, 0);
 				}
 				// add flash implementation (get player from ID then get location of player to decide who around should be affected)
 			});

@@ -7,6 +7,7 @@ import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.block.entity.FlashlightLightBlockEntity;
 import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.network.InsilenceNetworking;
+import net.hujoe.insilence.network.payloads.FlashSendPayload;
 import net.hujoe.insilence.network.payloads.FlashlightActivatePayload;
 import net.hujoe.insilence.network.payloads.LightRestartPayload;
 import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
@@ -33,7 +34,7 @@ public class FlashlightItem extends Item {
 
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int i, boolean bl) {
-        if (!world.isClient){
+        if (world.isClient){
         switch (stack.get(ModItems.FLASH_STAGE)){
             case 1:
                 stack.setDamage(88);
@@ -58,9 +59,10 @@ public class FlashlightItem extends Item {
                 world.setBlockState(pos, ModBlocks.FLASHLIGHT_LIGHT.getDefaultState());
             } else if (world.getBlockEntity(pos) instanceof FlashlightLightBlockEntity blockEntity) {
                 blockEntity.restartLife();
-                for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
-                    ServerPlayNetworking.send(player, new LightRestartPayload(pos.getX(), pos.getY(), pos.getZ()));
-
+                if (!world.isClient) {
+                    for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
+                        ServerPlayNetworking.send(player, new LightRestartPayload(pos.getX(), pos.getY(), pos.getZ()));
+                    }
                 }
             }
         }
@@ -80,7 +82,8 @@ public class FlashlightItem extends Item {
     public void flash(World world, ItemStack stack, PlayerEntity user){
         if (stack.get(ModItems.FLASH_STAGE) != 1 && stack.contains(ModItems.FLASH_STAGE)){
             stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
-            world.addParticle(ParticleTypes.FLASH, true, user.getX(), user.getY() + 1, user.getZ(), 0, 0, 0);
+            world.addParticle(ParticleTypes.FLASH, true, user.getX(), user.getY() + 1, user.getZ(), 0, 0, 0);            ClientPlayNetworking.send(new FlashlightActivatePayload(stack.get(ModItems.FLASH_ACTIVE)));
+            ClientPlayNetworking.send(new FlashSendPayload(user.getId()));
         }
     }
 
