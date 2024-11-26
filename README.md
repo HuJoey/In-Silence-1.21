@@ -1,5 +1,5 @@
 Next Objective:
-~~Flashlight~~ and flash system (should add visible light too?)
+Rake Attack
 
 To-do:
 - Full Animations for Rake
@@ -16,7 +16,8 @@ To-do:
 - ~~Update HUD Texture for Rake~~ (work on what happens during a rain section)
 - ~~Make Sound HUD only appear for Rakes~~
 - Game Sounds
-- ~~Flashlight~~ and flash system
+- ~~Flashlight and flash system~~
+- Screen Flash Effect
 - Batteries
 - Noisemakers and Scarecrows
 - ~~Packets~~
@@ -33,8 +34,7 @@ Bugs:
 - ~~Rake animations shared between players~~
 - ~~Durability and flash stage are server side~~
 - Flash particle doesnt appear on server
-- Flashlight light doesnt appear on server
-- animations on dash flicker a bit
+- ~~Flashlight light doesnt appear on server~~
+- ~~animations on dash flicker a bit~~
 
 recommend that FOV Effects be turned down for the mod
-give rake step height of 1 block at least
