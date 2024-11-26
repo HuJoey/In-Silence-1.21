@@ -13,6 +13,7 @@ public interface InSilenceEssentials {
     boolean canJump();
     boolean canLockIn();
     boolean isStunned();
+    boolean isDashing();
     void lockIn();
     void dash();
     void jumpCooldown();

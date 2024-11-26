@@ -248,6 +248,10 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         this.setVelocity(realVec);
     }
 
+    public boolean isDashing(){
+        return dashActive;
+    }
+
     public void jumpCooldown(){
         this.jumpCooldown = 60;
     }

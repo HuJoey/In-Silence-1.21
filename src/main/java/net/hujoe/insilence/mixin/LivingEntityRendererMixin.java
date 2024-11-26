@@ -70,7 +70,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 					rRenderer.render(r, f, g, matrixStack, vertexConsumerProvider, i);
 
 					if (isMoving(livingEntity)){
-						if (livingEntity.isSwimming()){
+						if (((InSilenceEssentials) livingEntity).isDashing()){
 							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "sprint");
 						} else if (livingEntity.isSprinting()) {
 							r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "run");
