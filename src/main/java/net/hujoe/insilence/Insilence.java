@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
@@ -17,20 +18,27 @@ import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
+import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Array;
 import java.util.List;
 
+import static net.minecraft.block.Block.getRawIdFromState;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class Insilence implements ModInitializer {
@@ -74,9 +82,9 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playC2S().register(FlashSendPayload.ID, FlashSendPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(DashPayload.ID, DashPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(LockInPayload.ID, LockInPayload.CODEC);
-		PayloadTypeRegistry.playC2S().register(FlashlightActivatePayload.ID, FlashlightActivatePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(RakeJumpPayload.ID, RakeJumpPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(LightRestartPayload.ID, LightRestartPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(LightPlacePayload.ID, LightPlacePayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
@@ -111,18 +119,19 @@ public class Insilence implements ModInitializer {
 				ItemStack stack = context.player().getMainHandStack();
 				if(stack.getItem() == ModItems.FLASHLIGHT){
 					stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
-					context.player().getServerWorld().addParticle(ParticleTypes.FLASH, true, context.player().getX(), context.player().getY() + 1, context.player().getZ(), 0, 0, 0);
+					switch (stack.get(ModItems.FLASH_STAGE)) {
+						case 1:
+							stack.setDamage(88);
+							break;
+						case 2:
+							stack.setDamage(40);
+							break;
+						case 3:
+							stack.setDamage(0);
+					} // PARTICLE STILL DOESNT APPEAR
+					context.player().getEntityWorld().addParticle(ParticleTypes.FLASH, true, context.player().getX(), context.player().getY() + 1, context.player().getZ(), 0, 0, 0);
 				}
 				// add flash implementation (get player from ID then get location of player to decide who around should be affected)
-			});
-		});
-
-		ServerPlayNetworking.registerGlobalReceiver(FlashlightActivatePayload.ID, (payload, context) -> {
-			context.server().execute(() -> {
-				ItemStack stack = context.player().getMainHandStack();
-				if(stack.getItem() == ModItems.FLASHLIGHT){
-					stack.set(ModItems.FLASH_ACTIVE, payload.state());
-				}
 			});
 		});
 
@@ -132,6 +141,22 @@ public class Insilence implements ModInitializer {
 					PlayerEntity player = context.server().getPlayerManager().getPlayer(context.player().getNameForScoreboard());
 					InSilenceEssentials p = (InSilenceEssentials) player;
 					p.jumpCooldown();
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(LightPlacePayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				BlockPos pos = new BlockPos(payload.x(), payload.y(), payload.z());
+				World world = context.player().getWorld();
+				BlockEntity blockEntity = world.getBlockEntity(pos);
+				if (world.getBlockState(pos) == Blocks.AIR.getDefaultState()) {
+					world.setBlockState(pos, ModBlocks.FLASHLIGHT_LIGHT.getDefaultState());
+					world.syncWorldEvent(null, 2001, pos, getRawIdFromState(world.getBlockState(pos)));
+				} else if (blockEntity != null && blockEntity.getType() == ModBlockEntities.FLASHLIGHT_LIGHT_BLOCK_ENTITY) {
+					for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
+						ServerPlayNetworking.send(player, new LightRestartPayload(pos.getX(), pos.getY(), pos.getZ()));
+					}
 				}
 			});
 		});

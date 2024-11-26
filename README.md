@@ -31,7 +31,9 @@ Bugs:
 - ~~Red vision goes away by hitting F1~~
 - ~~UI can bug and become transparent~~
 - ~~Rake animations shared between players~~
-- Durability and flash stage are server side ?
+- ~~Durability and flash stage are server side~~
+- Flash particle doesnt appear on server
+- Flashlight light doesnt appear on server
 - animations on dash flicker a bit
 
 recommend that FOV Effects be turned down for the mod

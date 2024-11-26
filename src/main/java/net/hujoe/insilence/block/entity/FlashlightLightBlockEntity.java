@@ -21,7 +21,7 @@ public class FlashlightLightBlockEntity extends BlockEntity {
     }
 
     public void restartLife(){
-        lifespan = 2;
+        lifespan = 3;
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, FlashlightLightBlockEntity blockEntity) {
