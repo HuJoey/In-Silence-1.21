@@ -2,7 +2,7 @@ Next Objective:
 Rake Attack
 
 To-do:
-- Full Animations for Rake
+- ~~Full Animations for Rake~~
 - ~~Camera Adjusts and Hand Render for Rake~~
 - ~~Rake Abilities and Jumping~~
 - Rake Attack
