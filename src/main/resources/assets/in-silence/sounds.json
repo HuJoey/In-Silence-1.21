@@ -1,8 +1,42 @@
 {
   "signal": {
-    "subtitle": "Sound Signal",
     "sounds": [
       "in-silence:signal"
+    ]
+  },
+  "sprint1": {
+    "sounds": [
+      "in-silence:sprint"
+    ]
+  },
+  "sprint2": {
+    "sounds": [
+      "in-silence:sprint-2"
+    ]
+  },
+  "eye1": {
+    "sounds": [
+      "in-silence:eye-1"
+    ]
+  },
+  "eye2": {
+    "sounds": [
+      "in-silence:eye-2"
+    ]
+  },
+  "flashbang": {
+    "sounds": [
+      "in-silence:explosion_flashbang_sfx"
+    ]
+  },
+  "catch": {
+    "sounds": [
+      "in-silence:catch-standart"
+    ]
+  },
+  "earringing": {
+    "sounds": [
+      "in-silence:flash-earringing"
     ]
   }
 }
