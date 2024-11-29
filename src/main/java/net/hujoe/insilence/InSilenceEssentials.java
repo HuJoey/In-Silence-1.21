@@ -19,4 +19,5 @@ public interface InSilenceEssentials {
     void jumpCooldown();
     boolean isAttacking();
     void triggerJumpscare(int id);
+    void triggerJumpscare();
 }

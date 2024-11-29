@@ -15,4 +15,6 @@ public class InsilenceNetworking {
     public static final Identifier RAKE_JUMP_PACKET_ID = Identifier.of(Insilence.MOD_ID, "rake_jump");
     public static final Identifier LIGHT_RESTART_PACKET_ID = Identifier.of(Insilence.MOD_ID, "light_restart");
     public static final Identifier LIGHT_PLACE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "light_place");
+    public static final Identifier RAKE_ATTACK_SEND_PACKET_ID = Identifier.of(Insilence.MOD_ID, "rake_attack_send");
+    public static final Identifier RAKE_ATTACK_RECEIVE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "rake_attack_receive");
 }

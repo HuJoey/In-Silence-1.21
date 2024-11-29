@@ -86,6 +86,8 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playC2S().register(RakeJumpPayload.ID, RakeJumpPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(LightRestartPayload.ID, LightRestartPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(LightPlacePayload.ID, LightPlacePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(RakeAttackReceivePayload.ID, RakeAttackReceivePayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(RakeAttackSendPayload.ID, RakeAttackSendPayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
@@ -98,10 +100,16 @@ public class Insilence implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(DashPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
 				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
-					PlayerEntity player = context.server().getPlayerManager().getPlayer(payload.username());
+					ServerPlayerEntity player = context.server().getPlayerManager().getPlayer(payload.username());
 					InSilenceEssentials p = (InSilenceEssentials) player;
 					p.dash();
-					//player.getWorld().playSound(player, player.getBlockPos(), ModSounds.DASH_ROAR_EVENT, SoundCategory.PLAYERS);
+					if (Math.random() > 0.5) {
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.SPRINT_EVENT_1, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.SPRINT_EVENT_1, SoundCategory.AMBIENT, 0.5F , 1);
+					} else {
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.SPRINT_EVENT_2, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.SPRINT_EVENT_2, SoundCategory.AMBIENT, 0.5F, 1);
+					}
 					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
 						ServerPlayNetworking.send(sp, new DashClientPayload(player.getId()));
 					}
@@ -113,7 +121,13 @@ public class Insilence implements ModInitializer {
 			context.server().execute(() -> {
 				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
 					PlayerEntity player = context.server().getPlayerManager().getPlayer(payload.username());
-					//player.getWorld().playSound(player, player.getBlockPos(), ModSounds.SCREECH_EVENT, SoundCategory.PLAYERS);
+					if (Math.random() > 0.5) {
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.EYE_EVENT_1, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.EYE_EVENT_1, SoundCategory.AMBIENT, 0.5F , 1);
+					} else {
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.EYE_EVENT_2, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.EYE_EVENT_2, SoundCategory.AMBIENT, 0.5F, 1);
+					}
 				}
 			});
 		});
@@ -161,6 +175,21 @@ public class Insilence implements ModInitializer {
 					for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
 						ServerPlayNetworking.send(player, new LightRestartPayload(pos.getX(), pos.getY(), pos.getZ()));
 					}
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(RakeAttackSendPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				if (context.player().getEntityWorld().getEntityById(payload.attackerId()) != null) {
+					PlayerEntity player = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.attackerId());
+					InSilenceEssentials p = (InSilenceEssentials) player;
+					p.triggerJumpscare(0);
+					player.getWorld().playSound(player, player.getBlockPos(), ModSounds.CATCH_EVENT, SoundCategory.PLAYERS);
+					player.playSoundToPlayer(ModSounds.CATCH_EVENT, SoundCategory.AMBIENT, 0.5F, 1);
+					//for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
+					//	ServerPlayNetworking.send(sp, new RakeAttackReceivePayload(player.getId()));
+					//}
 				}
 			});
 		});

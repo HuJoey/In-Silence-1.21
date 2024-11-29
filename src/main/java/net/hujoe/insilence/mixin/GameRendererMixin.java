@@ -2,6 +2,7 @@ package net.hujoe.insilence.mixin;
 
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.InsilenceClient;
 import net.hujoe.insilence.client.BlindnessHandler;
@@ -36,6 +37,8 @@ public abstract class GameRendererMixin {
     @Shadow @Final private BufferBuilderStorage buffers;
     private static final BlindnessHandler blindness = InsilenceClient.getBlindnessHandler();
     private static final Identifier VISION_TINT = Identifier.of(Insilence.MOD_ID,"textures/misc/rake_vision.png");
+    private float tintTransparency = 0;
+
 
     @Inject(method = "loadBlurPostProcessor", at = @At("TAIL"))
     private void loadBlurPostProcessor(ResourceFactory resourceFactory, CallbackInfo ci) {
@@ -66,7 +69,16 @@ public abstract class GameRendererMixin {
         int y = this.getClient().getWindow().getScaledHeight();
         ShaderProgram og = RenderSystem.getShader();
         RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
+        if (((InSilenceEssentials) getClient().player).isAttacking()){
+            if (tintTransparency < 0.3F){
+                tintTransparency += 0.001F;
+            }
+        } else if (tintTransparency > 0.1F){
+            tintTransparency -= 0.01F;
+        } else {
+            tintTransparency = 0.1F;
+        }
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, tintTransparency);
         RenderSystem.enableBlend();
         context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
         RenderSystem.disableBlend();

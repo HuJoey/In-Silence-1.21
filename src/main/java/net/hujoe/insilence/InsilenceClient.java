@@ -20,6 +20,7 @@ import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
+import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
@@ -28,6 +29,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
@@ -88,6 +90,16 @@ public class InsilenceClient implements ClientModInitializer {
                     LivingEntity player = (LivingEntity) context.player().getWorld().getEntityById(payload.id());
                     InSilenceEssentials p = (InSilenceEssentials) player;
                     p.dash();
+                }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(RakeAttackReceivePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                if (context.player().getEntityWorld().getEntityById(payload.id()) != null) {
+                    PlayerEntity player = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.id());
+                    InSilenceEssentials p = (InSilenceEssentials) player;
+                    p.triggerJumpscare();
                 }
             });
         });

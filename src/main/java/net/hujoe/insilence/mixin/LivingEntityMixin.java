@@ -1,6 +1,7 @@
 package net.hujoe.insilence.mixin;
 
 import com.google.common.base.Objects;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
@@ -8,14 +9,17 @@ import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
+import net.hujoe.insilence.network.payloads.RakeAttackSendPayload;
 import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
+import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
@@ -274,7 +278,14 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         return attackTicks > 0;
     }
 
-    public void triggerJumpscare(int id){
+    public void triggerJumpscare(int targetId){
+        triggerJumpscare();
+        if (getWorld().isClient){
+            ClientPlayNetworking.send(new RakeAttackSendPayload(this.getId(), targetId));
+        }
+    }
+
+    public void triggerJumpscare(){
         attackTicks = 142;
         attackYaw = this.getYaw();
         attackPitch = 0;
@@ -283,6 +294,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         dashingTicks = 80;
         dashActive = false;
     }
+
     public boolean isStunned(){
         return false;
     }
