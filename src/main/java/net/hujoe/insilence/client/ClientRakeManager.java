@@ -19,6 +19,7 @@ public class ClientRakeManager {
     public boolean isRake(String username){
         return usernames.contains(username);
     }
+    public boolean isMouse(String username){ return false; }
 
     public void toggleUser(String username){
         if (isRake(username)){

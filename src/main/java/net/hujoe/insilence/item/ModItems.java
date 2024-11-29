@@ -32,6 +32,6 @@ public class ModItems {
     }
 
     public static void registerModItems(){
-        Insilence.LOGGER.info("Registering Mod Items for " + Insilence.MOD_ID);
+        Insilence.LOGGER.info("Registering ModItems for " + Insilence.MOD_ID);
     }
 }

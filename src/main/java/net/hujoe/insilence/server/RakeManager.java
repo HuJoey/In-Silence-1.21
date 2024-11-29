@@ -28,6 +28,7 @@ public class RakeManager {
     public boolean isRake(String username){
         return usernames.contains(username);
     }
+    public boolean isMouse(String username){ return false; }
 
     public void toggleUser(String username, World world){
         if (isRake(username)){

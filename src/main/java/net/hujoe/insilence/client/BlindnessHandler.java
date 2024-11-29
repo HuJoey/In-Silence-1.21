@@ -3,6 +3,7 @@ package net.hujoe.insilence.client;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.network.payloads.SignalSoundPayload;
@@ -64,30 +65,33 @@ public class BlindnessHandler {
     }
 
     public void tick(){
-        if (!lockInActive) {
-            if (spawnedThisTick) {
-                ticksSinceSound = 0;
-            } else {
-                ticksSinceSound++;
-            }
-            if (ticksSinceSound > 100) {
-                blindnessLevel += 1F;
-                if (blindnessLevel > 32) {
-                    blindnessLevel = 32;
+        InSilenceEssentials player = (InSilenceEssentials) client.player;
+        if (!player.isAttacking()) {
+            if (!lockInActive) {
+                if (spawnedThisTick) {
+                    ticksSinceSound = 0;
+                } else {
+                    ticksSinceSound++;
                 }
-            }
-            spawnedThisTick = false;
-        } else {
-            if (blindnessLevel > 2){
-                blindnessLevel -= 2;
-            } else if (blindnessLevel < 2){
-                blindnessLevel = 2;
-            }
-
-            if (lockInTimer != 0){
-                lockInTimer--;
+                if (ticksSinceSound > 100) {
+                    blindnessLevel += 1F;
+                    if (blindnessLevel > 32) {
+                        blindnessLevel = 32;
+                    }
+                }
+                spawnedThisTick = false;
             } else {
-                lockInActive = false;
+                if (blindnessLevel > 2) {
+                    blindnessLevel -= 2;
+                } else if (blindnessLevel < 2) {
+                    blindnessLevel = 2;
+                }
+
+                if (lockInTimer != 0) {
+                    lockInTimer--;
+                } else {
+                    lockInActive = false;
+                }
             }
         }
     }

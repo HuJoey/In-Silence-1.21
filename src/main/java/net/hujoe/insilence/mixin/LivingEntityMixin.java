@@ -1,23 +1,15 @@
 package net.hujoe.insilence.mixin;
 
 import com.google.common.base.Objects;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
-import net.hujoe.insilence.InsilenceClient;
-import net.hujoe.insilence.client.BlindnessHandler;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
-import net.hujoe.insilence.network.InsilenceNetworking;
-import net.hujoe.insilence.network.payloads.RakeJumpPayload;
-import net.hujoe.insilence.network.payloads.RakeUpdatePayload;
 import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
@@ -30,7 +22,6 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -42,6 +33,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements InSilenceEssentials {
     @Shadow public abstract float getHeadYaw();
+
+    @Shadow public abstract void setBodyYaw(float bodyYaw);
+
+    @Shadow public abstract void setHeadYaw(float headYaw);
+
     private int ticksSinceLastSound = 20;
     private RakeEntity rakeEntity;
     private Vec3d lastPos;
@@ -53,6 +49,10 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private boolean dashActive = false;
     private int dashingTicks = 80;
     private float lastHeadYaw;
+    private int attackTicks = 0;
+    private Vec3d attackPos;
+    private float attackYaw;
+    private float attackPitch;
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_SPRINT = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"), 2, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_JUMP = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_jump"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
@@ -94,6 +94,16 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         }
         if (lockInCooldown != 0){
             lockInCooldown--;
+        }
+        if (attackTicks != 0){
+            this.setPosition(attackPos);
+            this.setBodyYaw(attackYaw);
+            this.setYaw(attackYaw);
+            this.setPitch(getAttackingPitch()); // CAN BE CHANGED!!
+            lockInCooldown++;
+            jumpCooldown++;
+            dashCooldown++;
+            attackTicks--;
         }
 
         if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard())){
@@ -188,12 +198,17 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                 dashingTicks = 80;
                 dashActive = false;
             }
-            HitResult result = raycast(2, 0, false);
-            if (result.getType() == HitResult.Type.ENTITY){
-                EntityHitResult entityHitResult = (EntityHitResult) result;
-                Entity entity = entityHitResult.getEntity();
-                if (entity instanceof PlayerEntity){
-                    // ATTACK
+            HitResult result = this.raycast(1, 0, false);
+            PlayerEntity target = getWorld().getClosestPlayer(result.getPos().x,result.getPos().y,result.getPos().z, 2, false);
+            if (target != null && target.getId() != this.getId()) {
+                if (target.isAttackable() && ClientRakeManager.getRakeManager().isRake(this.getNameForScoreboard())) {
+                    if (!isAttacking() && !isStunned()) {
+                        if (target instanceof PlayerEntity) {
+                            if (!ClientRakeManager.getRakeManager().isRake(target.getNameForScoreboard()) && !ClientRakeManager.getRakeManager().isMouse(target.getNameForScoreboard())) {
+                                this.triggerJumpscare(target.getId());
+                            }
+                        }
+                    }
                 }
             }
             dashingTicks--;
@@ -207,7 +222,6 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                 ci.cancel();
             } else {
                 jumpCooldown();
-                //ClientPlayNetworking.send(new RakeJumpPayload());
             }
         }
     }
@@ -254,6 +268,46 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public void jumpCooldown(){
         this.jumpCooldown = 60;
+    }
+
+    public boolean isAttacking(){
+        return attackTicks > 0;
+    }
+
+    public void triggerJumpscare(int id){
+        attackTicks = 142;
+        attackYaw = this.getYaw();
+        attackPitch = 0;
+        this.setPitch(0);
+        attackPos = this.getPos();
+        dashingTicks = 80;
+        dashActive = false;
+    }
+    public boolean isStunned(){
+        return false;
+    }
+
+    // this is probably the worst way to animate a camera - find a better way!!!!
+    public float getAttackingPitch(){
+        float currentPitch = this.getPitch();
+        if (attackTicks > 136){
+            currentPitch += 8;
+        } else if (attackTicks > 103){
+            // do nothing
+        } else if (attackTicks > 94){
+            currentPitch -= 3;
+        } else if (attackTicks > 88){
+            currentPitch += 8;
+        } else if (attackTicks > 60){
+            currentPitch -= 3;
+        } else if (attackTicks > 37){
+            // have a dance party
+        } else if (attackTicks > 32){
+            currentPitch -= 20;
+        } else if (attackTicks > 27){
+            currentPitch += 20;
+        }
+        return currentPitch;
     }
 }
 
