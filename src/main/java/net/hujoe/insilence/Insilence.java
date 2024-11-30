@@ -2,7 +2,6 @@ package net.hujoe.insilence;
 
 import net.fabricmc.api.ModInitializer;
 
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -10,11 +9,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.block.entity.ModBlockEntities;
-import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
-import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.item.ModItems;
-import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
@@ -29,14 +25,12 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.lang.reflect.Array;
-import java.util.List;
 
 import static net.minecraft.block.Block.getRawIdFromState;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -48,6 +42,7 @@ public class Insilence implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
 
 	@Override
 	public void onInitialize() {
@@ -184,12 +179,17 @@ public class Insilence implements ModInitializer {
 				if (context.player().getEntityWorld().getEntityById(payload.attackerId()) != null) {
 					PlayerEntity player = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.attackerId());
 					InSilenceEssentials p = (InSilenceEssentials) player;
-					p.triggerJumpscare(0);
+					p.triggerJumpscare();
+					HitResult result = player.raycast(1.3, 0, false);
+					if (context.player().getEntityWorld().getEntityById(payload.targetId()) != null) {
+						PlayerEntity target = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.targetId());
+						((InSilenceEssentials) target).triggerCaught(player.getYaw(), new Vec3d(result.getPos().x, player.getY(), result.getPos().z));
+					}
 					player.getWorld().playSound(player, player.getBlockPos(), ModSounds.CATCH_EVENT, SoundCategory.PLAYERS);
 					player.playSoundToPlayer(ModSounds.CATCH_EVENT, SoundCategory.AMBIENT, 0.5F, 1);
-					//for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
-					//	ServerPlayNetworking.send(sp, new RakeAttackReceivePayload(player.getId()));
-					//}
+					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
+						ServerPlayNetworking.send(sp, new RakeAttackReceivePayload(payload.attackerId(), payload.targetId()));
+					}
 				}
 			});
 		});

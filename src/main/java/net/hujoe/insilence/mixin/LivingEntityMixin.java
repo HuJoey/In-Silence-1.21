@@ -13,12 +13,20 @@ import net.hujoe.insilence.network.payloads.RakeAttackSendPayload;
 import net.hujoe.insilence.network.payloads.VolumeUpdatePayload;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
+import net.minecraft.block.Blocks;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.particle.BlockStateParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.hit.EntityHitResult;
@@ -42,6 +50,10 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     @Shadow public abstract void setHeadYaw(float headYaw);
 
+    @Shadow protected abstract void attackLivingEntity(LivingEntity target);
+
+    @Shadow public abstract boolean damage(DamageSource source, float amount);
+
     private int ticksSinceLastSound = 20;
     private RakeEntity rakeEntity;
     private Vec3d lastPos;
@@ -57,10 +69,17 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private Vec3d attackPos;
     private float attackYaw;
     private float attackPitch;
+    private Vec3d caughtPos;
+    private float caughtYaw;
+    private boolean caught;
+    private int bloodTicks = 10;
+    public final RegistryKey<DamageType> RAKE_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(Insilence.MOD_ID, "rake_damage"));
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+
     private static final EntityAttributeModifier RAKE_SPRINT = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_sprint"), 2, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_JUMP = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_jump"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     private static final EntityAttributeModifier RAKE_STEP = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_step"), 1, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    private static final EntityAttributeModifier ANIMATION_GRAVITY = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "animation_gravity"), 0, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     public LivingEntityMixin(EntityType<?> type, World world) {
         super(type, world);
     }
@@ -99,20 +118,54 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         if (lockInCooldown != 0){
             lockInCooldown--;
         }
-        if (attackTicks != 0){
-            this.setPosition(attackPos);
-            this.setBodyYaw(attackYaw);
-            this.setYaw(attackYaw);
-            this.setPitch(getAttackingPitch()); // CAN BE CHANGED!!
-            lockInCooldown++;
-            jumpCooldown++;
-            dashCooldown++;
+        EntityAttributeInstance gravityAttributeInstance = ((LivingEntity) (Object) this).getAttributeInstance(EntityAttributes.GENERIC_GRAVITY);
+
+        if (attackTicks > 0){
+            if (!gravityAttributeInstance.hasModifier(Identifier.of(Insilence.MOD_ID, "animation_gravity"))) {
+                gravityAttributeInstance.addTemporaryModifier(ANIMATION_GRAVITY);
+            }
+            if (!caught) {
+                this.setPosition(attackPos);
+                this.setBodyYaw(attackYaw);
+                this.setYaw(attackYaw);
+                attackPitch = getAttackingPitch();
+                this.setPitch(attackPitch); // CAN BE CHANGED!!
+                lockInCooldown++;
+                jumpCooldown++;
+                dashCooldown++;
+            } else {
+                if (attackTicks < 72 && attackTicks > 65){
+                    caughtPos = new Vec3d(caughtPos.getX(), caughtPos.getY() + 0.3, caughtPos.getZ());
+                }
+                this.setPosition(caughtPos);
+                this.setYaw(caughtYaw);
+                this.setBodyYaw(caughtYaw);
+                if (attackTicks < 89 && attackTicks > 32) {
+                    if (bloodTicks == 0 && !getWorld().isClient) {
+                        ((ServerWorld) getWorld()).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.NETHER_WART_BLOCK.getDefaultState()), caughtPos.x, caughtPos.y + 1, caughtPos.z, 6, 0, 0, 0, 0);
+                        bloodTicks = 10;
+                    }
+                    bloodTicks--;
+                } else if (attackTicks == 89 && !getWorld().isClient){
+                    ((ServerWorld) getWorld()).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.NETHER_WART_BLOCK.getDefaultState()), caughtPos.x, caughtPos.y + 1, caughtPos.z, 15, 0, 0, 0, 0);
+                    bloodTicks = 10;
+                } else if (attackTicks == 32 && !getWorld().isClient){
+                    ((ServerWorld) getWorld()).spawnParticles(new BlockStateParticleEffect(ParticleTypes.BLOCK, Blocks.NETHER_WART_BLOCK.getDefaultState()), caughtPos.x, caughtPos.y + 1, caughtPos.z, 50, 0, 0, 0, 0);
+                    murder();
+                }
+            }
             attackTicks--;
+        } else if (attackTicks < 0){
+            attackTicks = 0;
+        } else {
+            if (gravityAttributeInstance.hasModifier(Identifier.of(Insilence.MOD_ID, "animation_gravity"))) {
+                gravityAttributeInstance.removeModifier(ANIMATION_GRAVITY);
+            }
         }
 
         if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard())){
             World world = this.getWorld();
-            if (!world.isClient()) {
+            if (!world.isClient() && this.isAlive()) {
                 if (ticksSinceLastSound == 0) {
                     ticksSinceLastSound = 20;
                     int soundStrength = 0;
@@ -202,14 +255,16 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                 dashingTicks = 80;
                 dashActive = false;
             }
-            HitResult result = this.raycast(1, 0, false);
+            HitResult result = this.raycast(2.5, 0, false);
             PlayerEntity target = getWorld().getClosestPlayer(result.getPos().x,result.getPos().y,result.getPos().z, 2, false);
             if (target != null && target.getId() != this.getId()) {
                 if (target.isAttackable() && ClientRakeManager.getRakeManager().isRake(this.getNameForScoreboard())) {
                     if (!isAttacking() && !isStunned()) {
                         if (target instanceof PlayerEntity) {
                             if (!ClientRakeManager.getRakeManager().isRake(target.getNameForScoreboard()) && !ClientRakeManager.getRakeManager().isMouse(target.getNameForScoreboard())) {
-                                this.triggerJumpscare(target.getId());
+                                if (getWorld().isClient) {
+                                    this.triggerJumpscare();
+                                }
                             }
                         }
                     }
@@ -280,8 +335,9 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public void triggerJumpscare(int targetId){
         triggerJumpscare();
-        if (getWorld().isClient){
-            ClientPlayNetworking.send(new RakeAttackSendPayload(this.getId(), targetId));
+        World world = this.getWorld();
+        if (world.isClient()){
+            //ClientPlayNetworking.send(new RakeAttackSendPayload(this.getId(), targetId));
         }
     }
 
@@ -289,10 +345,10 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         attackTicks = 142;
         attackYaw = this.getYaw();
         attackPitch = 0;
-        this.setPitch(0);
         attackPos = this.getPos();
         dashingTicks = 80;
         dashActive = false;
+        caught = false;
     }
 
     public boolean isStunned(){
@@ -301,7 +357,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     // this is probably the worst way to animate a camera - find a better way!!!!
     public float getAttackingPitch(){
-        float currentPitch = this.getPitch();
+        float currentPitch = attackPitch;
         if (attackTicks > 136){
             currentPitch += 8;
         } else if (attackTicks > 103){
@@ -320,6 +376,25 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
             currentPitch += 20;
         }
         return currentPitch;
+    }
+
+    public void triggerCaught(float yaw, Vec3d pos) {
+        caughtYaw = yaw + 180;
+        attackTicks = 142;
+        this.setPitch(0);
+        caughtPos = pos;
+        caught = true;
+    }
+
+    public boolean isCaught(){
+        return caught;
+    }
+
+    public void murder(){
+        attackTicks = 0;
+        //caught = false;
+        DamageSource damageSource = new DamageSource(getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(RAKE_DAMAGE));
+        this.damage(damageSource, 100);
     }
 }
 

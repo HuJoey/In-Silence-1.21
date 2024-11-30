@@ -1,8 +1,10 @@
 package net.hujoe.insilence.mixin;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
+import net.hujoe.insilence.network.payloads.RakeAttackSendPayload;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -21,7 +23,10 @@ public class PlayerEntityMixin {
             if (!rake.isAttacking() && !rake.isStunned()) {
                 if (target instanceof PlayerEntity) {
                     if (!ClientRakeManager.getRakeManager().isRake(target.getNameForScoreboard()) && !ClientRakeManager.getRakeManager().isMouse(target.getNameForScoreboard())) {
-                        rake.triggerJumpscare(target.getId());
+                        if (target.getWorld().isClient) {
+                            rake.triggerJumpscare(target.getId());
+                            ClientPlayNetworking.send(new RakeAttackSendPayload(((PlayerEntity) (Object)this).getId(), target.getId()));
+                        }
                         ci.cancel();
                     }
                 }

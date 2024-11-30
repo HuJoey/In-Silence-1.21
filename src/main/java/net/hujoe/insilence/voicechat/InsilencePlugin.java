@@ -72,6 +72,6 @@ public class InsilencePlugin implements VoicechatPlugin {
 
     @Override
     public String getPluginId() {
-        return "in-silence";
+        return "data/in-silence";
     }
 }

@@ -30,7 +30,9 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
@@ -96,10 +98,16 @@ public class InsilenceClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(RakeAttackReceivePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
-                if (context.player().getEntityWorld().getEntityById(payload.id()) != null) {
-                    PlayerEntity player = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.id());
+                PlayerEntity player = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.attackerId());
+                if (context.player().getEntityWorld().getEntityById(payload.attackerId()) != null && context.player().getId() != payload.attackerId()) {
                     InSilenceEssentials p = (InSilenceEssentials) player;
                     p.triggerJumpscare();
+                }
+                HitResult result = player.raycast(1.3, 0, false);
+                if (context.player().getEntityWorld().getEntityById(payload.targetId()) != null) {
+                    PlayerEntity target = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.targetId());
+                    InSilenceEssentials p2 = (InSilenceEssentials) target;
+                    p2.triggerCaught(player.getYaw(), new Vec3d(result.getPos().x, player.getY(), result.getPos().z));
                 }
             });
         });
