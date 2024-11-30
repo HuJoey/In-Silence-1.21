@@ -8,5 +8,6 @@
   "key.in-silence.flash": "Flash",
   "key.in-silence.lockIn": "Rake Screech",
   "key.in-silence.dash": "Rake Dash",
-  "death.attack.rake": "%1$s was slaughtered for being too loud..."
+  "death.attack.rake": "%1$s was slaughtered for being too loud...",
+  "death.attack.player": "%1$s was slaughtered for being too loud..."
 }

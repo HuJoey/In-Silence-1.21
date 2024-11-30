@@ -17,20 +17,9 @@ public class IJustNeedToSendAClientPacketMixin {
     @Inject(method="baseTick", at = @At("TAIL"))
     public void baseTick(CallbackInfo ci) {
         InSilenceEssentials playerES = (InSilenceEssentials) this;
-        if (playerES.isDashing()) {
-            PlayerEntity player = (PlayerEntity) (Object) this;
-            HitResult result = ((LivingEntity) (Object) this).raycast(2.5, 0, false);
-            PlayerEntity target = ((LivingEntity) (Object) this).getWorld().getClosestPlayer(result.getPos().x, result.getPos().y, result.getPos().z, 2, false);
-            if (target != null && target.getId() != ((LivingEntity) (Object) this).getId()) {
-                if (target.isAttackable() && ClientRakeManager.getRakeManager().isRake(((LivingEntity) (Object) this).getNameForScoreboard())) {
-                    if (!playerES.isAttacking() && !playerES.isStunned()) {
-                        if (target instanceof PlayerEntity) {
-                            if (!ClientRakeManager.getRakeManager().isRake(target.getNameForScoreboard()) && !ClientRakeManager.getRakeManager().isMouse(target.getNameForScoreboard())) {
-                                ClientPlayNetworking.send(new RakeAttackSendPayload(((LivingEntity) (Object) this).getId(), target.getId()));
-                            }
-                        }
-                    }
-                }
+        if (playerES.wasAttackFromDash()){
+            if (playerES.getCaughtTarget() != null){
+                ClientPlayNetworking.send(new RakeAttackSendPayload(((PlayerEntity) (Object) this).getId(), playerES.getCaughtTarget().getId()));
             }
         }
     }

@@ -73,6 +73,8 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private float caughtYaw;
     private boolean caught;
     private int bloodTicks = 10;
+    private boolean attackFromDash;
+    private PlayerEntity caughtTarget;
     public final RegistryKey<DamageType> RAKE_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(Insilence.MOD_ID, "rake_damage"));
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
@@ -255,8 +257,8 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                 dashingTicks = 80;
                 dashActive = false;
             }
-            HitResult result = this.raycast(2.5, 0, false);
-            PlayerEntity target = getWorld().getClosestPlayer(result.getPos().x,result.getPos().y,result.getPos().z, 2, false);
+            HitResult result = this.raycast(2, 0, false);
+            PlayerEntity target = getWorld().getClosestPlayer(result.getPos().x,result.getPos().y,result.getPos().z, 2.5, false);
             if (target != null && target.getId() != this.getId()) {
                 if (target.isAttackable() && ClientRakeManager.getRakeManager().isRake(this.getNameForScoreboard())) {
                     if (!isAttacking() && !isStunned()) {
@@ -264,6 +266,8 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                             if (!ClientRakeManager.getRakeManager().isRake(target.getNameForScoreboard()) && !ClientRakeManager.getRakeManager().isMouse(target.getNameForScoreboard())) {
                                 if (getWorld().isClient) {
                                     this.triggerJumpscare();
+                                    attackFromDash = true;
+                                    caughtTarget = target;
                                 }
                             }
                         }
@@ -395,6 +399,19 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         //caught = false;
         DamageSource damageSource = new DamageSource(getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(RAKE_DAMAGE));
         this.damage(damageSource, 100);
+    }
+
+    public boolean wasAttackFromDash(){
+        boolean result = false;
+        if (attackFromDash){
+            attackFromDash = false;
+            result = true;
+        }
+        return result;
+    }
+
+    public PlayerEntity getCaughtTarget(){
+        return caughtTarget;
     }
 }
 
