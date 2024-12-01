@@ -73,7 +73,13 @@ public class InsilenceClient implements ClientModInitializer {
 
         ClientPlayNetworking.registerGlobalReceiver(FlashReceivePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
-                // add flash implementation here
+                ((InSilenceEssentials) context.player().getWorld().getEntityById(payload.attackerId())).cancelAttack();
+                ((InSilenceEssentials) context.player().getWorld().getEntityById(payload.targetId())).cancelAttack();
+
+                if (payload.shouldBlind()){
+                    FlashActivator renderer = (FlashActivator) context.client().gameRenderer;
+                    renderer.activateFlash();
+                }
             });
         });
 

@@ -1,5 +1,6 @@
 package net.hujoe.insilence.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;

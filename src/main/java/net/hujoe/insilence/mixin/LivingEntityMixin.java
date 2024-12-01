@@ -50,8 +50,6 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     @Shadow public abstract void setHeadYaw(float headYaw);
 
-    @Shadow protected abstract void attackLivingEntity(LivingEntity target);
-
     @Shadow public abstract boolean damage(DamageSource source, float amount);
 
     private int ticksSinceLastSound = 20;
@@ -75,6 +73,8 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private int bloodTicks = 10;
     private boolean attackFromDash;
     private PlayerEntity caughtTarget;
+    private boolean isStunned = false;
+    private int attackerId;
     public final RegistryKey<DamageType> RAKE_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(Insilence.MOD_ID, "rake_damage"));
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
@@ -356,7 +356,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     }
 
     public boolean isStunned(){
-        return false;
+        return isStunned;
     }
 
     // this is probably the worst way to animate a camera - find a better way!!!!
@@ -396,7 +396,6 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public void murder(){
         attackTicks = 0;
-        //caught = false;
         DamageSource damageSource = new DamageSource(getWorld().getRegistryManager().get(RegistryKeys.DAMAGE_TYPE).entryOf(RAKE_DAMAGE));
         this.damage(damageSource, 100);
     }
@@ -412,6 +411,21 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public PlayerEntity getCaughtTarget(){
         return caughtTarget;
+    }
+
+    public void setStunned(boolean stunned){
+        isStunned = stunned;
+    }
+
+    public int getAttackerId(){
+        return attackerId;
+    }
+    public void setAttackerId(int id){
+        attackerId = id;
+    }
+
+    public void cancelAttack(){
+        attackTicks = 0;
     }
 }
 

@@ -25,4 +25,8 @@ public interface InSilenceEssentials {
     void triggerCaught(float yaw, Vec3d pos);
     boolean wasAttackFromDash();
     PlayerEntity getCaughtTarget();
+    void setStunned(boolean stunned);
+    int getAttackerId();
+    void setAttackerId(int id);
+    void cancelAttack();
 }

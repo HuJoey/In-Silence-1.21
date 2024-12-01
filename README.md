@@ -1,11 +1,11 @@
 Next Objective:
-Rake Attack
+Screen Flash Effect
 
 To-do:
 - ~~Full Animations for Rake~~
 - ~~Camera Adjusts and Hand Render for Rake~~
 - ~~Rake Abilities and Jumping~~
-- Rake Attack
+- ~~Rake Attack~~
 - Abilities UI?
 - ~~Rake Blindness~~
 - ~~Sound Events in the HUD~~

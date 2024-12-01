@@ -67,7 +67,7 @@ public class InGameHudMixin {
         int y = minecraftClient.getWindow().getScaledHeight();
         if (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())) {
 
-            if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden) {
+            if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden && !((InSilenceEssentials) clientPlayerEntity).isStunned()) {
                 // renders wheel hud
                 RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);

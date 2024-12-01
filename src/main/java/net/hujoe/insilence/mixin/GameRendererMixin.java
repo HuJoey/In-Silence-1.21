@@ -2,6 +2,7 @@ package net.hujoe.insilence.mixin;
 
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.systems.RenderSystem;
+import net.hujoe.insilence.FlashActivator;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.InsilenceClient;
@@ -32,13 +33,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.io.IOException;
 
 @Mixin(GameRenderer.class)
-public abstract class GameRendererMixin {
+public abstract class GameRendererMixin implements FlashActivator {
     @Shadow public abstract MinecraftClient getClient();
     @Shadow @Final private BufferBuilderStorage buffers;
     private static final BlindnessHandler blindness = InsilenceClient.getBlindnessHandler();
     private static final Identifier VISION_TINT = Identifier.of(Insilence.MOD_ID,"textures/misc/rake_vision.png");
+    private static final Identifier FLASH = Identifier.of(Insilence.MOD_ID,"textures/misc/flash.png");
+    private boolean shouldBeFlashed;
+    private int fadeInTime;
+    private int fadeOutTime;
+    private int flashTime;
     private float tintTransparency = 0;
-
+    private float fadeInAmount = 0;
+    private float fadeOutAmount = 0;
 
     @Inject(method = "loadBlurPostProcessor", at = @At("TAIL"))
     private void loadBlurPostProcessor(ResourceFactory resourceFactory, CallbackInfo ci) {
@@ -63,12 +70,12 @@ public abstract class GameRendererMixin {
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "net/minecraft/util/profiler/Profiler.swap (Ljava/lang/String;)V", shift = At.Shift.AFTER))
     private void renderTint(CallbackInfo ci){
-        if (this.getClient().player != null && ClientRakeManager.getRakeManager().isRake(this.getClient().player.getNameForScoreboard())) {
         DrawContext context = new DrawContext(this.getClient(), this.buffers.getEntityVertexConsumers());
         int x = this.getClient().getWindow().getScaledWidth() / 2;
         int y = this.getClient().getWindow().getScaledHeight();
         ShaderProgram og = RenderSystem.getShader();
         RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+        if (this.getClient().player != null && ClientRakeManager.getRakeManager().isRake(this.getClient().player.getNameForScoreboard())) {
         if (((InSilenceEssentials) getClient().player).isAttacking()){
             if (tintTransparency < 0.3F){
                 tintTransparency += 0.001F;
@@ -84,5 +91,49 @@ public abstract class GameRendererMixin {
         RenderSystem.disableBlend();
         RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
         }
+
+        if (shouldBeFlashed){
+            if (fadeInTime > 0){
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, (1F - (fadeInAmount * fadeInTime)));
+                RenderSystem.enableBlend();
+                context.drawTexture(FLASH, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+                RenderSystem.disableBlend();
+                RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
+                fadeInTime--;
+            } else if (flashTime > 0){
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
+                RenderSystem.enableBlend();
+                context.drawTexture(FLASH, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+                RenderSystem.disableBlend();
+                RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
+                flashTime--;
+            } else if (fadeOutTime > 0){
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeOutAmount * fadeOutTime);
+                RenderSystem.enableBlend();
+                context.drawTexture(FLASH, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+                RenderSystem.disableBlend();
+                RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
+                fadeOutTime--;
+            } else {
+                shouldBeFlashed = false;
+                ((InSilenceEssentials)this.getClient().player).setStunned(false);
+            }
+        }
+    }
+
+    public void activateFlash(){
+        fadeInTime = MinecraftClient.getInstance().options.getMaxFps().getValue() / 2;
+        if (this.getClient().player != null && ClientRakeManager.getRakeManager().isRake(this.getClient().player.getNameForScoreboard())) {
+            flashTime = 5 * MinecraftClient.getInstance().options.getMaxFps().getValue();
+            fadeOutTime = 6 * MinecraftClient.getInstance().options.getMaxFps().getValue();
+        } else {
+            flashTime = 2 * MinecraftClient.getInstance().options.getMaxFps().getValue();
+            fadeOutTime = 3 * MinecraftClient.getInstance().options.getMaxFps().getValue();
+        }
+        fadeInAmount = 1F / fadeInTime;
+        fadeOutAmount = 1F / fadeOutTime;
+        shouldBeFlashed = true;
+
+        ((InSilenceEssentials)this.getClient().player).setStunned(true);
     }
 }

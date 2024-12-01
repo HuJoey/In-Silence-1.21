@@ -17,9 +17,11 @@ import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -27,10 +29,14 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.function.Predicate;
 
 import static net.minecraft.block.Block.getRawIdFromState;
 import static net.minecraft.server.command.CommandManager.literal;
@@ -142,9 +148,23 @@ public class Insilence implements ModInitializer {
 						case 3:
 							stack.setDamage(0);
 					} // PARTICLE STILL DOESNT APPEAR
+					context.player().getWorld().playSound(context.player().getX(), context.player().getY(), context.player().getZ(), ModSounds.FLASHBANG_EVENT, SoundCategory.PLAYERS, 1, 1, true);
 					context.player().getEntityWorld().addParticle(ParticleTypes.FLASH, true, context.player().getX(), context.player().getY() + 1, context.player().getZ(), 0, 0, 0);
 				}
-				// add flash implementation (get player from ID then get location of player to decide who around should be affected)
+
+				if (((InSilenceEssentials) context.player()).isCaught()){
+					((InSilenceEssentials) context.player()).cancelAttack();
+					((InSilenceEssentials) context.player().getWorld().getEntityById((((InSilenceEssentials) context.player()).getAttackerId()))).cancelAttack();
+
+					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
+						if (sp.distanceTo(context.player()) < 10) {
+							ServerPlayNetworking.send(sp, new FlashReceivePayload(((InSilenceEssentials) context.player()).getAttackerId(), context.player().getId(), true));
+							sp.playSoundToPlayer(ModSounds.EAR_RINGING_EVENT, SoundCategory.PLAYERS, 1, 1);
+						} else {
+							ServerPlayNetworking.send(sp, new FlashReceivePayload(((InSilenceEssentials) context.player()).getAttackerId(), context.player().getId(), false));
+						}
+					}
+				}
 			});
 		});
 
@@ -184,6 +204,7 @@ public class Insilence implements ModInitializer {
 					if (context.player().getEntityWorld().getEntityById(payload.targetId()) != null) {
 						PlayerEntity target = (PlayerEntity) context.player().getEntityWorld().getEntityById(payload.targetId());
 						((InSilenceEssentials) target).triggerCaught(player.getYaw(), new Vec3d(result.getPos().x, player.getY(), result.getPos().z));
+						((InSilenceEssentials) target).setAttackerId(payload.attackerId());
 					}
 					player.getWorld().playSound(player, player.getBlockPos(), ModSounds.CATCH_EVENT, SoundCategory.PLAYERS);
 					player.playSoundToPlayer(ModSounds.CATCH_EVENT, SoundCategory.AMBIENT, 0.5F, 1);
