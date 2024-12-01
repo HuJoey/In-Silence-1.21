@@ -2,6 +2,7 @@ package net.hujoe.insilence.block;
 
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.block.custom.BatteryBlock;
 import net.hujoe.insilence.block.custom.FlashlightLightBlock;
 import net.hujoe.insilence.block.custom.TallWheatBlock;
 import net.minecraft.block.*;
@@ -31,9 +32,12 @@ public class ModBlocks {
             .noCollision()
             .sounds(BlockSoundGroup.INTENTIONALLY_EMPTY)
             .luminance(FlashlightLightBlock.STATE_TO_LUMINANCE));
+    public static final Block BATTERY = new BatteryBlock(AbstractBlock.Settings.create()
+            .sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
     public static void registerModBlocks(){
         Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "flashlight_light"), FLASHLIGHT_LIGHT);
         Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "tall_wheat"), TALL_WHEAT);
+        Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "battery"), BATTERY);
         Registry.register(Registries.ITEM, Identifier.of(Insilence.MOD_ID, "tall_wheat"),  new BlockItem(TALL_WHEAT, new Item.Settings()));
         Insilence.LOGGER.info("Registering ModBlocks for " + Insilence.MOD_ID);
     }

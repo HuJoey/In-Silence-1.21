@@ -38,7 +38,6 @@ public class FlashlightItem extends Item {
     @Override
     public void inventoryTick(ItemStack stack, World world, Entity entity, int i, boolean bl) {
         if (Boolean.TRUE.equals(stack.get(ModItems.FLASH_ACTIVE))) {
-            Insilence.LOGGER.info("active!");
             if (world.isClient) {
                 HitResult result = entity.raycast(4, 0, false);
                 BlockPos pos = new BlockPos((int) result.getPos().getX(), (int) result.getPos().getY(), (int) result.getPos().getZ() - 1);
