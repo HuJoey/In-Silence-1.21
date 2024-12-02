@@ -38,5 +38,10 @@
     "sounds": [
       "in-silence:flash-earringing"
     ]
+  },
+  "usebattery": {
+    "sounds": [
+      "in-silence:use_battery"
+    ]
   }
 }

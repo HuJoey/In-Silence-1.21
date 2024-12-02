@@ -15,6 +15,7 @@ public class ModSounds {
     public static Identifier FLASHBANG = Identifier.of(Insilence.MOD_ID, "flashbang");
     public static Identifier CATCH = Identifier.of(Insilence.MOD_ID, "catch");
     public static Identifier EAR_RINGING = Identifier.of(Insilence.MOD_ID, "earringing");
+    public static Identifier USE_BATTERY = Identifier.of(Insilence.MOD_ID, "usebattery");
     public static SoundEvent SIGNAL_EVENT = SoundEvent.of(SIGNAL);
     public static SoundEvent SPRINT_EVENT_1 = SoundEvent.of(SPRINT_1);
     public static SoundEvent SPRINT_EVENT_2 = SoundEvent.of(SPRINT_2);
@@ -23,6 +24,7 @@ public class ModSounds {
     public static SoundEvent FLASHBANG_EVENT = SoundEvent.of(FLASHBANG);
     public static SoundEvent CATCH_EVENT = SoundEvent.of(CATCH);
     public static SoundEvent EAR_RINGING_EVENT = SoundEvent.of(EAR_RINGING);
+    public static SoundEvent USE_BATTERY_EVENT = SoundEvent.of(USE_BATTERY);
 
     public static void registerModSounds(){
         Insilence.LOGGER.info("Registering ModSounds for " + Insilence.MOD_ID);
@@ -34,5 +36,6 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, FLASHBANG, FLASHBANG_EVENT);
         Registry.register(Registries.SOUND_EVENT, CATCH, CATCH_EVENT);
         Registry.register(Registries.SOUND_EVENT, EAR_RINGING, EAR_RINGING_EVENT);
+        Registry.register(Registries.SOUND_EVENT, USE_BATTERY, USE_BATTERY_EVENT);
     }
 }

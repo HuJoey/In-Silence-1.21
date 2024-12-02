@@ -66,16 +66,7 @@ public class FlashlightItem extends Item {
         if (stack.get(ModItems.FLASH_STAGE) != 1 && stack.contains(ModItems.FLASH_STAGE)){
             stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
             world.addParticle(ParticleTypes.FLASH, true, user.getX(), user.getY() + 1, user.getZ(), 0, 0, 0);
-            switch (stack.get(ModItems.FLASH_STAGE)) {
-                case 1:
-                    stack.setDamage(88);
-                    break;
-                case 2:
-                    stack.setDamage(40);
-                    break;
-                case 3:
-                    stack.setDamage(0);
-            }
+            updateDamage(stack);
             ClientPlayNetworking.send(new FlashSendPayload(user.getId()));
         }
     }
@@ -83,5 +74,18 @@ public class FlashlightItem extends Item {
     @Override
     public boolean isItemBarVisible(ItemStack stack) {
         return true;
+    }
+
+    public void updateDamage(ItemStack stack){
+        switch (stack.get(ModItems.FLASH_STAGE)) {
+            case 1:
+                stack.setDamage(88);
+                break;
+            case 2:
+                stack.setDamage(40);
+                break;
+            case 3:
+                stack.setDamage(0);
+        }
     }
 }

@@ -3,6 +3,8 @@ package net.hujoe.insilence.block.custom;
 import com.mojang.serialization.MapCodec;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.item.ModItems;
+import net.hujoe.insilence.item.custom.FlashlightItem;
+import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BlockFace;
 import net.minecraft.entity.player.PlayerEntity;
@@ -11,6 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -42,18 +45,19 @@ public class BatteryBlock extends HorizontalFacingBlock {
 
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         PlayerInventory inv = player.getInventory();
-        if (inv.contains(TagKey.of(RegistryKeys.ITEM, Identifier.of(Insilence.MOD_ID, "flashlight")))){
             for (int i = 0; i < 36; i++){
                 ItemStack stack = inv.getStack(i);
                 if (stack.isOf(ModItems.FLASHLIGHT) && stack.get(ModItems.FLASH_STAGE) != null && stack.get(ModItems.FLASH_STAGE) < 3){
                     stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) + 1);
                     if (!world.isClient) {
                         world.setBlockState(pos, Blocks.AIR.getDefaultState(), Block.NOTIFY_NEIGHBORS);
+                        player.playSoundToPlayer(ModSounds.USE_BATTERY_EVENT, SoundCategory.BLOCKS, 0.5F, 1);
                     }
+                    FlashlightItem item = (FlashlightItem) stack.getItem();
+                    item.updateDamage(stack);
                     break;
                 }
             }
-        }
         return ActionResult.success(world.isClient);
     }
 
