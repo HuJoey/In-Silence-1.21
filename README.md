@@ -38,7 +38,7 @@ Things to Handle:
 - Flash particle doesnt appear on server
 - ~~Flashlight light doesnt appear on server~~
 - ~~animations on dash flicker a bit~~
-- still blind during rain section
+- ~~still blind during rain section~~
 - edit blindness system to be for ticks and not for frames
 - ~~fix screen overlay to fit for really absurdly tiny gui scales~~
 - lock in sound is loud

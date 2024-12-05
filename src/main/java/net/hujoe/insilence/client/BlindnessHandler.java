@@ -73,13 +73,21 @@ public class BlindnessHandler {
                 } else {
                     ticksSinceSound++;
                 }
-                if (ticksSinceSound > 100) {
+                if (ticksSinceSound > 100 && !client.world.isRaining()) {
                     blindnessLevel += 1F;
                     if (blindnessLevel > 32) {
                         blindnessLevel = 32;
                     }
                 }
                 spawnedThisTick = false;
+
+                if (client.world.isRaining()){
+                    if (blindnessLevel - 1 < 6) {
+                        blindnessLevel = 6;
+                    } else {
+                        blindnessLevel -= 1;
+                    }
+                }
             } else {
                 if (blindnessLevel > 2) {
                     blindnessLevel -= 2;
