@@ -41,7 +41,7 @@ Things to Handle:
 - ~~still blind during rain section~~
 - edit blindness system to be for ticks and not for frames
 - ~~fix screen overlay to fit for really absurdly tiny gui scales~~
-- lock in sound is loud
+- ~~lock in sound is loud~~
 - consider increasing rake listening range and increasing multiplier
 - make lightning louder somehow?
 
