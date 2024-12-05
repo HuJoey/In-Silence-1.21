@@ -71,6 +71,8 @@ public abstract class GameRendererMixin implements FlashActivator {
     @Inject(method = "render", at = @At(value = "INVOKE", target = "net/minecraft/util/profiler/Profiler.swap (Ljava/lang/String;)V", shift = At.Shift.AFTER))
     private void renderTint(CallbackInfo ci){
         DrawContext context = new DrawContext(this.getClient(), this.buffers.getEntityVertexConsumers());
+        int guiSize = MinecraftClient.getInstance().options.getGuiScale().getValue();
+        int gScale = 7 - guiSize;
         int x = this.getClient().getWindow().getScaledWidth() / 2;
         int y = this.getClient().getWindow().getScaledHeight();
         ShaderProgram og = RenderSystem.getShader();
@@ -87,7 +89,7 @@ public abstract class GameRendererMixin implements FlashActivator {
         }
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, tintTransparency);
         RenderSystem.enableBlend();
-        context.drawTexture(VISION_TINT, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+        context.drawTexture(VISION_TINT, x - (512 * gScale) , y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
         RenderSystem.disableBlend();
         RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
         }
@@ -96,21 +98,21 @@ public abstract class GameRendererMixin implements FlashActivator {
             if (fadeInTime > 0){
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, (1F - (fadeInAmount * fadeInTime)));
                 RenderSystem.enableBlend();
-                context.drawTexture(FLASH, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+                context.drawTexture(FLASH, x - (512 * gScale), y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
                 RenderSystem.disableBlend();
                 RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
                 fadeInTime--;
             } else if (flashTime > 0){
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
                 RenderSystem.enableBlend();
-                context.drawTexture(FLASH, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+                context.drawTexture(FLASH, x - (512 * gScale), y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
                 RenderSystem.disableBlend();
                 RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
                 flashTime--;
             } else if (fadeOutTime > 0){
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeOutAmount * fadeOutTime);
                 RenderSystem.enableBlend();
-                context.drawTexture(FLASH, x - 512, y - 512, 0, 0, 1024, 1024, 1024, 1024);
+                context.drawTexture(FLASH, x - (512 * gScale), y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
                 RenderSystem.disableBlend();
                 RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
                 fadeOutTime--;

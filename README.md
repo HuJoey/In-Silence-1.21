@@ -17,12 +17,14 @@ To-do:
 - ~~Make Sound HUD only appear for Rakes~~
 - Game Sounds
 - ~~Flashlight and flash system~~
-- Screen Flash Effect
-- Batteries
+- ~~Screen Flash Effect~~
+- ~~Batteries~~
 - Noisemakers and Scarecrows
 - ~~Packets~~
+- Playbirdsound command
 
-Bugs:
+
+Things to Handle:
 - ~~Choppy Rake Rotation~~
 - ~~Sounds seem to come back if you unload and reenter chunks?~~
 - Hitbox of Rake doesn't get updated until you crouch
@@ -36,5 +38,13 @@ Bugs:
 - Flash particle doesnt appear on server
 - ~~Flashlight light doesnt appear on server~~
 - ~~animations on dash flicker a bit~~
+- still blind during rain section
+- edit blindness system to be for ticks and not for frames
+- ~~fix screen overlay to fit for really absurdly tiny gui scales~~
+- lock in sound is loud
+- consider increasing rake listening range and increasing multiplier
+- make lightning louder somehow?
 
-recommend that FOV Effects be turned down for the mod
+recommend that FOV Effects be turned down for the mod 
+
+and also voice chat voice range to 15 blocks

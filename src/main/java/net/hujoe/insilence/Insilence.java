@@ -135,7 +135,8 @@ public class Insilence implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(FlashSendPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
-				ItemStack stack = context.player().getMainHandStack();
+				PlayerEntity player = context.server().getPlayerManager().getPlayer(context.player().getNameForScoreboard());
+				ItemStack stack = player.getMainHandStack();
 				if(stack.getItem() == ModItems.FLASHLIGHT){
 					stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
 					switch (stack.get(ModItems.FLASH_STAGE)) {
@@ -148,20 +149,20 @@ public class Insilence implements ModInitializer {
 						case 3:
 							stack.setDamage(0);
 					} // PARTICLE STILL DOESNT APPEAR
-					context.player().getWorld().playSound(context.player().getX(), context.player().getY(), context.player().getZ(), ModSounds.FLASHBANG_EVENT, SoundCategory.PLAYERS, 1, 1, true);
-					context.player().getEntityWorld().addParticle(ParticleTypes.FLASH, true, context.player().getX(), context.player().getY() + 1, context.player().getZ(), 0, 0, 0);
+					player.getWorld().playSound(player.getX(), player.getY(), player.getZ(), ModSounds.FLASHBANG_EVENT, SoundCategory.PLAYERS, 1, 1, true);
+					player.getWorld().addParticle(ParticleTypes.FLASH, true, player.getX(), player.getY() + 1, player.getZ(), 0, 0, 0);
 				}
 
-				if (((InSilenceEssentials) context.player()).isCaught()){
-					((InSilenceEssentials) context.player()).cancelAttack();
-					((InSilenceEssentials) context.player().getWorld().getEntityById((((InSilenceEssentials) context.player()).getAttackerId()))).cancelAttack();
+				if (((InSilenceEssentials) player).isCaught()){
+					((InSilenceEssentials) player).cancelAttack();
+					((InSilenceEssentials) player.getWorld().getEntityById((((InSilenceEssentials) player).getAttackerId()))).cancelAttack();
 
 					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
-						if (sp.distanceTo(context.player()) < 10) {
-							ServerPlayNetworking.send(sp, new FlashReceivePayload(((InSilenceEssentials) context.player()).getAttackerId(), context.player().getId(), true));
+						if (sp.distanceTo(player) < 10) {
+							ServerPlayNetworking.send(sp, new FlashReceivePayload(((InSilenceEssentials) player).getAttackerId(), player.getId(), true));
 							sp.playSoundToPlayer(ModSounds.EAR_RINGING_EVENT, SoundCategory.PLAYERS, 1, 1);
 						} else {
-							ServerPlayNetworking.send(sp, new FlashReceivePayload(((InSilenceEssentials) context.player()).getAttackerId(), context.player().getId(), false));
+							ServerPlayNetworking.send(sp, new FlashReceivePayload(((InSilenceEssentials) player).getAttackerId(), player.getId(), false));
 						}
 					}
 				}
