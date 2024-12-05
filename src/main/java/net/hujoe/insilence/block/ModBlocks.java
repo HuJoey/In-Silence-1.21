@@ -1,8 +1,10 @@
 package net.hujoe.insilence.block;
 
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.block.custom.BatteryBlock;
+import net.hujoe.insilence.block.custom.DecoyBlock;
 import net.hujoe.insilence.block.custom.FlashlightLightBlock;
 import net.hujoe.insilence.block.custom.TallWheatBlock;
 import net.minecraft.block.*;
@@ -34,11 +36,18 @@ public class ModBlocks {
             .luminance(FlashlightLightBlock.STATE_TO_LUMINANCE));
     public static final Block BATTERY = new BatteryBlock(AbstractBlock.Settings.create()
             .sounds(BlockSoundGroup.INTENTIONALLY_EMPTY));
+    public static final Block DECOY = new DecoyBlock(AbstractBlock.Settings.create()
+            .strength(0.5F)
+            .sounds(BlockSoundGroup.GRASS)
+            .nonOpaque()
+    );
     public static void registerModBlocks(){
         Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "flashlight_light"), FLASHLIGHT_LIGHT);
         Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "tall_wheat"), TALL_WHEAT);
         Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "battery"), BATTERY);
+        Registry.register(Registries.BLOCK, Identifier.of(Insilence.MOD_ID, "decoy"), DECOY);
         Registry.register(Registries.ITEM, Identifier.of(Insilence.MOD_ID, "tall_wheat"),  new BlockItem(TALL_WHEAT, new Item.Settings()));
+        Registry.register(Registries.ITEM, Identifier.of(Insilence.MOD_ID, "decoy"),  new BlockItem(DECOY, new Item.Settings().maxCount(1)));
         Insilence.LOGGER.info("Registering ModBlocks for " + Insilence.MOD_ID);
     }
 }

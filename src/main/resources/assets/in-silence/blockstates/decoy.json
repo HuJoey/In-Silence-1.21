@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=north": {
+      "model": "in-silence:block/decoy"
+    },
+    "facing=east": {
+      "model": "in-silence:block/decoy",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "in-silence:block/decoy",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "in-silence:block/decoy",
+      "y": 270
+    }
+  }
+}
