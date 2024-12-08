@@ -1,0 +1,79 @@
+{
+  "variants": {
+    "facing=north,active=false": {
+      "model": "in-silence:block/tv/tv"
+    },
+    "facing=east,active=false": {
+      "model": "in-silence:block/tv/tv",
+      "y": 90
+    },
+    "facing=south,active=false": {
+      "model": "in-silence:block/tv/tv",
+      "y": 180
+    },
+    "facing=west,active=false": {
+      "model": "in-silence:block/tv/tv",
+      "y": 270
+    },
+    "facing=north,active=true,stage=1": {
+      "model": "in-silence:block/tv/tv_on1"
+    },
+    "facing=east,active=true,stage=1": {
+      "model": "in-silence:block/tv/tv_on1",
+      "y": 90
+    },
+    "facing=south,active=true,stage=1": {
+      "model": "in-silence:block/tv/tv_on1",
+      "y": 180
+    },
+    "facing=west,active=true,stage=1": {
+      "model": "in-silence:block/tv/tv_on1",
+      "y": 270
+    },
+    "facing=north,active=true,stage=2": {
+      "model": "in-silence:block/tv/tv_on2"
+    },
+    "facing=east,active=true,stage=2": {
+      "model": "in-silence:block/tv/tv_on2",
+      "y": 90
+    },
+    "facing=south,active=true,stage=2": {
+      "model": "in-silence:block/tv/tv_on2",
+      "y": 180
+    },
+    "facing=west,active=true,stage=2": {
+      "model": "in-silence:block/tv/tv_on2",
+      "y": 270
+    },
+    "facing=north,active=true,stage=3": {
+      "model": "in-silence:block/tv/tv_on3"
+    },
+    "facing=east,active=true,stage=3": {
+      "model": "in-silence:block/tv/tv_on3",
+      "y": 90
+    },
+    "facing=south,active=true,stage=3": {
+      "model": "in-silence:block/tv/tv_on3",
+      "y": 180
+    },
+    "facing=west,active=true,stage=3": {
+      "model": "in-silence:block/tv/tv_on3",
+      "y": 270
+    },
+    "facing=north,active=true,stage=4": {
+      "model": "in-silence:block/tv/tv_on4"
+    },
+    "facing=east,active=true,stage=4": {
+      "model": "in-silence:block/tv/tv_on4",
+      "y": 90
+    },
+    "facing=south,active=true,stage=4": {
+      "model": "in-silence:block/tv/tv_on4",
+      "y": 180
+    },
+    "facing=west,active=true,stage=4": {
+      "model": "in-silence:block/tv/tv_on4",
+      "y": 270
+    }
+  }
+}
