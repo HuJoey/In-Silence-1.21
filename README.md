@@ -19,9 +19,10 @@ To-do:
 - ~~Flashlight and flash system~~
 - ~~Screen Flash Effect~~
 - ~~Batteries~~
-- Noisemakers and Scarecrows
+- ~~Noisemakers and Scarecrows~~ (Noisemakers still need audio)
 - ~~Packets~~
 - Playbirdsound command
+- Add text to flash when getting attacked
 
 
 Things to Handle:

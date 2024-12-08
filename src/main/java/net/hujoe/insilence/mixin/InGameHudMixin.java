@@ -94,7 +94,7 @@ public class InGameHudMixin {
                 Predicate<SoundEntity> close = (soundEntity) -> {
                     return soundEntity.getPos().isInRange(vec3d, 100);
                 };
-                List<SoundEntity> closeEntities = world.getEntitiesByClass(SoundEntity.class, new Box(pos.getX() - 50, pos.getY() - 50, pos.getZ() - 50, pos.getX() + 50, pos.getY() + 50, pos.getZ() + 50), close.and(SoundEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
+                List<SoundEntity> closeEntities = world.getEntitiesByClass(SoundEntity.class, new Box(pos.getX() - 100, pos.getY() - 100, pos.getZ() - 100, pos.getX() + 100, pos.getY() + 100, pos.getZ() + 100), close.and(SoundEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
                 var facing = clientPlayerEntity.getRotationVector();
                 var offset = new Vec3d(50 * facing.getX(), facing.getY(), 50 * facing.getZ());
 

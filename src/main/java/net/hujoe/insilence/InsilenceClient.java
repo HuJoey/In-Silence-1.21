@@ -41,7 +41,7 @@ import java.util.ArrayList;
 
 public class InsilenceClient implements ClientModInitializer {
     private static BlindnessHandler blindnessHandler;
-    private static KeyBinding flashKeyBinding;
+    public static KeyBinding flashKeyBinding;
     private static KeyBinding lockInKeyBinding;
     private static KeyBinding dashKeyBinding;
     @Override
