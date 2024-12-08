@@ -25,8 +25,10 @@ public class TVBlock extends BlockWithEntity {
     public static final BooleanProperty LIT;
     public static final BooleanProperty ACTIVE;
     public static final IntProperty STAGE;
-    public final VoxelShape X_SHAPE = Block.createCuboidShape(2.0, 0.0, 6.0, 14.0, 8.0, 10.0);
-    public final VoxelShape Z_SHAPE = Block.createCuboidShape(6.0, 0.0, 2.0, 10.0, 8.0, 14.0);
+    public final VoxelShape NORTH_SHAPE = Block.createCuboidShape(1.0, 0.0, 2.0, 15.0, 12.0, 13.0);
+    public final VoxelShape SOUTH_SHAPE = Block.createCuboidShape(1.0, 0.0, 3.0, 15.0, 12.0, 14.0);
+    public final VoxelShape WEST_SHAPE = Block.createCuboidShape(2.0, 0.0, 1.0, 13.0, 12.0, 15.0);
+    public final VoxelShape EAST_SHAPE = Block.createCuboidShape(3.0, 0.0, 1.0, 14.0, 12.0, 15.0);
     public TVBlock(Settings settings) {
         super(settings);
         this.setDefaultState((BlockState) ((BlockState) ((BlockState) ((BlockState) ((BlockState)this.stateManager.getDefaultState()).with(FACING, Direction.NORTH)).with(ACTIVE, false)).with(STAGE, 1)).with(LIT, false));
@@ -34,11 +36,13 @@ public class TVBlock extends BlockWithEntity {
 
     protected VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
-        if (direction == Direction.NORTH || direction == Direction.SOUTH){
-            return X_SHAPE;
-        } else {
-            return Z_SHAPE;
-        }
+        return switch (direction) {
+            case EAST -> EAST_SHAPE;
+            case NORTH -> NORTH_SHAPE;
+            case WEST -> WEST_SHAPE;
+            case SOUTH -> SOUTH_SHAPE;
+            default -> null;
+        };
     }
 
     @Override
