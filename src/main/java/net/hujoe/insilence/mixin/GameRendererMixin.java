@@ -40,9 +40,9 @@ public abstract class GameRendererMixin implements FlashActivator {
     private static final Identifier VISION_TINT = Identifier.of(Insilence.MOD_ID,"textures/misc/rake_vision.png");
     private static final Identifier FLASH = Identifier.of(Insilence.MOD_ID,"textures/misc/flash.png");
     private boolean shouldBeFlashed;
-    private int fadeInTime;
-    private int fadeOutTime;
-    private int flashTime;
+    private int fadeInTime = 0;
+    private int fadeOutTime = 0;
+    private int flashTime = 0;
     private float tintTransparency = 0;
     private float fadeInAmount = 0;
     private float fadeOutAmount = 0;
@@ -101,21 +101,18 @@ public abstract class GameRendererMixin implements FlashActivator {
                 context.drawTexture(FLASH, x - (512 * gScale), y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
                 RenderSystem.disableBlend();
                 RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
-                fadeInTime--;
             } else if (flashTime > 0){
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
                 RenderSystem.enableBlend();
                 context.drawTexture(FLASH, x - (512 * gScale), y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
                 RenderSystem.disableBlend();
                 RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
-                flashTime--;
             } else if (fadeOutTime > 0){
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, fadeOutAmount * fadeOutTime);
                 RenderSystem.enableBlend();
                 context.drawTexture(FLASH, x - (512 * gScale), y - (512 * gScale), 0, 0, 1024 * gScale, 1024 * gScale, 1024 * gScale, 1024 * gScale);
                 RenderSystem.disableBlend();
                 RenderSystem.clear(256, MinecraftClient.IS_SYSTEM_MAC);
-                fadeOutTime--;
             } else {
                 shouldBeFlashed = false;
                 ((InSilenceEssentials)this.getClient().player).setStunned(false);
@@ -124,18 +121,29 @@ public abstract class GameRendererMixin implements FlashActivator {
     }
 
     public void activateFlash(){
-        fadeInTime = MinecraftClient.getInstance().options.getMaxFps().getValue() / 2;
+        fadeInTime = 10;
         if (this.getClient().player != null && ClientRakeManager.getRakeManager().isRake(this.getClient().player.getNameForScoreboard())) {
-            flashTime = 5 * MinecraftClient.getInstance().options.getMaxFps().getValue();
-            fadeOutTime = 6 * MinecraftClient.getInstance().options.getMaxFps().getValue();
+            flashTime = 100;
+            fadeOutTime = 120;
         } else {
-            flashTime = 2 * MinecraftClient.getInstance().options.getMaxFps().getValue();
-            fadeOutTime = 3 * MinecraftClient.getInstance().options.getMaxFps().getValue();
+            flashTime = 40;
+            fadeOutTime = 60;
         }
         fadeInAmount = 1F / fadeInTime;
         fadeOutAmount = 1F / fadeOutTime;
         shouldBeFlashed = true;
 
         ((InSilenceEssentials)this.getClient().player).setStunned(true);
+    }
+
+    public void incrementTicks(){
+        if (fadeInTime > 0){
+            fadeInTime--;
+        } else if (flashTime > 0){
+            flashTime--;
+        } else {
+            fadeOutTime--;
+        }
+        Insilence.LOGGER.info("gaming? " + fadeOutTime);
     }
 }

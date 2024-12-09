@@ -75,6 +75,19 @@ public class Insilence implements ModInitializer {
 					return 1;
 				}))));
 
+		CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("playbirdsound")
+				.requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+				.executes(commandContext -> {
+					ServerCommandSource source = commandContext.getSource();
+					Vec3d pos = source.getPosition();
+					Entity sender = source.getEntity();
+					// play sound at pos
+					if (sender != null) {
+						RakeManager.getRakeManager().toggleUser(sender.getNameForScoreboard(), sender.getWorld());
+					}
+					return 1;
+				}))));
+
 		PayloadTypeRegistry.playS2C().register(RakeUpdatePayload.ID, RakeUpdatePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(RakeListReceivePayload.ID, RakeListReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SignalSoundPayload.ID, SignalSoundPayload.CODEC);

@@ -6,4 +6,5 @@ import net.minecraft.util.math.Vec3d;
 
 public interface FlashActivator {
     void activateFlash();
+    void incrementTicks();
 }

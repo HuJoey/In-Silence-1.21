@@ -36,7 +36,7 @@ Things to Handle:
 - ~~UI can bug and become transparent~~
 - ~~Rake animations shared between players~~
 - ~~Durability and flash stage are server side~~
-- Flash particle doesnt appear on server
+- Flash particle doesnt appear on server + sound doesnt play
 - ~~Flashlight light doesnt appear on server~~
 - ~~animations on dash flicker a bit~~
 - ~~still blind during rain section~~
