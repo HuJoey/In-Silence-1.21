@@ -36,15 +36,17 @@ Things to Handle:
 - ~~UI can bug and become transparent~~
 - ~~Rake animations shared between players~~
 - ~~Durability and flash stage are server side~~
-- Flash particle doesnt appear on server + sound doesnt play
+- ~~Flash particle doesnt appear on server + sound doesnt play~~
 - ~~Flashlight light doesnt appear on server~~
 - ~~animations on dash flicker a bit~~
 - ~~still blind during rain section~~
-- edit blindness system to be for ticks and not for frames
+- ~~edit blindness system to be for ticks and not for frames~~
 - ~~fix screen overlay to fit for really absurdly tiny gui scales~~
 - ~~lock in sound is loud~~
 - consider increasing rake listening range and increasing multiplier
 - make lightning louder somehow?
+- flash text doesnt go away after flashing + it doesnt show key
+- ~~flash only works with flashlight in hand~~
 
 recommend that FOV Effects be turned down for the mod 
 

@@ -10,17 +10,23 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
 import net.hujoe.insilence.block.entity.ModBlockEntities;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.item.ModItems;
+import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.particle.FireworksSparkParticle;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.BlockStateParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.SimpleParticleType;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -81,7 +87,12 @@ public class Insilence implements ModInitializer {
 					ServerCommandSource source = commandContext.getSource();
 					Vec3d pos = source.getPosition();
 					Entity sender = source.getEntity();
+					World world = source.getWorld();
 					// play sound at pos
+					SoundEntity soundEntity = new SoundEntity(ModEntities.SOUNDENTITY, world);
+					soundEntity.setStrength(50);
+					soundEntity.setPosition(pos);
+					world.spawnEntity(soundEntity);
 					if (sender != null) {
 						RakeManager.getRakeManager().toggleUser(sender.getNameForScoreboard(), sender.getWorld());
 					}
@@ -149,7 +160,14 @@ public class Insilence implements ModInitializer {
 		ServerPlayNetworking.registerGlobalReceiver(FlashSendPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
 				PlayerEntity player = context.server().getPlayerManager().getPlayer(context.player().getNameForScoreboard());
-				ItemStack stack = player.getMainHandStack();
+				PlayerInventory inv = player.getInventory();
+				ItemStack stack = null;
+				for (int i = 0; i < 36; i++){
+					stack = inv.getStack(i);
+					if (stack.isOf(ModItems.FLASHLIGHT) && stack.get(ModItems.FLASH_STAGE) != null && stack.get(ModItems.FLASH_STAGE) > 1){
+						break;
+					}
+				}
 				if(stack.getItem() == ModItems.FLASHLIGHT){
 					stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
 					switch (stack.get(ModItems.FLASH_STAGE)) {
@@ -161,9 +179,8 @@ public class Insilence implements ModInitializer {
 							break;
 						case 3:
 							stack.setDamage(0);
-					} // PARTICLE STILL DOESNT APPEAR
-					player.getWorld().playSound(player.getX(), player.getY(), player.getZ(), ModSounds.FLASHBANG_EVENT, SoundCategory.PLAYERS, 1, 1, true);
-					player.getWorld().addParticle(ParticleTypes.FLASH, true, player.getX(), player.getY() + 1, player.getZ(), 0, 0, 0);
+					}
+					player.getWorld().playSound(null, player.getBlockPos(), ModSounds.FLASHBANG_EVENT, SoundCategory.PLAYERS, 0.5F, 1);
 				}
 
 				if (((InSilenceEssentials) player).isCaught()){

@@ -21,12 +21,15 @@ import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -144,9 +147,16 @@ public class InsilenceClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (flashKeyBinding.wasPressed()) {
-                ItemStack stack = client.player.getMainHandStack();
-                if(stack.getItem() == ModItems.FLASHLIGHT){
-                    ((FlashlightItem) stack.getItem()).flash(client.world, stack, client.player);
+                // if mouse
+                // else
+                PlayerInventory inv = client.player.getInventory();
+                for (int i = 0; i < 36; i++){
+                    ItemStack stack = inv.getStack(i);
+                    if (stack.isOf(ModItems.FLASHLIGHT) && stack.get(ModItems.FLASH_STAGE) != null && stack.get(ModItems.FLASH_STAGE) > 1){
+                        FlashlightItem item = (FlashlightItem) stack.getItem();
+                        item.flash(client.world, stack, client.player);
+                        break;
+                    }
                 }
             }
 

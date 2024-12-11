@@ -144,6 +144,5 @@ public abstract class GameRendererMixin implements FlashActivator {
         } else {
             fadeOutTime--;
         }
-        Insilence.LOGGER.info("gaming? " + fadeOutTime);
     }
 }

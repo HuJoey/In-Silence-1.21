@@ -65,7 +65,8 @@ public class FlashlightItem extends Item {
     public void flash(World world, ItemStack stack, PlayerEntity user){
         if (stack.get(ModItems.FLASH_STAGE) != 1 && stack.contains(ModItems.FLASH_STAGE)){
             stack.set(ModItems.FLASH_STAGE, stack.get(ModItems.FLASH_STAGE) - 1);
-            world.addParticle(ParticleTypes.FLASH, true, user.getX(), user.getY() + 1, user.getZ(), 0, 0, 0);
+            HitResult result = user.raycast(2, 0, false);
+            world.addParticle(ParticleTypes.FLASH, true, result.getPos().getX(), result.getPos().getY(), result.getPos().getZ(), 0, 0, 0);
             updateDamage(stack);
             ClientPlayNetworking.send(new FlashSendPayload(user.getId()));
         }
