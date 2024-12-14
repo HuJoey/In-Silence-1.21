@@ -91,7 +91,6 @@ public class Insilence implements ModInitializer {
 				.executes(commandContext -> {
 					ServerCommandSource source = commandContext.getSource();
 					Vec3d pos = source.getPosition();
-					Entity sender = source.getEntity();
 					World world = source.getWorld();
 
 					double rand = Math.random(); // limited range of 8.5 blocks in order to hear this sound
