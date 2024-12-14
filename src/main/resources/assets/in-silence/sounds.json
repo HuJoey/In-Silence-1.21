@@ -43,5 +43,40 @@
     "sounds": [
       "in-silence:use_battery"
     ]
+  },
+  "crow1": {
+    "sounds": [
+      "in-silence:crow-01"
+    ]
+  },
+  "crow2": {
+    "sounds": [
+      "in-silence:crow-02"
+    ]
+  },
+  "crowscare1": {
+    "sounds": [
+      "in-silence:crow-scare-01"
+    ]
+  },
+  "crowscare2": {
+    "sounds": [
+      "in-silence:crow-scare-02"
+    ]
+  },
+  "crowwing": {
+    "sounds": [
+      "in-silence:crow-wing"
+    ]
+  },
+  "owlhoot1": {
+    "sounds": [
+      "in-silence:owl-hoot-01"
+    ]
+  },
+  "owlhoot2": {
+    "sounds": [
+      "in-silence:owl-hoot-02"
+    ]
   }
 }
