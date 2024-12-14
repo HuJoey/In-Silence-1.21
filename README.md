@@ -1,5 +1,5 @@
 Next Objective:
-~~Screen Flash Effect~~
+Mice
 
 To-do:
 - ~~Full Animations for Rake~~
@@ -21,8 +21,9 @@ To-do:
 - ~~Batteries~~
 - ~~Noisemakers and Scarecrows~~ (Noisemakers still need audio)
 - ~~Packets~~
-- Playbirdsound command
+- ~~Playbirdsound command~~
 - ~~Add text to flash when getting attacked~~
+- Ravens!!
 
 
 Things to Handle:
