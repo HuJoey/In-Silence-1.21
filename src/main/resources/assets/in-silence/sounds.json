@@ -78,5 +78,15 @@
     "sounds": [
       "in-silence:owl-hoot-02"
     ]
+  },
+  "tvstatic": {
+    "sounds": [
+      "in-silence:tv-static"
+    ]
+  },
+  "radiostatic": {
+    "sounds": [
+      "in-silence:radio-static"
+    ]
   }
 }

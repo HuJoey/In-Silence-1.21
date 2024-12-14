@@ -1,16 +1,20 @@
 package net.hujoe.insilence.block.entity;
 
+import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.block.custom.TVBlock;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.SoundEntity;
+import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TVBlockEntity extends BlockEntity {
     public int ticksSincePing = 20;
     public int ticksSinceStage = 5;
+    public int ticksSinceSound = 1;
 
     public TVBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.TV_BLOCK_ENTITY, pos, state);
@@ -19,12 +23,20 @@ public class TVBlockEntity extends BlockEntity {
     public void incrementTicks(){
         ticksSincePing--;
         ticksSinceStage--;
+        ticksSinceSound--;
     }
+
     public void resetPingTicks(){
         ticksSincePing = 20;
     }
     public void resetStageTicks(){
         ticksSinceStage = 5;
+    }
+    public void resetSoundTicks(){
+        ticksSinceSound = 55;
+    }
+    public void zeroSoundTicks(){
+        ticksSinceSound = 1;
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, TVBlockEntity blockEntity) {
@@ -49,6 +61,15 @@ public class TVBlockEntity extends BlockEntity {
                 world.setBlockState(pos, state.with(TVBlock.STAGE, stage));
                 blockEntity.resetStageTicks();
             }
+
+            if (blockEntity.ticksSinceSound == 0){
+                if (!world.isClient) {
+                    world.playSound(null, pos, ModSounds.TV_STATIC_EVENT, SoundCategory.BLOCKS);
+                }
+                blockEntity.resetSoundTicks();
+            }
+        } else {
+            blockEntity.zeroSoundTicks();
         }
     }
 }
