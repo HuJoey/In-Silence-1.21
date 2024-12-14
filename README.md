@@ -1,5 +1,5 @@
 Next Objective:
-Screen Flash Effect
+~~Screen Flash Effect~~
 
 To-do:
 - ~~Full Animations for Rake~~
@@ -22,7 +22,7 @@ To-do:
 - ~~Noisemakers and Scarecrows~~ (Noisemakers still need audio)
 - ~~Packets~~
 - Playbirdsound command
-- Add text to flash when getting attacked
+- ~~Add text to flash when getting attacked~~
 
 
 Things to Handle:
@@ -45,7 +45,7 @@ Things to Handle:
 - ~~lock in sound is loud~~
 - consider increasing rake listening range and increasing multiplier
 - make lightning louder somehow?
-- flash text doesnt go away after flashing + it doesnt show key
+- ~~flash text doesnt go away after flashing + it doesnt show key~~
 - ~~flash only works with flashlight in hand~~
 
 recommend that FOV Effects be turned down for the mod 

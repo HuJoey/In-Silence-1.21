@@ -340,9 +340,6 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     public void triggerJumpscare(int targetId){
         triggerJumpscare();
         World world = this.getWorld();
-        if (world.isClient()){
-            //ClientPlayNetworking.send(new RakeAttackSendPayload(this.getId(), targetId));
-        }
     }
 
     public void triggerJumpscare(){
