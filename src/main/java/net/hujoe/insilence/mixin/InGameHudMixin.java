@@ -78,14 +78,10 @@ public class InGameHudMixin {
                     RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.5F);
                 }
                 context.drawTexture(RAKE_WHEEL, x - 78, y - 78, 0, 0, 156, 64, 156, 64); // draws the rake wheel texture
+                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
 
-                if (minecraftClient.world.isRaining()){
-                RenderSystem.enableBlend();
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-                context.drawTexture(SOUND, x - 12, y - 58,0, 0, 24, 24, 24, 24);
-                RenderSystem.disableBlend();
-                } else {
+                if (!minecraftClient.world.isRaining()){
 
                 // renders all sound events
                 BlockPos pos = clientPlayerEntity.getBlockPos();
