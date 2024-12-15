@@ -25,6 +25,22 @@ public class ModSounds {
     public static Identifier OWL_HOOT_02 = Identifier.of(Insilence.MOD_ID, "owlhoot2");
     public static Identifier TV_STATIC = Identifier.of(Insilence.MOD_ID, "tvstatic");
     public static Identifier RADIO_STATIC = Identifier.of(Insilence.MOD_ID, "radiostatic");
+    public static Identifier FOOTSTEPS_01 = Identifier.of(Insilence.MOD_ID, "footsteps01");
+    public static Identifier FOOTSTEPS_02 = Identifier.of(Insilence.MOD_ID, "footsteps02");
+    public static Identifier FOOTSTEPS_03 = Identifier.of(Insilence.MOD_ID, "footsteps03");
+    public static Identifier FOOTSTEPS_04 = Identifier.of(Insilence.MOD_ID, "footsteps04");
+    public static Identifier FOOTSTEPS_05 = Identifier.of(Insilence.MOD_ID, "footsteps05");
+    public static Identifier FOOTSTEPS_06 = Identifier.of(Insilence.MOD_ID, "footsteps06");
+    public static Identifier FOOTSTEPS_07 = Identifier.of(Insilence.MOD_ID, "footsteps07");
+    public static Identifier FOOTSTEPS_08 = Identifier.of(Insilence.MOD_ID, "footsteps08");
+    public static Identifier BREATHING_01 = Identifier.of(Insilence.MOD_ID, "breathing01");
+    public static Identifier BREATHING_02 = Identifier.of(Insilence.MOD_ID, "breathing02");
+    public static Identifier BREATHING_03 = Identifier.of(Insilence.MOD_ID, "breathing03");
+    public static Identifier BREATHING_04 = Identifier.of(Insilence.MOD_ID, "breathing04");
+    public static Identifier BREATHING_05 = Identifier.of(Insilence.MOD_ID, "breathing05");
+    public static Identifier BREATHING_06 = Identifier.of(Insilence.MOD_ID, "breathing06");
+
+
     public static SoundEvent SIGNAL_EVENT = SoundEvent.of(SIGNAL);
     public static SoundEvent SPRINT_EVENT_1 = SoundEvent.of(SPRINT_1);
     public static SoundEvent SPRINT_EVENT_2 = SoundEvent.of(SPRINT_2);
@@ -43,6 +59,20 @@ public class ModSounds {
     public static SoundEvent OWL_HOOT_02_EVENT = SoundEvent.of(OWL_HOOT_02);
     public static SoundEvent TV_STATIC_EVENT = SoundEvent.of(TV_STATIC);
     public static SoundEvent RADIO_STATIC_EVENT = SoundEvent.of(RADIO_STATIC);
+    public static SoundEvent FOOTSTEPS_01_EVENT = SoundEvent.of(FOOTSTEPS_01);
+    public static SoundEvent FOOTSTEPS_02_EVENT = SoundEvent.of(FOOTSTEPS_02);
+    public static SoundEvent FOOTSTEPS_03_EVENT = SoundEvent.of(FOOTSTEPS_03);
+    public static SoundEvent FOOTSTEPS_04_EVENT = SoundEvent.of(FOOTSTEPS_04);
+    public static SoundEvent FOOTSTEPS_05_EVENT = SoundEvent.of(FOOTSTEPS_05);
+    public static SoundEvent FOOTSTEPS_06_EVENT = SoundEvent.of(FOOTSTEPS_06);
+    public static SoundEvent FOOTSTEPS_07_EVENT = SoundEvent.of(FOOTSTEPS_07);
+    public static SoundEvent FOOTSTEPS_08_EVENT = SoundEvent.of(FOOTSTEPS_08);
+    public static SoundEvent BREATHING_01_EVENT = SoundEvent.of(BREATHING_01);
+    public static SoundEvent BREATHING_02_EVENT = SoundEvent.of(BREATHING_02);
+    public static SoundEvent BREATHING_03_EVENT = SoundEvent.of(BREATHING_03);
+    public static SoundEvent BREATHING_04_EVENT = SoundEvent.of(BREATHING_04);
+    public static SoundEvent BREATHING_05_EVENT = SoundEvent.of(BREATHING_05);
+    public static SoundEvent BREATHING_06_EVENT = SoundEvent.of(BREATHING_06);
 
     public static void registerModSounds(){
         Insilence.LOGGER.info("Registering ModSounds for " + Insilence.MOD_ID);
@@ -64,5 +94,19 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, OWL_HOOT_02, OWL_HOOT_02_EVENT);
         Registry.register(Registries.SOUND_EVENT, TV_STATIC, TV_STATIC_EVENT);
         Registry.register(Registries.SOUND_EVENT, RADIO_STATIC, RADIO_STATIC_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_01, FOOTSTEPS_01_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_02, FOOTSTEPS_02_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_03, FOOTSTEPS_03_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_04, FOOTSTEPS_04_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_05, FOOTSTEPS_05_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_06, FOOTSTEPS_06_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_07, FOOTSTEPS_07_EVENT);
+        Registry.register(Registries.SOUND_EVENT, FOOTSTEPS_08, FOOTSTEPS_08_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BREATHING_01, BREATHING_01_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BREATHING_02, BREATHING_02_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BREATHING_03, BREATHING_03_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BREATHING_04, BREATHING_04_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BREATHING_05, BREATHING_05_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BREATHING_06, BREATHING_06_EVENT);
     }
 }

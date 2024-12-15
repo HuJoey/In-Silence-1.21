@@ -88,5 +88,75 @@
     "sounds": [
       "in-silence:radio-static"
     ]
+  },
+  "footsteps01": {
+    "sounds": [
+      "in-silence:footsteps/01"
+    ]
+  },
+  "footsteps02": {
+    "sounds": [
+      "in-silence:footsteps/02"
+    ]
+  },
+  "footsteps03": {
+    "sounds": [
+      "in-silence:footsteps/03"
+    ]
+  },
+  "footsteps04": {
+    "sounds": [
+      "in-silence:footsteps/04"
+    ]
+  },
+  "footsteps05": {
+    "sounds": [
+      "in-silence:footsteps/05"
+    ]
+  },
+  "footsteps06": {
+    "sounds": [
+      "in-silence:footsteps/06"
+    ]
+  },
+  "footsteps07": {
+    "sounds": [
+      "in-silence:footsteps/07"
+    ]
+  },
+  "footsteps08": {
+    "sounds": [
+      "in-silence:footsteps/08"
+    ]
+  },
+  "breathing01": {
+    "sounds": [
+      "in-silence:breathing/breathing-01"
+    ]
+  },
+  "breathing02": {
+    "sounds": [
+      "in-silence:breathing/breathing-02"
+    ]
+  },
+  "breathing03": {
+    "sounds": [
+      "in-silence:breathing/breathing-03"
+    ]
+  },
+  "breathing04": {
+    "sounds": [
+      "in-silence:breathing/breathing-04"
+    ]
+  },
+  "breathing05": {
+    "sounds": [
+      "in-silence:breathing/breathing-05"
+    ]
+  },
+  "breathing06": {
+    "sounds": [
+      "in-silence:breathing/breathing-06"
+    ]
   }
 }

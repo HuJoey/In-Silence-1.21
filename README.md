@@ -6,7 +6,7 @@ To-do:
 - ~~Camera Adjusts and Hand Render for Rake~~
 - ~~Rake Abilities and Jumping~~
 - ~~Rake Attack~~
-- Abilities UI?
+- Ability Cooldown bars
 - ~~Rake Blindness~~
 - ~~Sound Events in the HUD~~
 - ~~Sound Strength~~
@@ -19,10 +19,9 @@ To-do:
 - ~~Flashlight and flash system~~
 - ~~Screen Flash Effect~~
 - ~~Batteries~~
-- ~~Noisemakers and Scarecrows~~ (Noisemakers still need audio)
+- ~~Noisemakers and Scarecrows~~
 - ~~Packets~~
 - ~~Playbirdsound command~~
-- ~~Add text to flash when getting attacked~~
 - Ravens!!
 
 
