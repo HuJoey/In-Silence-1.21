@@ -41,7 +41,7 @@
   },
   "usebattery": {
     "sounds": [
-      "in-silence:use_battery"
+      "in-silence:use-battery"
     ]
   },
   "crow1": {
@@ -157,6 +157,76 @@
   "breathing06": {
     "sounds": [
       "in-silence:breathing/breathing-06"
+    ]
+  },
+  "bloodynightmare": {
+    "sounds": [
+      "in-silence:bloodynightmare"
+    ]
+  },
+  "ratsqueak1": {
+    "sounds": [
+      "in-silence:rat-squeak-1"
+    ]
+  },
+  "ratsqueak2": {
+    "sounds": [
+      "in-silence:rat-squeak-2"
+    ]
+  },
+  "ratsqueak3": {
+    "sounds": [
+      "in-silence:rat-squeak-3"
+    ]
+  },
+  "tension1": {
+    "sounds": [
+      "in-silence:tension-1"
+    ]
+  },
+  "tension2": {
+    "sounds": [
+      "in-silence:tension-2"
+    ]
+  },
+  "truckescape": {
+    "sounds": [
+      "in-silence:truck-escape"
+    ]
+  },
+  "truckrepair": {
+    "sounds": [
+      "in-silence:truck-repair"
+    ]
+  },
+  "usecarbattery": {
+    "sounds": [
+      "in-silence:use-car-battery"
+    ]
+  },
+  "usefuel": {
+    "sounds": [
+      "in-silence:use-fuel"
+    ]
+  },
+  "usekey": {
+    "sounds": [
+      "in-silence:use-key"
+    ]
+  },
+  "usewheel": {
+    "sounds": [
+      "in-silence:use-wheel"
+    ]
+  },
+  "youarecreature": {
+    "sounds": [
+      "in-silence:you-are-creature"
+    ]
+  },
+  "youarehuman": {
+    "sounds": [
+      "in-silence:you-are-human"
     ]
   }
 }

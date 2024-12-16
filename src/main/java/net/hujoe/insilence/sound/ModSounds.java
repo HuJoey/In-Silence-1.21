@@ -39,6 +39,20 @@ public class ModSounds {
     public static Identifier BREATHING_04 = Identifier.of(Insilence.MOD_ID, "breathing04");
     public static Identifier BREATHING_05 = Identifier.of(Insilence.MOD_ID, "breathing05");
     public static Identifier BREATHING_06 = Identifier.of(Insilence.MOD_ID, "breathing06");
+    public static Identifier BLOODY_NIGHTMARE = Identifier.of(Insilence.MOD_ID, "bloodynightmare");
+    public static Identifier RAT_SQUEAK_1 = Identifier.of(Insilence.MOD_ID, "ratsqueak1");
+    public static Identifier RAT_SQUEAK_2 = Identifier.of(Insilence.MOD_ID, "ratsqueak2");
+    public static Identifier RAT_SQUEAK_3 = Identifier.of(Insilence.MOD_ID, "ratsqueak3");
+    public static Identifier TENSION_1 = Identifier.of(Insilence.MOD_ID, "tension1");
+    public static Identifier TENSION_2 = Identifier.of(Insilence.MOD_ID, "tension2");
+    public static Identifier TRUCK_ESCAPE = Identifier.of(Insilence.MOD_ID, "truckescape");
+    public static Identifier TRUCK_REPAIR = Identifier.of(Insilence.MOD_ID, "truckrepair");
+    public static Identifier USE_CAR_BATTERY = Identifier.of(Insilence.MOD_ID, "usecarbattery");
+    public static Identifier USE_FUEL = Identifier.of(Insilence.MOD_ID, "usefuel");
+    public static Identifier USE_KEY = Identifier.of(Insilence.MOD_ID, "usekey");
+    public static Identifier USE_WHEEL = Identifier.of(Insilence.MOD_ID, "usewheel");
+    public static Identifier YOU_ARE_CREATURE = Identifier.of(Insilence.MOD_ID, "youarecreature");
+    public static Identifier YOU_ARE_HUMAN = Identifier.of(Insilence.MOD_ID, "youarehuman");
 
 
     public static SoundEvent SIGNAL_EVENT = SoundEvent.of(SIGNAL);
@@ -73,6 +87,20 @@ public class ModSounds {
     public static SoundEvent BREATHING_04_EVENT = SoundEvent.of(BREATHING_04);
     public static SoundEvent BREATHING_05_EVENT = SoundEvent.of(BREATHING_05);
     public static SoundEvent BREATHING_06_EVENT = SoundEvent.of(BREATHING_06);
+    public static SoundEvent BLOODY_NIGHTMARE_EVENT = SoundEvent.of(BLOODY_NIGHTMARE);
+    public static SoundEvent RAT_SQUEAK_1_EVENT = SoundEvent.of(RAT_SQUEAK_1);
+    public static SoundEvent RAT_SQUEAK_2_EVENT = SoundEvent.of(RAT_SQUEAK_2);
+    public static SoundEvent RAT_SQUEAK_3_EVENT = SoundEvent.of(RAT_SQUEAK_3);
+    public static SoundEvent TENSION_1_EVENT = SoundEvent.of(TENSION_1);
+    public static SoundEvent TENSION_2_EVENT = SoundEvent.of(TENSION_2);
+    public static SoundEvent TRUCK_ESCAPE_EVENT = SoundEvent.of(TRUCK_ESCAPE);
+    public static SoundEvent TRUCK_REPAIR_EVENT = SoundEvent.of(TRUCK_REPAIR);
+    public static SoundEvent USE_CAR_BATTERY_EVENT = SoundEvent.of(USE_CAR_BATTERY);
+    public static SoundEvent USE_FUEL_EVENT = SoundEvent.of(USE_FUEL);
+    public static SoundEvent USE_KEY_EVENT = SoundEvent.of(USE_KEY);
+    public static SoundEvent USE_WHEEL_EVENT = SoundEvent.of(USE_WHEEL);
+    public static SoundEvent YOU_ARE_CREATURE_EVENT = SoundEvent.of(YOU_ARE_CREATURE);
+    public static SoundEvent YOU_ARE_HUMAN_EVENT = SoundEvent.of(YOU_ARE_HUMAN);
 
     public static void registerModSounds(){
         Insilence.LOGGER.info("Registering ModSounds for " + Insilence.MOD_ID);
@@ -108,5 +136,19 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, BREATHING_04, BREATHING_04_EVENT);
         Registry.register(Registries.SOUND_EVENT, BREATHING_05, BREATHING_05_EVENT);
         Registry.register(Registries.SOUND_EVENT, BREATHING_06, BREATHING_06_EVENT);
+        Registry.register(Registries.SOUND_EVENT, BLOODY_NIGHTMARE, BLOODY_NIGHTMARE_EVENT);
+        Registry.register(Registries.SOUND_EVENT, RAT_SQUEAK_1, RAT_SQUEAK_1_EVENT);
+        Registry.register(Registries.SOUND_EVENT, RAT_SQUEAK_2, RAT_SQUEAK_2_EVENT);
+        Registry.register(Registries.SOUND_EVENT, RAT_SQUEAK_3, RAT_SQUEAK_3_EVENT);
+        Registry.register(Registries.SOUND_EVENT, TENSION_1, TENSION_1_EVENT);
+        Registry.register(Registries.SOUND_EVENT, TENSION_2, TENSION_2_EVENT);
+        Registry.register(Registries.SOUND_EVENT, TRUCK_REPAIR, TRUCK_REPAIR_EVENT);
+        Registry.register(Registries.SOUND_EVENT, TRUCK_ESCAPE, TRUCK_ESCAPE_EVENT);
+        Registry.register(Registries.SOUND_EVENT, USE_CAR_BATTERY, USE_CAR_BATTERY_EVENT);
+        Registry.register(Registries.SOUND_EVENT, USE_FUEL, USE_FUEL_EVENT);
+        Registry.register(Registries.SOUND_EVENT, USE_KEY, USE_KEY_EVENT);
+        Registry.register(Registries.SOUND_EVENT, USE_WHEEL, USE_WHEEL_EVENT);
+        Registry.register(Registries.SOUND_EVENT, YOU_ARE_HUMAN, YOU_ARE_HUMAN_EVENT);
+        Registry.register(Registries.SOUND_EVENT, YOU_ARE_CREATURE, YOU_ARE_CREATURE_EVENT);
     }
 }
