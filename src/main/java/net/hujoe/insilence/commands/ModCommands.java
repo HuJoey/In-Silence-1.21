@@ -59,18 +59,47 @@ public class ModCommands {
                 .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                 .executes(commandContext -> {
                     ServerCommandSource source = commandContext.getSource();
-                    Vec3d pos = source.getPosition();
-                    World world = source.getWorld();
                     Entity entity = source.getEntity();
 
                     if (entity instanceof PlayerEntity){
-                        ((PlayerEntity) entity).playSoundToPlayer();
+                        ((PlayerEntity) entity).playSoundToPlayer(ModSounds.YOU_ARE_HUMAN_EVENT, SoundCategory.AMBIENT, 0.7F, 1);
                     }
+                    return 1;
+                }))));
 
-                    SoundEntity soundEntity = new SoundEntity(ModEntities.SOUNDENTITY, world);
-                    soundEntity.setStrength(50);
-                    soundEntity.setPosition(pos);
-                    world.spawnEntity(soundEntity);
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("playcreaturesound")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                .executes(commandContext -> {
+                    ServerCommandSource source = commandContext.getSource();
+                    Entity entity = source.getEntity();
+
+                    if (entity instanceof PlayerEntity){
+                        ((PlayerEntity) entity).playSoundToPlayer(ModSounds.YOU_ARE_CREATURE_EVENT, SoundCategory.AMBIENT, 0.6F, 1);
+                    }
+                    return 1;
+                }))));
+
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("playtension")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                .executes(commandContext -> {
+                    ServerCommandSource source = commandContext.getSource();
+                    Entity entity = source.getEntity();
+
+                    if (entity instanceof PlayerEntity){
+                        ((PlayerEntity) entity).playSoundToPlayer(ModSounds.TENSION_2_EVENT, SoundCategory.AMBIENT, 0.5F, 1);
+                    }
+                    return 1;
+                }))));
+
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("playendsound")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                .executes(commandContext -> {
+                    ServerCommandSource source = commandContext.getSource();
+                    Entity entity = source.getEntity();
+
+                    if (entity instanceof PlayerEntity){
+                        ((PlayerEntity) entity).playSoundToPlayer(ModSounds.BLOODY_NIGHTMARE_EVENT, SoundCategory.AMBIENT, 0.6F, 1);
+                    }
                     return 1;
                 }))));
     }
