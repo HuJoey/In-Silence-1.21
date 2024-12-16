@@ -21,6 +21,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
@@ -57,6 +59,7 @@ public class FlashlightItem extends Item {
         boolean state = stack.getOrDefault(ModItems.FLASH_ACTIVE, false);
         if (!world.isClient) {
             stack.set(ModItems.FLASH_ACTIVE, !state);
+            user.playSoundToPlayer(SoundEvents.BLOCK_COMPARATOR_CLICK, SoundCategory.PLAYERS, 0.2F, 1);
         }
         user.getItemCooldownManager().set(this, 10);
         return TypedActionResult.pass(stack);
