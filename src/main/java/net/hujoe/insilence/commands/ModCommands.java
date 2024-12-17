@@ -23,9 +23,21 @@ public class ModCommands {
                     ServerCommandSource source = commandContext.getSource();
                     Entity sender = source.getEntity();
                     if (sender != null) {
-                        RakeManager.getRakeManager().toggleUser(sender.getNameForScoreboard(), sender.getWorld());
+                        RakeManager.getRakeManager().toggleRakeUser(sender.getNameForScoreboard(), sender.getWorld());
                     }
                     commandContext.getSource().sendFeedback(() -> Text.literal("You Toggled Rake"), false);
+                    return 1;
+                }))));
+
+        CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("mouse")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                .executes(commandContext -> {
+                    ServerCommandSource source = commandContext.getSource();
+                    Entity sender = source.getEntity();
+                    if (sender != null) {
+                        RakeManager.getRakeManager().toggleMouseUser(sender.getNameForScoreboard(), sender.getWorld());
+                    }
+                    commandContext.getSource().sendFeedback(() -> Text.literal("You Toggled Mouse"), false);
                     return 1;
                 }))));
 

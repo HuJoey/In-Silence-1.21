@@ -1,5 +1,5 @@
 Next Objective:
-Adding Remaining Game Sounds
+Mice
 
 To-do:
 - ~~Full Animations for Rake~~
@@ -16,13 +16,7 @@ To-do:
 - ~~Update HUD Texture for Rake~~
 - ~~Rain HUD~~
 - ~~Make Sound HUD only appear for Rakes~~
-- 
-- Game Sounds:
-- Item sound effects
-- ~~Rake sound effects~~
-- ~~Bird sound effects~~
-- Ambience sound effects
--
+- ~~Game Sounds~~
 - ~~Flashlight and flash system~~
 - ~~Screen Flash Effect~~
 - ~~Batteries~~

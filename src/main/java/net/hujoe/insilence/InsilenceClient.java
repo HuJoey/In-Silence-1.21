@@ -51,19 +51,32 @@ public class InsilenceClient implements ClientModInitializer {
     public void onInitializeClient(){
         EntityRendererRegistry.register(ModEntities.SOUNDENTITY, SoundEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.RAKE, RakeRenderer::new);
+        EntityRendererRegistry.register(ModEntities.MOUSE, MouseRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE_ARMS, RakeArmModel::getTexturedModelData);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TALL_WHEAT);
 
         ClientPlayNetworking.registerGlobalReceiver(RakeUpdatePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
-                ClientRakeManager.getRakeManager().toggleUser(payload.username());
+                ClientRakeManager.getRakeManager().toggleRakeUser(payload.username());
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(MouseUpdatePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                ClientRakeManager.getRakeManager().toggleMouseUser(payload.username());
             });
         });
 
         ClientPlayNetworking.registerGlobalReceiver(RakeListReceivePayload.ID, (payload, context) -> {
             context.client().execute(() -> {
-                ClientRakeManager.getRakeManager().receiveList((ArrayList<String>) payload.list());
+                ClientRakeManager.getRakeManager().receiveRakeList((ArrayList<String>) payload.list());
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(MouseListReceivePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                ClientRakeManager.getRakeManager().receiveMouseList((ArrayList<String>) payload.list());
             });
         });
 

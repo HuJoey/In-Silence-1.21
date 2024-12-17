@@ -7,6 +7,7 @@ import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.entity.custom.MouseEntity;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.network.payloads.RakeAttackSendPayload;
@@ -55,6 +56,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     private int ticksSinceLastSound = 20;
     private RakeEntity rakeEntity;
+    private MouseEntity mouseEntity;
     private Vec3d lastPos;
     private float soundLevel = -127;
     private int lastVolume = 0;
@@ -303,7 +305,8 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public RakeEntity getRakeEntity(){return rakeEntity;}
     public void setRakeEntity(RakeEntity r){rakeEntity = r;}
-
+    public MouseEntity getMouseEntity(){return mouseEntity;}
+    public void setMouseEntity(MouseEntity m){mouseEntity = m;}
     public boolean canDash(){return dashCooldown == 0;}
     public boolean canJump(){return jumpCooldown == 0;}
     public boolean canLockIn(){return lockInCooldown == 0;}

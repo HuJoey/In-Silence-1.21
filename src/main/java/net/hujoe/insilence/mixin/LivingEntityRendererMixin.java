@@ -6,10 +6,13 @@ import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.client.ModModelLayers;
+import net.hujoe.insilence.entity.client.MouseRenderer;
 import net.hujoe.insilence.entity.client.RakeModel;
 import net.hujoe.insilence.entity.client.RakeRenderer;
+import net.hujoe.insilence.entity.custom.MouseEntity;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Mouse;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.render.LightmapTextureManager;
 import net.minecraft.client.render.RenderLayer;
@@ -85,18 +88,46 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 						}
 					}
 					ci.cancel();
-			}
+			} else if (ClientRakeManager.getRakeManager().isMouse(livingEntity.getNameForScoreboard())){
+					InSilenceEssentials p = (InSilenceEssentials) livingEntity;
+					if (p.getMouseEntity() == null){
+						p.setMouseEntity(new MouseEntity(ModEntities.MOUSE, livingEntity.getWorld()));
+					}
+					MouseEntity m = p.getMouseEntity();
+					MouseRenderer mRenderer = (MouseRenderer) MinecraftClient.getInstance().getEntityRenderDispatcher().getRenderer(m);
+
+					m.bodyYaw = livingEntity.bodyYaw;
+					m.prevBodyYaw = livingEntity.prevBodyYaw;
+					m.headYaw = livingEntity.headYaw;
+					m.prevHeadYaw = livingEntity.prevHeadYaw;
+					m.age = livingEntity.age;
+					m.preferredHand = livingEntity.preferredHand;
+					m.setOnGround(livingEntity.isOnGround());
+					m.setVelocity(livingEntity.getVelocity());
+					m.setAttacking(livingEntity.isUsingItem());
+					m.setPose(livingEntity.getPose());
+
+					mRenderer.render(m, f, g, matrixStack, vertexConsumerProvider, i);
+
+					if (isMoving(livingEntity)){
+						//something isnt working here
+						m.getAnimatableInstanceCache().getManagerForId(m.getId()).tryTriggerAnimation("animation.model.walk", "animation.model.walk");
+					} else {
+						m.getAnimatableInstanceCache().getManagerForId(m.getId()).tryTriggerAnimation("controller", "animation.model.idle");
+					}
+					ci.cancel();
+				}
 		}
 	}
 
 	@Inject(method="hasLabel", at = @At("HEAD"), cancellable = true)
 	public void hasLabel(T livingEntity, CallbackInfoReturnable<Boolean> ci){
-		if (livingEntity.getType() == EntityType.PLAYER && ClientRakeManager.getRakeManager().isRake(livingEntity.getNameForScoreboard())){
+		if ((livingEntity.getType() == EntityType.PLAYER) && (ClientRakeManager.getRakeManager().isRake(livingEntity.getNameForScoreboard()) || ClientRakeManager.getRakeManager().isMouse(livingEntity.getNameForScoreboard()))){
 			ci.setReturnValue(false);
 		} else {
 			MinecraftClient minecraftClient = MinecraftClient.getInstance();
 			ClientPlayerEntity clientPlayerEntity = minecraftClient.player;
-			if (clientPlayerEntity != null && ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard())){
+			if (clientPlayerEntity != null && (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard()) || ClientRakeManager.getRakeManager().isMouse(clientPlayerEntity.getNameForScoreboard()))){
 				ci.setReturnValue(false);
 			}
 		}

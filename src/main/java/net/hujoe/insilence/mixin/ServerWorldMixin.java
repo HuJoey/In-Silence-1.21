@@ -29,7 +29,7 @@ public abstract class ServerWorldMixin {
         if (rand < 0.3) {
             if (((ServerWorld) (Object) this).isRaining()) {
                 List<ServerPlayerEntity> online = ((ServerWorld) (Object) this).getPlayers();
-                ArrayList<String> users = RakeManager.getRakeManager().getList();
+                ArrayList<String> users = RakeManager.getRakeManager().getRakeList();
                 for (ServerPlayerEntity player : online) {
                     if (users.contains(player.getNameForScoreboard())) {
                         player.playSoundToPlayer(ModSounds.SIGNAL_EVENT, SoundCategory.AMBIENT, (float) (rand * 3), 1);

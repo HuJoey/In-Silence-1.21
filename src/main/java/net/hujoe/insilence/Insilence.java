@@ -77,7 +77,9 @@ public class Insilence implements ModInitializer {
 		ModCommands.registerModCommands();
 
 		PayloadTypeRegistry.playS2C().register(RakeUpdatePayload.ID, RakeUpdatePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(MouseUpdatePayload.ID, MouseUpdatePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(RakeListReceivePayload.ID, RakeListReceivePayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(MouseListReceivePayload.ID, MouseListReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SignalSoundPayload.ID, SignalSoundPayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(VolumeUpdatePayload.ID, VolumeUpdatePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(FlashReceivePayload.ID, FlashReceivePayload.CODEC);
@@ -224,7 +226,8 @@ public class Insilence implements ModInitializer {
 		});
 
 		ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
-			ServerPlayNetworking.send(handler.getPlayer(), new RakeListReceivePayload(RakeManager.getRakeManager().getList()));
+			ServerPlayNetworking.send(handler.getPlayer(), new RakeListReceivePayload(RakeManager.getRakeManager().getRakeList()));
+			ServerPlayNetworking.send(handler.getPlayer(), new MouseListReceivePayload(RakeManager.getRakeManager().getMouseList()));
 		});
 	}
 }

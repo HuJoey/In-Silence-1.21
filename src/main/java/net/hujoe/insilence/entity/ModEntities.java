@@ -3,6 +3,7 @@ package net.hujoe.insilence.entity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.hujoe.insilence.Insilence;
+import net.hujoe.insilence.entity.custom.MouseEntity;
 import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.minecraft.entity.Entity;
@@ -25,8 +26,13 @@ public class ModEntities {
             Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "rake"),
                     EntityType.Builder.create(RakeEntity::new, SpawnGroup.MISC).dimensions(1f, 3f).build("rake"));
 
+    public static final EntityType<MouseEntity> MOUSE =
+            Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "mouse"),
+                    EntityType.Builder.create(MouseEntity::new, SpawnGroup.MISC).dimensions(1f, 3f).build("mouse"));
+
     public static void registerModEntities() {
         Insilence.LOGGER.info("Registering ModEntities for " + Insilence.MOD_ID);
         FabricDefaultAttributeRegistry.register(RAKE, RakeEntity.createRakeAttributes());
+        FabricDefaultAttributeRegistry.register(MOUSE, MouseEntity.createMouseAttributes());
     }
 }
