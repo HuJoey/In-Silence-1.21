@@ -25,6 +25,8 @@ public class ModItems {
     public static final Item CAR_BATTERY = registerItem("car_battery", new CarPartItem(new Item.Settings().maxCount(1)));
     public static final Item KEY = registerItem("key", new CarPartItem(new Item.Settings().maxCount(1)));
     public static final Item TIRE = registerItem("tire", new CarPartItem(new Item.Settings().maxCount(1)));
+    public static final Item BLOCKER = registerItem("blocker", new Item(new Item.Settings().maxCount(1)));
+
     public static final Item FLASHLIGHT = registerItem("flashlight", new FlashlightItem(new Item.Settings().maxCount(1).maxDamage(100).component(FLASH_STAGE, 3).component(FLASH_ACTIVE, false)));
 
     private static Item registerItem(String name, Item item){

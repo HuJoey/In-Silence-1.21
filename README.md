@@ -12,7 +12,9 @@ To-do:
 - ~~Sound Strength~~
 - ~~Sound Radii~~
 - ~~Voice Chat Implementation~~
-- Mice
+- Mice: HAND SHOULD BE GONE REGARDLESS, SQUEAK, SHOULD DISABLE RAKE OR MOUSE IF ACTIVATING EITHER
+- Location Signal
+- ~~Invisible Item Blockers for Inventory~~
 - ~~Update HUD Texture for Rake~~
 - ~~Rain HUD~~
 - ~~Make Sound HUD only appear for Rakes~~
