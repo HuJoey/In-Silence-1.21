@@ -92,6 +92,7 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playC2S().register(LightPlacePayload.ID, LightPlacePayload.CODEC);
 		PayloadTypeRegistry.playS2C().register(RakeAttackReceivePayload.ID, RakeAttackReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(RakeAttackSendPayload.ID, RakeAttackSendPayload.CODEC);
+		PayloadTypeRegistry.playC2S().register(SqueakPayload.ID, SqueakPayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
@@ -221,6 +222,29 @@ public class Insilence implements ModInitializer {
 					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
 						ServerPlayNetworking.send(sp, new RakeAttackReceivePayload(payload.attackerId(), payload.targetId()));
 					}
+				}
+			});
+		});
+
+		ServerPlayNetworking.registerGlobalReceiver(SqueakPayload.ID, (payload, context) -> {
+			context.server().execute(() -> {
+				if (context.server().getPlayerManager().getPlayer(payload.username()) != null) {
+					PlayerEntity player = context.server().getPlayerManager().getPlayer(payload.username());
+					double rand = Math.random();
+					if (rand > 0.33) {
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.RAT_SQUEAK_1_EVENT, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.RAT_SQUEAK_1_EVENT, SoundCategory.AMBIENT, 0.5F , 1);
+					} else if (rand > 0.66){
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.RAT_SQUEAK_2_EVENT, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.RAT_SQUEAK_2_EVENT, SoundCategory.AMBIENT, 0.5F, 1);
+					} else {
+						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.RAT_SQUEAK_3_EVENT, SoundCategory.PLAYERS);
+						player.playSoundToPlayer(ModSounds.RAT_SQUEAK_3_EVENT, SoundCategory.AMBIENT, 0.5F, 1);
+					}
+					SoundEntity soundEntity = new SoundEntity(ModEntities.SOUNDENTITY, player.getWorld());
+					soundEntity.setStrength(30);
+					soundEntity.setPosition(player.getPos());
+					player.getWorld().spawnEntity(soundEntity);
 				}
 			});
 		});

@@ -1,5 +1,5 @@
 Next Objective:
-Mice
+Location Signal
 
 To-do:
 - ~~Full Animations for Rake~~
@@ -12,7 +12,7 @@ To-do:
 - ~~Sound Strength~~
 - ~~Sound Radii~~
 - ~~Voice Chat Implementation~~
-- Mice: HAND SHOULD BE GONE REGARDLESS, SQUEAK, SHOULD DISABLE RAKE OR MOUSE IF ACTIVATING EITHER
+- ~~Mice~~
 - Location Signal
 - ~~Invisible Item Blockers for Inventory~~
 - ~~Update HUD Texture for Rake~~

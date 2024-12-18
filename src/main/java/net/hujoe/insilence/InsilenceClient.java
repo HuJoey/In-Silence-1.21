@@ -160,15 +160,20 @@ public class InsilenceClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (flashKeyBinding.wasPressed()) {
-                // if mouse
-                // else
-                PlayerInventory inv = client.player.getInventory();
-                for (int i = 0; i < 36; i++){
-                    ItemStack stack = inv.getStack(i);
-                    if (stack.isOf(ModItems.FLASHLIGHT) && stack.get(ModItems.FLASH_STAGE) != null && stack.get(ModItems.FLASH_STAGE) > 1){
-                        FlashlightItem item = (FlashlightItem) stack.getItem();
-                        item.flash(client.world, stack, client.player);
-                        break;
+                if (ClientRakeManager.getRakeManager().isMouse(client.player.getNameForScoreboard())){
+                    boolean result = ((InSilenceEssentials) client.player).trySqueak();
+                    if (result){
+                        ClientPlayNetworking.send(new SqueakPayload(client.player.getNameForScoreboard()));
+                    }
+                } else {
+                    PlayerInventory inv = client.player.getInventory();
+                    for (int i = 0; i < 36; i++) {
+                        ItemStack stack = inv.getStack(i);
+                        if (stack.isOf(ModItems.FLASHLIGHT) && stack.get(ModItems.FLASH_STAGE) != null && stack.get(ModItems.FLASH_STAGE) > 1) {
+                            FlashlightItem item = (FlashlightItem) stack.getItem();
+                            item.flash(client.world, stack, client.player);
+                            break;
+                        }
                     }
                 }
             }

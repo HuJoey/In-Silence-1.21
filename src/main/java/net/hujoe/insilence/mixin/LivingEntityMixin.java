@@ -78,6 +78,8 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     private PlayerEntity caughtTarget;
     private boolean isStunned = false;
     private int attackerId;
+    private int ticksSinceLastSqueak = 0;
+
     public final RegistryKey<DamageType> RAKE_DAMAGE = RegistryKey.of(RegistryKeys.DAMAGE_TYPE, Identifier.of(Insilence.MOD_ID, "rake_damage"));
     private static final EntityAttributeModifier RAKE_WALK_SLOW = new EntityAttributeModifier(Identifier.of(Insilence.MOD_ID, "rake_walk"), -0.6, EntityAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
@@ -107,6 +109,21 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                         cir.cancel();
                         break;
                 }
+            } else if (ClientRakeManager.getRakeManager().isMouse(player.getNameForScoreboard())){
+                switch (pose){
+                    case STANDING:
+                        cir.setReturnValue(EntityDimensions.changing(0.5F, 0.5F)
+                                .withEyeHeight(0.3F)
+                                .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
+                        cir.cancel();
+                        break;
+                    case CROUCHING:
+                        cir.setReturnValue(EntityDimensions.changing(0.5F, 0.2F)
+                                .withEyeHeight(0.1F)
+                                .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
+                        cir.cancel();
+                        break;
+                }
             }
         }
     }
@@ -114,6 +131,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     @Inject(method="baseTick", at = @At("TAIL"))
     public void baseTick(CallbackInfo ci) {
+        ticksSinceLastSqueak++;
         if (jumpCooldown != 0){
             jumpCooldown--;
         }
@@ -427,6 +445,15 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
 
     public void cancelAttack(){
         attackTicks = 0;
+    }
+
+    public boolean trySqueak(){
+        if (ticksSinceLastSqueak >= 200){
+            ticksSinceLastSqueak = 0;
+            return true; // success
+        } else {
+            return false; // failed
+        }
     }
 }
 

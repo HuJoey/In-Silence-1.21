@@ -36,6 +36,13 @@ public class RakeManager {
     }
 
     public void toggleRakeUser(String username, World world){
+        if (isMouse(username)){
+            removeUser(username, this.miceUsernames);
+            for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
+                ServerPlayNetworking.send(player, new MouseUpdatePayload(username));
+            }
+        }
+
         if (isRake(username)){
             removeUser(username, this.usernames);
         } else {
@@ -47,6 +54,13 @@ public class RakeManager {
     }
 
     public void toggleMouseUser(String username, World world){
+        if (isRake(username)){
+            removeUser(username, this.usernames);
+            for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
+                ServerPlayNetworking.send(player, new RakeUpdatePayload(username));
+            }
+        }
+
         if (isMouse(username)){
             removeUser(username, this.miceUsernames);
         } else {

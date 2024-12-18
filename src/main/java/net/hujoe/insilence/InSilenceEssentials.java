@@ -32,4 +32,5 @@ public interface InSilenceEssentials {
     int getAttackerId();
     void setAttackerId(int id);
     void cancelAttack();
+    boolean trySqueak();
 }

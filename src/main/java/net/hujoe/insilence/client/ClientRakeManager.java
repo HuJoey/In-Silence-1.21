@@ -33,6 +33,10 @@ public class ClientRakeManager {
     }
 
     public void toggleRakeUser(String username){
+        if (isMouse(username)){
+            removeUser(username, this.miceUsernames);
+        }
+
         if (isRake(username)){
             removeUser(username, this.usernames);
         } else {
@@ -41,6 +45,10 @@ public class ClientRakeManager {
     }
 
     public void toggleMouseUser(String username){
+        if (isRake(username)){
+            removeUser(username, this.usernames);
+        }
+
         if (isMouse(username)){
             removeUser(username, this.miceUsernames);
         } else {

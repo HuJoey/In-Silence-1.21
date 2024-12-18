@@ -41,14 +41,14 @@ public class MouseEntity extends PathAwareEntity implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
-        tAnimationState.getController().triggerableAnim("controller", RawAnimation.begin().then("animation.model.idle", Animation.LoopType.PLAY_ONCE));
-        tAnimationState.getController().triggerableAnim("animation.model.walk", RawAnimation.begin().then("animation.model.walk", Animation.LoopType.LOOP));
+        tAnimationState.getController().triggerableAnim("idle", RawAnimation.begin().then("idle", Animation.LoopType.PLAY_ONCE));
+        tAnimationState.getController().triggerableAnim("walk", RawAnimation.begin().then("walk", Animation.LoopType.LOOP));
         if(tAnimationState.isMoving()){
-            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.walk", Animation.LoopType.LOOP));
+            tAnimationState.getController().setAnimation(RawAnimation.begin().then("walk", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;
         }
 
-        tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.model.idle", Animation.LoopType.LOOP));
+        tAnimationState.getController().setAnimation(RawAnimation.begin().then("idle", Animation.LoopType.PLAY_ONCE));
         return PlayState.CONTINUE;
     }
 

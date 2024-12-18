@@ -1,5 +1,6 @@
 package net.hujoe.insilence.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.hujoe.insilence.InSilenceEssentials;
 import net.hujoe.insilence.Insilence;
@@ -110,10 +111,9 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 					mRenderer.render(m, f, g, matrixStack, vertexConsumerProvider, i);
 
 					if (isMoving(livingEntity)){
-						//something isnt working here
-						m.getAnimatableInstanceCache().getManagerForId(m.getId()).tryTriggerAnimation("animation.model.walk", "animation.model.walk");
+						m.getAnimatableInstanceCache().getManagerForId(m.getId()).tryTriggerAnimation("controller", "walk");
 					} else {
-						m.getAnimatableInstanceCache().getManagerForId(m.getId()).tryTriggerAnimation("controller", "animation.model.idle");
+						m.getAnimatableInstanceCache().getManagerForId(m.getId()).tryTriggerAnimation("controller", "idle");
 					}
 					ci.cancel();
 				}
@@ -130,6 +130,13 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 			if (clientPlayerEntity != null && (ClientRakeManager.getRakeManager().isRake(clientPlayerEntity.getNameForScoreboard()) || ClientRakeManager.getRakeManager().isMouse(clientPlayerEntity.getNameForScoreboard()))){
 				ci.setReturnValue(false);
 			}
+		}
+	}
+
+	@Inject(method="getShadowRadius(Lnet/minecraft/entity/LivingEntity;)F", at = @At("HEAD"), cancellable = true)
+	protected void getShadowRadius(T livingEntity, CallbackInfoReturnable<Float> ci){
+		if ((livingEntity.getType() == EntityType.PLAYER) && (ClientRakeManager.getRakeManager().isMouse(livingEntity.getNameForScoreboard()))) {
+			ci.setReturnValue(0.3F);
 		}
 	}
 
