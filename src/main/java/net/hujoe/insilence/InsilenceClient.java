@@ -53,6 +53,7 @@ public class InsilenceClient implements ClientModInitializer {
         EntityRendererRegistry.register(ModEntities.LOCATIONENTITY, LocationEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.RAKE, RakeRenderer::new);
         EntityRendererRegistry.register(ModEntities.MOUSE, MouseRenderer::new);
+        EntityRendererRegistry.register(ModEntities.RAVEN, RavenRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(ModModelLayers.RAKE_ARMS, RakeArmModel::getTexturedModelData);
 
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getCutout(), ModBlocks.TALL_WHEAT);
