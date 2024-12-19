@@ -1,5 +1,5 @@
 Next Objective:
-Location Signal
+Ravens!!
 
 To-do:
 - ~~Full Animations for Rake~~
@@ -13,7 +13,7 @@ To-do:
 - ~~Sound Radii~~
 - ~~Voice Chat Implementation~~
 - ~~Mice~~
-- Location Signal
+- ~~Location Signal~~
 - ~~Invisible Item Blockers for Inventory~~
 - ~~Update HUD Texture for Rake~~
 - ~~Rain HUD~~
