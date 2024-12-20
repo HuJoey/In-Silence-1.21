@@ -93,6 +93,7 @@ public class Insilence implements ModInitializer {
 		PayloadTypeRegistry.playS2C().register(RakeAttackReceivePayload.ID, RakeAttackReceivePayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(RakeAttackSendPayload.ID, RakeAttackSendPayload.CODEC);
 		PayloadTypeRegistry.playC2S().register(SqueakPayload.ID, SqueakPayload.CODEC);
+		PayloadTypeRegistry.playS2C().register(RavenAnimatePayload.ID, RavenAnimatePayload.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(SignalSoundPayload.ID, (payload, context) -> {
 			context.server().execute(() -> {

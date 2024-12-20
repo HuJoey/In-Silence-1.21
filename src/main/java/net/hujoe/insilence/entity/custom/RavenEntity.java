@@ -1,6 +1,12 @@
 package net.hujoe.insilence.entity.custom;
 
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.hujoe.insilence.Insilence;
 import net.hujoe.insilence.InsilenceClient;
+import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.network.payloads.MouseUpdatePayload;
+import net.hujoe.insilence.network.payloads.RavenAnimatePayload;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.EquipmentSlot;
@@ -18,9 +24,11 @@ import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Arm;
+import net.minecraft.util.math.Box;
 import net.minecraft.world.World;
 import software.bernie.geckolib.animatable.GeoAnimatable;
 import software.bernie.geckolib.animatable.GeoEntity;
@@ -28,13 +36,14 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animation.*;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
-public class RavenEntity extends Entity implements GeoEntity {
+public class RavenEntity extends MobEntity implements GeoEntity {
 
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
     private static final TrackedData<Boolean> SCARED;
-    private int ticksTilDespawn = 290;
+    private int ticksTilDespawn = 58;
+    private boolean doneStupidSpin = false;
 
-    public RavenEntity(EntityType<? extends Entity> entityType, World world) {
+    public RavenEntity(EntityType<? extends MobEntity> entityType, World world) {
         super(entityType, world);
     }
 
@@ -50,28 +59,47 @@ public class RavenEntity extends Entity implements GeoEntity {
 
     public void tick() {
         if (!this.getWorld().isClient) {
+            if (!doneStupidSpin){
+                doneStupidSpin = true;
+                double angle = Math.random() * 360;
+                angle = angle - 180;
+                this.setYaw((float) angle);
+            }
+
             if (this.getScared()) {
                 if (ticksTilDespawn == 0) {
                     this.discard();
-                } else if (ticksTilDespawn == 278){
+                } else if (ticksTilDespawn == 48){
                     this.getWorld().playSound(null, this.getBlockPos(), ModSounds.CROW_WING_EVENT, SoundCategory.NEUTRAL);
                     ticksTilDespawn--;
                 } else {
                     ticksTilDespawn--;
                 }
             } else {
-                if (this.getWorld().getClosestPlayer(this, 5) != null){
+                if (this.getWorld().getClosestPlayer(this, 3) != null){
                     this.setScared(true);
-                    cache.getManagerForId(this.getId()).tryTriggerAnimation("controller", "fly");
+                    for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) this.getWorld())) {
+                        ServerPlayNetworking.send(player, new RavenAnimatePayload(this.getId()));
+                    }
 
                     if (Math.random() > 0.5) {
                         this.getWorld().playSound(null, this.getBlockPos(), ModSounds.CROW_SCARE_01_EVENT, SoundCategory.NEUTRAL);
                     } else {
                         this.getWorld().playSound(null, this.getBlockPos(), ModSounds.CROW_SCARE_02_EVENT, SoundCategory.NEUTRAL);
                     }
+
+                    SoundEntity soundEntity = new SoundEntity(ModEntities.SOUNDENTITY, this.getWorld());
+                    soundEntity.setStrength(30);
+                    soundEntity.setPosition(this.getPos());
+                    this.getWorld().spawnEntity(soundEntity);
                 }
             }
         }
+    }
+
+    @Override
+    public Arm getMainArm() {
+        return null;
     }
 
     @Override
@@ -81,11 +109,32 @@ public class RavenEntity extends Entity implements GeoEntity {
 
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
         builder.add(SCARED, false);
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
+
+    }
+
+    @Override
+    public boolean shouldRenderName() {
+        return false;
+    }
+
+    @Override
+    public Iterable<ItemStack> getArmorItems() {
+        return null;
+    }
+
+    @Override
+    public ItemStack getEquippedStack(EquipmentSlot slot) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public void equipStack(EquipmentSlot slot, ItemStack stack) {
 
     }
 
@@ -104,23 +153,5 @@ public class RavenEntity extends Entity implements GeoEntity {
 
     static {
         SCARED = DataTracker.registerData(RavenEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-    }
-
-    @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        int i = packet.getEntityId();
-        double d = packet.getX();
-        double e = packet.getY();
-        double f = packet.getZ();
-        this.updateTrackedPosition(d, e, f);
-        this.refreshPositionAfterTeleport(d, e, f);
-        this.setPitch(packet.getPitch());
-
-        double angle = Math.random() * 2 * Math.PI;
-        angle = angle - Math.PI;
-
-        this.setYaw((float) angle);
-        this.setId(i);
-        this.setUuid(packet.getUuid());
     }
 }

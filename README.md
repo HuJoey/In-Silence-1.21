@@ -1,5 +1,5 @@
 Next Objective:
-Ravens!!
+Ability Cooldown bars
 
 To-do:
 - ~~Full Animations for Rake~~
@@ -25,7 +25,7 @@ To-do:
 - ~~Noisemakers and Scarecrows~~
 - ~~Packets~~
 - ~~Playbirdsound command~~
-- Ravens!!
+- ~~Ravens!!~~
 
 
 Things to Handle:

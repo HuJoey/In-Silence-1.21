@@ -34,12 +34,13 @@ public class ModEntities {
 
     public static final EntityType<RavenEntity> RAVEN =
             Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "raven"),
-                    EntityType.Builder.create(RavenEntity::new, SpawnGroup.MISC).dimensions(0.1f, 0.1f).build("raven"));
+                    EntityType.Builder.create(RavenEntity::new, SpawnGroup.MISC).dimensions(1f, 1f).build("raven"));
 
 
     public static void registerModEntities() {
         Insilence.LOGGER.info("Registering ModEntities for " + Insilence.MOD_ID);
         FabricDefaultAttributeRegistry.register(RAKE, RakeEntity.createRakeAttributes());
         FabricDefaultAttributeRegistry.register(MOUSE, MouseEntity.createMouseAttributes());
+        FabricDefaultAttributeRegistry.register(RAVEN, RavenEntity.createMobAttributes());
     }
 }

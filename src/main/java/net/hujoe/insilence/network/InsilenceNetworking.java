@@ -20,4 +20,5 @@ public class InsilenceNetworking {
     public static final Identifier MOUSE_UPDATE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "mouse_update");
     public static final Identifier MOUSE_LIST_RECEIVE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "mouse_list_receive");
     public static final Identifier SQUEAK_PACKET_ID = Identifier.of(Insilence.MOD_ID, "squeak");
+    public static final Identifier RAVEN_ANIMATE_PACKET_ID = Identifier.of(Insilence.MOD_ID, "raven_animate");
 }

@@ -16,6 +16,8 @@ import net.hujoe.insilence.block.entity.ModBlockEntities;
 import net.hujoe.insilence.client.*;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.client.*;
+import net.hujoe.insilence.entity.custom.RakeEntity;
+import net.hujoe.insilence.entity.custom.RavenEntity;
 import net.hujoe.insilence.item.ModItems;
 import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
@@ -23,6 +25,7 @@ import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.InputUtil;
@@ -133,6 +136,13 @@ public class InsilenceClient implements ClientModInitializer {
                     InSilenceEssentials p2 = (InSilenceEssentials) target;
                     p2.triggerCaught(player.getYaw(), new Vec3d(result.getPos().x, player.getY(), result.getPos().z));
                 }
+            });
+        });
+
+        ClientPlayNetworking.registerGlobalReceiver(RavenAnimatePayload.ID, (payload, context) -> {
+            context.client().execute(() -> {
+                RavenEntity raven = (RavenEntity) context.player().getWorld().getEntityById(payload.ravenId());
+                raven.getAnimatableInstanceCache().getManagerForId(raven.getId()).tryTriggerAnimation("controller", "fly");
             });
         });
 
