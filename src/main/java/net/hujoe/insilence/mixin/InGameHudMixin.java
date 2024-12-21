@@ -75,7 +75,6 @@ public class InGameHudMixin {
             if (!clientPlayerEntity.isSpectator() && !client.options.hudHidden && !((InSilenceEssentials) clientPlayerEntity).isStunned()) {
                 // renders wheel hud
                 RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
-                RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
                 RenderSystem.enableBlend(); // allows wheel to be transparent
                 if (minecraftClient.world.isRaining()) {
                     RenderSystem.setShaderColor(1.0F, 0F, 0F, 1.0F);
@@ -85,6 +84,8 @@ public class InGameHudMixin {
                 context.drawTexture(RAKE_WHEEL, x - 78, y - 78, 0, 0, 156, 64, 156, 64); // draws the rake wheel texture
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                 RenderSystem.disableBlend(); // prevents transparency issue when hitting esc
+
+                renderCooldownBar(context, x, y, clientPlayerEntity);
 
                 if (!minecraftClient.world.isRaining()){
 
@@ -278,5 +279,96 @@ public class InGameHudMixin {
         }
 
         return facingAngle;
+    }
+
+    private void renderCooldownBar(DrawContext context, int width, int height, ClientPlayerEntity player){
+        int cooldownsActive = 0;
+        InSilenceEssentials rake = (InSilenceEssentials) player;
+        boolean lockInCooldown = false;
+        boolean dashCooldown = false;
+        boolean jumpCooldown = false;
+        if (!rake.canLockIn()){
+            cooldownsActive++;
+            lockInCooldown = true;
+        }
+        if (!rake.canDash()){
+            cooldownsActive++;
+            dashCooldown = true;
+        }
+        if (!rake.canJump()){
+            cooldownsActive++;
+            jumpCooldown = true;
+        }
+
+        if (cooldownsActive != 0) {
+            int xPos = width + 85;
+            for (int i = 0; i < cooldownsActive; i++) {
+                boolean attackingDoNotRender = false;
+                int stage = 0;
+                if (lockInCooldown) {
+                    int ticksSince = rake.getTicksSinceLockIn();
+                    if (ticksSince == 1) {
+                        attackingDoNotRender = true;
+                    }
+                    double ticksPerStage = (double) 400 / 18; // total cooldown ticks divided by stages
+                    stage = (int) (ticksSince / ticksPerStage);
+                    lockInCooldown = false;
+
+                    if (!attackingDoNotRender) {
+                        RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+                        RenderSystem.enableBlend();
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                        context.drawTexture(Identifier.of(Insilence.MOD_ID, "textures/gui/cooldown/eye_icon.png"), xPos, height - 82, 0, 0, 12, 12, 12, 12);
+                        RenderSystem.disableBlend();
+                    }
+                } else if (dashCooldown) {
+                    int ticksSince = rake.getTicksSinceDash();
+                    if (ticksSince == 1) {
+                        attackingDoNotRender = true;
+                    }
+                    double ticksPerStage = (double) 600 / 18; // total cooldown ticks divided by stages
+                    stage = (int) (ticksSince / ticksPerStage);
+                    dashCooldown = false;
+
+                    if (!attackingDoNotRender) {
+                        RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+                        RenderSystem.enableBlend();
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                        context.drawTexture(Identifier.of(Insilence.MOD_ID, "textures/gui/cooldown/dash_icon.png"), xPos, height - 82, 0, 0, 12, 12, 12, 12);
+                        RenderSystem.disableBlend();
+                    }
+                } else if (jumpCooldown) {
+                    int ticksSince = rake.getTicksSinceJump();
+                    if (ticksSince == 1) {
+                        attackingDoNotRender = true;
+                    }
+                    double ticksPerStage = (double) 60 / 18; // total cooldown ticks divided by stages
+                    stage = (int) (ticksSince / ticksPerStage);
+                    jumpCooldown = false;
+
+                    if (!attackingDoNotRender) {
+                        RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+                        RenderSystem.enableBlend();
+                        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                        context.drawTexture(Identifier.of(Insilence.MOD_ID, "textures/gui/cooldown/jump_icon.png"), xPos, height - 82, 0, 0, 12, 12, 12, 12);
+                        RenderSystem.disableBlend();
+                    }
+                }
+                if (stage < 17) {
+                    stage++;
+                } else if (stage > 17) {
+                    stage = 17;
+                }
+                if (!attackingDoNotRender){
+                    RenderSystem.setShader(GameRenderer::getRenderTypeTextSeeThroughProgram);
+                    RenderSystem.enableBlend();
+                    String imageName = "textures/gui/cooldown/cooldown_" + stage + ".png";
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                    context.drawTexture(Identifier.of(Insilence.MOD_ID, imageName), xPos, height - 70, 0, 0, 12, 52, 12, 52);
+                    RenderSystem.disableBlend();
+                    xPos += 12;
+                }
+            }
+        }
     }
 }

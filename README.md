@@ -1,12 +1,12 @@
 Next Objective:
-Ability Cooldown bars
+THE MAP
 
 To-do:
 - ~~Full Animations for Rake~~
 - ~~Camera Adjusts and Hand Render for Rake~~
 - ~~Rake Abilities and Jumping~~
 - ~~Rake Attack~~
-- Ability Cooldown bars
+- ~~Ability Cooldown bars~~
 - ~~Rake Blindness~~
 - ~~Sound Events in the HUD~~
 - ~~Sound Strength~~

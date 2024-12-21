@@ -94,7 +94,22 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     @Inject(method = "getDimensions", at = @At("HEAD"), cancellable = true)
     private void getDimensions(EntityPose pose, CallbackInfoReturnable<EntityDimensions> cir) {
         if ((Object) this instanceof PlayerEntity player) {
-            if (ClientRakeManager.getRakeManager().isRake(player.getNameForScoreboard())){
+            boolean isMouse = false;
+            boolean isRake = false;
+            if (getWorld().isClient){
+                if (ClientRakeManager.getRakeManager().isRake(player.getNameForScoreboard())){
+                    isRake = true;
+                } else if (ClientRakeManager.getRakeManager().isMouse(player.getNameForScoreboard())) {
+                    isMouse = true;
+                }
+            } else {
+                if (RakeManager.getRakeManager().isRake(player.getNameForScoreboard())){
+                    isRake = true;
+                } else if (RakeManager.getRakeManager().isMouse(player.getNameForScoreboard())) {
+                    isMouse = true;
+                }
+            }
+            if (isRake){
                 switch (pose){
                     case STANDING:
                         cir.setReturnValue(EntityDimensions.changing(0.9F, 2.7F)
@@ -102,14 +117,14 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                                 .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
                         cir.cancel();
                         break;
-                    case CROUCHING:
+                    case CROUCHING, SWIMMING:
                         cir.setReturnValue(EntityDimensions.changing(0.9F, 2.4F)
                                 .withEyeHeight(2.15F)
                                 .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
                         cir.cancel();
                         break;
                 }
-            } else if (ClientRakeManager.getRakeManager().isMouse(player.getNameForScoreboard())){
+            } else if (isMouse){
                 switch (pose){
                     case STANDING:
                         cir.setReturnValue(EntityDimensions.changing(0.5F, 0.5F)
@@ -117,7 +132,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                                 .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
                         cir.cancel();
                         break;
-                    case CROUCHING:
+                    case CROUCHING, SWIMMING:
                         cir.setReturnValue(EntityDimensions.changing(0.5F, 0.2F)
                                 .withEyeHeight(0.1F)
                                 .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
@@ -186,7 +201,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
             }
         }
 
-        if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard())){
+        if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard()) || !RakeManager.getRakeManager().isMouse(this.getNameForScoreboard())){
             World world = this.getWorld();
             if (!world.isClient() && this.isAlive()) {
                 if (ticksSinceLastSound == 0) {
@@ -454,6 +469,18 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
         } else {
             return false; // failed
         }
+    }
+
+    public int getTicksSinceLockIn(){
+        return lockInCooldown;
+    }
+
+    public int getTicksSinceDash(){
+        return dashCooldown;
+    }
+
+    public int getTicksSinceJump(){
+        return jumpCooldown;
     }
 }
 
