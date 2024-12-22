@@ -201,7 +201,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
             }
         }
 
-        if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard()) || !RakeManager.getRakeManager().isMouse(this.getNameForScoreboard())){
+        if (!RakeManager.getRakeManager().isRake(this.getNameForScoreboard()) && !RakeManager.getRakeManager().isMouse(this.getNameForScoreboard())){
             World world = this.getWorld();
             if (!world.isClient() && this.isAlive()) {
                 if (ticksSinceLastSound == 0) {
