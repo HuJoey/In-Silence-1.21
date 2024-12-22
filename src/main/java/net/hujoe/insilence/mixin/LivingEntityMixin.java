@@ -117,7 +117,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
                                 .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
                         cir.cancel();
                         break;
-                    case CROUCHING, SWIMMING:
+                    case CROUCHING:
                         cir.setReturnValue(EntityDimensions.changing(0.9F, 2.4F)
                                 .withEyeHeight(2.15F)
                                 .withAttachments(EntityAttachments.builder().add(EntityAttachmentType.VEHICLE, new Vec3d(0.0, 0.6, 0.0))));
