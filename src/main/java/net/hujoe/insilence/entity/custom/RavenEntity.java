@@ -76,7 +76,7 @@ public class RavenEntity extends MobEntity implements GeoEntity {
                     ticksTilDespawn--;
                 }
             } else {
-                if (this.getWorld().getClosestPlayer(this, 3) != null){
+                if (this.getWorld().getClosestPlayer(this, 7) != null){
                     this.setScared(true);
                     for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) this.getWorld())) {
                         ServerPlayNetworking.send(player, new RavenAnimatePayload(this.getId()));
