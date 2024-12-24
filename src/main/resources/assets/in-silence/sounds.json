@@ -228,5 +228,15 @@
     "sounds": [
       "in-silence:you-are-human"
     ]
+  },
+  "thunderspike": {
+    "sounds": [
+      "in-silence:thunder-spike"
+    ]
+  },
+  "ambiancewindy": {
+    "sounds": [
+      "in-silence:ambiance-windy"
+    ]
   }
 }

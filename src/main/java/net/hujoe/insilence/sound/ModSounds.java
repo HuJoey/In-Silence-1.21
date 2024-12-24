@@ -53,6 +53,8 @@ public class ModSounds {
     public static Identifier USE_WHEEL = Identifier.of(Insilence.MOD_ID, "usewheel");
     public static Identifier YOU_ARE_CREATURE = Identifier.of(Insilence.MOD_ID, "youarecreature");
     public static Identifier YOU_ARE_HUMAN = Identifier.of(Insilence.MOD_ID, "youarehuman");
+    public static Identifier THUNDER_SPIKE = Identifier.of(Insilence.MOD_ID, "thunderspike");
+    public static Identifier AMBIANCE_WINDY = Identifier.of(Insilence.MOD_ID, "ambiancewindy");
 
 
     public static SoundEvent SIGNAL_EVENT = SoundEvent.of(SIGNAL);
@@ -101,6 +103,8 @@ public class ModSounds {
     public static SoundEvent USE_WHEEL_EVENT = SoundEvent.of(USE_WHEEL);
     public static SoundEvent YOU_ARE_CREATURE_EVENT = SoundEvent.of(YOU_ARE_CREATURE);
     public static SoundEvent YOU_ARE_HUMAN_EVENT = SoundEvent.of(YOU_ARE_HUMAN);
+    public static SoundEvent THUNDER_SPIKE_EVENT = SoundEvent.of(THUNDER_SPIKE);
+    public static SoundEvent AMBIANCE_WINDY_EVENT = SoundEvent.of(AMBIANCE_WINDY);
 
     public static void registerModSounds(){
         Insilence.LOGGER.info("Registering ModSounds for " + Insilence.MOD_ID);
@@ -150,5 +154,7 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, USE_WHEEL, USE_WHEEL_EVENT);
         Registry.register(Registries.SOUND_EVENT, YOU_ARE_HUMAN, YOU_ARE_HUMAN_EVENT);
         Registry.register(Registries.SOUND_EVENT, YOU_ARE_CREATURE, YOU_ARE_CREATURE_EVENT);
+        Registry.register(Registries.SOUND_EVENT, THUNDER_SPIKE, THUNDER_SPIKE_EVENT);
+        Registry.register(Registries.SOUND_EVENT, AMBIANCE_WINDY, AMBIANCE_WINDY_EVENT);
     }
 }
