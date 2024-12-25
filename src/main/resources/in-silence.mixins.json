@@ -5,7 +5,10 @@
   "mixins": [
     "EntityMixin",
     "LivingEntityMixin",
+    "LootableContainerBlockEntityMixin",
+    "PlayerInventoryMixin",
     "PressurePlateBlockMixin",
+    "ScreenHandlerMixin",
     "ServerWorldMixin"
   ],
   "injectors": {
