@@ -37,4 +37,9 @@ public class HuJoeEntity extends MobEntity {
     public boolean isPushable() {
         return false;
     }
+
+    @Override
+    public boolean isAttackable() {
+        return false;
+    }
 }
