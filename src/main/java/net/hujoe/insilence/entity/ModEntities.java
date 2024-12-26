@@ -36,11 +36,21 @@ public class ModEntities {
             Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "raven"),
                     EntityType.Builder.create(RavenEntity::new, SpawnGroup.MISC).dimensions(1f, 1f).build("raven"));
 
+    public static final EntityType<HuJoeEntity> HUJOE_STATUE =
+            Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "hujoe_statue"),
+                    EntityType.Builder.create(HuJoeEntity::new, SpawnGroup.MISC).dimensions(1.5f, 2f).build("hujoe_statue"));
+
+    public static final EntityType<SobrXShuppetEntity> SOBR_SHUPPET_STATUE =
+            Registry.register(Registries.ENTITY_TYPE, Identifier.of(Insilence.MOD_ID, "sobr_shuppet_statue"),
+                    EntityType.Builder.create(SobrXShuppetEntity::new, SpawnGroup.MISC).dimensions(3f, 2f).build("sobr_shuppet_statue"));
+
 
     public static void registerModEntities() {
         Insilence.LOGGER.info("Registering ModEntities for " + Insilence.MOD_ID);
         FabricDefaultAttributeRegistry.register(RAKE, RakeEntity.createRakeAttributes());
         FabricDefaultAttributeRegistry.register(MOUSE, MouseEntity.createMouseAttributes());
         FabricDefaultAttributeRegistry.register(RAVEN, RavenEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(HUJOE_STATUE, HuJoeEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(SOBR_SHUPPET_STATUE, SobrXShuppetEntity.createMobAttributes());
     }
 }
