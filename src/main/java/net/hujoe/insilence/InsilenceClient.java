@@ -2,6 +2,9 @@ package net.hujoe.insilence;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -34,16 +37,20 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.lwjgl.glfw.GLFW;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 
 public class InsilenceClient implements ClientModInitializer {
     private static BlindnessHandler blindnessHandler;
@@ -215,6 +222,24 @@ public class InsilenceClient implements ClientModInitializer {
                 }
             }
         });
+
+        ClientCommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("thumbnail")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                .executes(commandContext -> {
+                    FabricClientCommandSource source = commandContext.getSource();
+
+                    BlockPos pos = source.getPlayer().getBlockPos();
+                    World world = source.getWorld();
+                    Vec3d vec3d = Vec3d.ofCenter(pos);
+                    Predicate<RakeEntity> close = (rake) -> {
+                        return rake.getPos().isInRange(vec3d, 5);
+                    };
+                    List<RakeEntity> closeEntities = world.getEntitiesByClass(RakeEntity.class, new Box(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), close.and(RakeEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
+                    for (RakeEntity r : closeEntities){
+                        r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "thumbnail");
+                    }
+                    return 1;
+                }))));
     }
 
     public static BlindnessHandler getBlindnessHandler(){

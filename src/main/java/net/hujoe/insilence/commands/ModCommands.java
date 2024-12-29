@@ -56,24 +56,6 @@ public class ModCommands {
                     return 1;
                 }))));
 
-        ClientCommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("thumbnail")
-                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                .executes(commandContext -> {
-                    FabricClientCommandSource source = commandContext.getSource();
-
-                    BlockPos pos = source.getPlayer().getBlockPos();
-                    World world = source.getWorld();
-                    Vec3d vec3d = Vec3d.ofCenter(pos);
-                    Predicate<RakeEntity> close = (rake) -> {
-                        return rake.getPos().isInRange(vec3d, 5);
-                    };
-                    List<RakeEntity> closeEntities = world.getEntitiesByClass(RakeEntity.class, new Box(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), close.and(RakeEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
-                    for (RakeEntity r : closeEntities){
-                        r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "thumbnail");
-                    }
-                    return 1;
-                }))));
-
         CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> dispatcher.register(literal("playbirdsound")
                 .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
                 .executes(commandContext -> {
