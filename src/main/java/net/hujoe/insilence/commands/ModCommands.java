@@ -1,18 +1,33 @@
 package net.hujoe.insilence.commands;
 
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.hujoe.insilence.entity.ModEntities;
+import net.hujoe.insilence.entity.custom.LocationEntity;
+import net.hujoe.insilence.entity.custom.RakeEntity;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
+import net.minecraft.client.network.ClientCommandSource;
+import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
+import java.util.List;
+import java.util.function.Predicate;
+
+import static net.minecraft.server.command.CommandManager.argument;
 import static net.minecraft.server.command.CommandManager.literal;
 
 public class ModCommands {
@@ -38,6 +53,24 @@ public class ModCommands {
                         RakeManager.getRakeManager().toggleMouseUser(sender.getNameForScoreboard(), sender.getWorld());
                     }
                     commandContext.getSource().sendFeedback(() -> Text.literal("You Toggled Mouse"), false);
+                    return 1;
+                }))));
+
+        ClientCommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("thumbnail")
+                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
+                .executes(commandContext -> {
+                    FabricClientCommandSource source = commandContext.getSource();
+
+                    BlockPos pos = source.getPlayer().getBlockPos();
+                    World world = source.getWorld();
+                    Vec3d vec3d = Vec3d.ofCenter(pos);
+                    Predicate<RakeEntity> close = (rake) -> {
+                        return rake.getPos().isInRange(vec3d, 5);
+                    };
+                    List<RakeEntity> closeEntities = world.getEntitiesByClass(RakeEntity.class, new Box(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), close.and(RakeEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
+                    for (RakeEntity r : closeEntities){
+                        r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "thumbnail");
+                    }
                     return 1;
                 }))));
 
