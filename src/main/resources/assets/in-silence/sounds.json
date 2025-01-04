@@ -14,6 +14,16 @@
       "in-silence:sprint-2"
     ]
   },
+  "sprint1player": {
+    "sounds": [
+      "in-silence:sprint-player"
+    ]
+  },
+  "sprint2player": {
+    "sounds": [
+      "in-silence:sprint-2-player"
+    ]
+  },
   "eye1": {
     "sounds": [
       "in-silence:eye-1"

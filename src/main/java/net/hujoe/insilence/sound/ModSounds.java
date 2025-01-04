@@ -10,6 +10,8 @@ public class ModSounds {
     public static Identifier SIGNAL = Identifier.of(Insilence.MOD_ID, "signal");
     public static Identifier SPRINT_1 = Identifier.of(Insilence.MOD_ID, "sprint1");
     public static Identifier SPRINT_2 = Identifier.of(Insilence.MOD_ID, "sprint2");
+    public static Identifier SPRINT_1_PLAYER = Identifier.of(Insilence.MOD_ID, "sprint1player");
+    public static Identifier SPRINT_2_PLAYER = Identifier.of(Insilence.MOD_ID, "sprint2player");
     public static Identifier EYE_1 = Identifier.of(Insilence.MOD_ID, "eye1");
     public static Identifier EYE_2 = Identifier.of(Insilence.MOD_ID, "eye2");
     public static Identifier FLASHBANG = Identifier.of(Insilence.MOD_ID, "flashbang");
@@ -60,6 +62,8 @@ public class ModSounds {
     public static SoundEvent SIGNAL_EVENT = SoundEvent.of(SIGNAL);
     public static SoundEvent SPRINT_EVENT_1 = SoundEvent.of(SPRINT_1);
     public static SoundEvent SPRINT_EVENT_2 = SoundEvent.of(SPRINT_2);
+    public static SoundEvent SPRINT_EVENT_1_PLAYER = SoundEvent.of(SPRINT_1_PLAYER);
+    public static SoundEvent SPRINT_EVENT_2_PLAYER = SoundEvent.of(SPRINT_2_PLAYER);
     public static SoundEvent EYE_EVENT_1 = SoundEvent.of(EYE_1);
     public static SoundEvent EYE_EVENT_2 = SoundEvent.of(EYE_2);
     public static SoundEvent FLASHBANG_EVENT = SoundEvent.of(FLASHBANG);
@@ -111,6 +115,8 @@ public class ModSounds {
         Registry.register(Registries.SOUND_EVENT, SIGNAL, SIGNAL_EVENT);
         Registry.register(Registries.SOUND_EVENT, SPRINT_1, SPRINT_EVENT_1);
         Registry.register(Registries.SOUND_EVENT, SPRINT_2, SPRINT_EVENT_2);
+        Registry.register(Registries.SOUND_EVENT, SPRINT_1_PLAYER, SPRINT_EVENT_1_PLAYER);
+        Registry.register(Registries.SOUND_EVENT, SPRINT_2_PLAYER, SPRINT_EVENT_2_PLAYER);
         Registry.register(Registries.SOUND_EVENT, EYE_1, EYE_EVENT_1);
         Registry.register(Registries.SOUND_EVENT, EYE_2, EYE_EVENT_2);
         Registry.register(Registries.SOUND_EVENT, FLASHBANG, FLASHBANG_EVENT);

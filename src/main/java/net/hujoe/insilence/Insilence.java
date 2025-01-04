@@ -111,10 +111,10 @@ public class Insilence implements ModInitializer {
 					p.dash();
 					if (Math.random() > 0.5) {
 						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.SPRINT_EVENT_1, SoundCategory.PLAYERS);
-						player.playSoundToPlayer(ModSounds.SPRINT_EVENT_1, SoundCategory.AMBIENT, 0.3F , 1);
+						player.playSoundToPlayer(ModSounds.SPRINT_EVENT_1_PLAYER, SoundCategory.AMBIENT, 0.3F , 1);
 					} else {
 						player.getWorld().playSound(player, player.getBlockPos(), ModSounds.SPRINT_EVENT_2, SoundCategory.PLAYERS);
-						player.playSoundToPlayer(ModSounds.SPRINT_EVENT_2, SoundCategory.AMBIENT, 0.3F, 1);
+						player.playSoundToPlayer(ModSounds.SPRINT_EVENT_2_PLAYER, SoundCategory.AMBIENT, 0.3F, 1);
 					}
 					for (ServerPlayerEntity sp : PlayerLookup.world(context.player().getServerWorld())) {
 						ServerPlayNetworking.send(sp, new DashClientPayload(player.getId()));
