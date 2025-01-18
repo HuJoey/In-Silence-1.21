@@ -53,7 +53,6 @@ public class RakeEntity extends PathAwareEntity implements GeoEntity {
         tAnimationState.getController().triggerableAnim("run", RawAnimation.begin().then("run", Animation.LoopType.LOOP));
         tAnimationState.getController().triggerableAnim("walk", RawAnimation.begin().then("walk", Animation.LoopType.LOOP));
         tAnimationState.getController().triggerableAnim("jumpscare", RawAnimation.begin().then("jumpscare", Animation.LoopType.PLAY_ONCE));
-        tAnimationState.getController().triggerableAnim("thumbnail", RawAnimation.begin().then("thumbnail", Animation.LoopType.HOLD_ON_LAST_FRAME));
         if(tAnimationState.isMoving()){
             tAnimationState.getController().setAnimation(RawAnimation.begin().then("walk", Animation.LoopType.LOOP));
             return PlayState.CONTINUE;

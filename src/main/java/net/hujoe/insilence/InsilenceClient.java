@@ -58,7 +58,7 @@ public class InsilenceClient implements ClientModInitializer {
     private static KeyBinding lockInKeyBinding;
     private static KeyBinding dashKeyBinding;
     @Override
-    public void onInitializeClient(){
+    public void onInitializeClient() {
         EntityRendererRegistry.register(ModEntities.SOUNDENTITY, SoundEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.LOCATIONENTITY, LocationEntityRenderer::new);
         EntityRendererRegistry.register(ModEntities.RAKE, RakeRenderer::new);
@@ -108,7 +108,7 @@ public class InsilenceClient implements ClientModInitializer {
                 ((InSilenceEssentials) context.player().getWorld().getEntityById(payload.attackerId())).cancelAttack();
                 ((InSilenceEssentials) context.player().getWorld().getEntityById(payload.targetId())).cancelAttack();
 
-                if (payload.shouldBlind()){
+                if (payload.shouldBlind()) {
                     FlashActivator renderer = (FlashActivator) context.client().gameRenderer;
                     renderer.activateFlash();
                 }
@@ -183,9 +183,9 @@ public class InsilenceClient implements ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             while (flashKeyBinding.wasPressed()) {
-                if (ClientRakeManager.getRakeManager().isMouse(client.player.getNameForScoreboard())){
+                if (ClientRakeManager.getRakeManager().isMouse(client.player.getNameForScoreboard())) {
                     boolean result = ((InSilenceEssentials) client.player).trySqueak();
-                    if (result){
+                    if (result) {
                         ClientPlayNetworking.send(new SqueakPayload(client.player.getNameForScoreboard()));
                     }
                 } else {
@@ -222,24 +222,6 @@ public class InsilenceClient implements ClientModInitializer {
                 }
             }
         });
-
-        ClientCommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess) -> dispatcher.register(ClientCommandManager.literal("thumbnail")
-                .requires(serverCommandSource -> serverCommandSource.hasPermissionLevel(2))
-                .executes(commandContext -> {
-                    FabricClientCommandSource source = commandContext.getSource();
-
-                    BlockPos pos = source.getPlayer().getBlockPos();
-                    World world = source.getWorld();
-                    Vec3d vec3d = Vec3d.ofCenter(pos);
-                    Predicate<RakeEntity> close = (rake) -> {
-                        return rake.getPos().isInRange(vec3d, 5);
-                    };
-                    List<RakeEntity> closeEntities = world.getEntitiesByClass(RakeEntity.class, new Box(pos.getX() - 5, pos.getY() - 5, pos.getZ() - 5, pos.getX() + 5, pos.getY() + 5, pos.getZ() + 5), close.and(RakeEntity::isAlive).and(EntityPredicates.EXCEPT_SPECTATOR));
-                    for (RakeEntity r : closeEntities){
-                        r.getAnimatableInstanceCache().getManagerForId(r.getId()).tryTriggerAnimation("controller", "thumbnail");
-                    }
-                    return 1;
-                }))));
     }
 
     public static BlindnessHandler getBlindnessHandler(){
