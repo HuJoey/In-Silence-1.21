@@ -344,7 +344,7 @@ public abstract class LivingEntityMixin extends Entity implements InSilenceEssen
     public boolean canJump(){return jumpCooldown == 0;}
     public boolean canLockIn(){return lockInCooldown == 0;}
     public void lockIn(){
-        lockInCooldown = 400;
+        lockInCooldown = 560;
     }
 
     public void dash(){

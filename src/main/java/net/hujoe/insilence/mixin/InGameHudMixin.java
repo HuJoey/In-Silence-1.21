@@ -310,7 +310,7 @@ public class InGameHudMixin {
                     if (ticksSince == 1) {
                         attackingDoNotRender = true;
                     }
-                    double ticksPerStage = (double) 400 / 18; // total cooldown ticks divided by stages
+                    double ticksPerStage = (double) 560 / 18; // total cooldown ticks divided by stages
                     stage = (int) (ticksSince / ticksPerStage);
                     lockInCooldown = false;
 

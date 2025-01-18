@@ -125,6 +125,6 @@ public class BlindnessHandler {
 
     public void lockIn(){
         lockInActive = true;
-        lockInTimer = 300;
+        lockInTimer = 200;
     }
 }
