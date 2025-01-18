@@ -3,6 +3,7 @@ package net.hujoe.insilence.block.custom;
 import com.mojang.serialization.MapCodec;
 import net.hujoe.insilence.block.entity.ModBlockEntities;
 import net.hujoe.insilence.block.entity.TVBlockEntity;
+import net.hujoe.insilence.client.ClientRakeManager;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -51,10 +52,14 @@ public class TVBlock extends BlockWithEntity {
     }
 
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        boolean active = state.get(ACTIVE);
-        world.setBlockState(pos, ((BlockState) (state.with(ACTIVE, !active)).with(LIT, !active)));
+        if (!ClientRakeManager.getRakeManager().isMouse(player.getNameForScoreboard())) {
+            boolean active = state.get(ACTIVE);
+            world.setBlockState(pos, ((BlockState) (state.with(ACTIVE, !active)).with(LIT, !active)));
 
-        return ActionResult.success(world.isClient);
+            return ActionResult.success(world.isClient);
+        } else {
+            return ActionResult.FAIL;
+        }
     }
 
     @Nullable

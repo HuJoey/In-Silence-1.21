@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.hujoe.insilence.block.entity.FlashlightLightBlockEntity;
 import net.hujoe.insilence.block.entity.ModBlockEntities;
 import net.hujoe.insilence.block.entity.RadioBlockEntity;
+import net.hujoe.insilence.client.ClientRakeManager;
 import net.hujoe.insilence.entity.ModEntities;
 import net.hujoe.insilence.entity.custom.SoundEntity;
 import net.hujoe.insilence.item.ModItems;
@@ -59,10 +60,14 @@ public class RadioBlock extends BlockWithEntity {
     }
 
     protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        boolean active = state.get(ACTIVE);
-        world.setBlockState(pos, state.with(ACTIVE, !active));
+        if (!ClientRakeManager.getRakeManager().isMouse(player.getNameForScoreboard())) {
+            boolean active = state.get(ACTIVE);
+            world.setBlockState(pos, state.with(ACTIVE, !active));
 
-        return ActionResult.success(world.isClient);
+            return ActionResult.success(world.isClient);
+        } else {
+            return ActionResult.FAIL;
+        }
     }
 
     @Nullable
