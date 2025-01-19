@@ -126,8 +126,8 @@ public abstract class GameRendererMixin implements FlashActivator {
             flashTime = 100;
             fadeOutTime = 120;
         } else {
-            flashTime = 40;
-            fadeOutTime = 60;
+            flashTime = 10;
+            fadeOutTime = 20;
         }
         fadeInAmount = 1F / fadeInTime;
         fadeOutAmount = 1F / fadeOutTime;
