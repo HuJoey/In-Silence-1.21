@@ -49,9 +49,8 @@ public class FlashlightItem extends Item {
                 } else if (entity.getHorizontalFacing() == Direction.NORTH) {
                     pos = pos.add(0, 0, -1);
                 }
-                Vec3d normalized = result.getPos().normalize();
 
-                ClientPlayNetworking.send(new LightPlacePayload(pos.getX(), pos.getY(), pos.getZ(), normalized.getX(), normalized.getY(), normalized.getZ()));
+                ClientPlayNetworking.send(new LightPlacePayload(pos.getX(), pos.getY(), pos.getZ()));
             }
         }
     }

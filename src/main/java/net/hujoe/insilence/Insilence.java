@@ -206,7 +206,6 @@ public class Insilence implements ModInitializer {
 
 					if (!lightPlaced) {
 						placePos = context.player().getPos().lerp(placePos, 0.5);
-						Insilence.LOGGER.info(placePos + "");
 					}
 					failSafeCount++;
 				}
