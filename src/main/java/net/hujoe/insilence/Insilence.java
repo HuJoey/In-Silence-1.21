@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.hujoe.insilence.block.ModBlocks;
+import net.hujoe.insilence.block.custom.FlashlightLightBlock;
 import net.hujoe.insilence.block.entity.ModBlockEntities;
 import net.hujoe.insilence.commands.ModCommands;
 import net.hujoe.insilence.entity.ModEntities;
@@ -17,6 +18,7 @@ import net.hujoe.insilence.item.custom.FlashlightItem;
 import net.hujoe.insilence.network.payloads.*;
 import net.hujoe.insilence.server.RakeManager;
 import net.hujoe.insilence.sound.ModSounds;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.particle.FireworksSparkParticle;
@@ -48,6 +50,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 import static net.minecraft.block.Block.getRawIdFromState;
@@ -192,16 +195,24 @@ public class Insilence implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(LightPlacePayload.ID, (payload, context) -> {
 			context.server().execute(() -> {
-				BlockPos pos = new BlockPos(payload.x(), payload.y(), payload.z());
+				boolean lightPlaced = false;
 				World world = context.player().getWorld();
-				BlockEntity blockEntity = world.getBlockEntity(pos);
-				if (world.getBlockState(pos) == Blocks.AIR.getDefaultState()) {
-					world.setBlockState(pos, ModBlocks.FLASHLIGHT_LIGHT.getDefaultState());
-					world.syncWorldEvent(null, 2001, pos, getRawIdFromState(world.getBlockState(pos)));
-				} else if (blockEntity != null && blockEntity.getType() == ModBlockEntities.FLASHLIGHT_LIGHT_BLOCK_ENTITY) {
-					for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
-						ServerPlayNetworking.send(player, new LightRestartPayload(pos.getX(), pos.getY(), pos.getZ()));
+				Vec3d placePos = new Vec3d(payload.x(), payload.y(), payload.z());
+				int failSafeCount = 0;
+
+				while (!lightPlaced && failSafeCount < 5) {
+					BlockPos targetPos = new BlockPos((int) placePos.getX(), (int) placePos.getY(), (int) placePos.getZ());
+					lightPlaced = this.placeLight(targetPos, world);
+
+					if (!lightPlaced) {
+						placePos = context.player().getPos().lerp(placePos, 0.5);
+						Insilence.LOGGER.info(placePos + "");
 					}
+					failSafeCount++;
+				}
+				if (failSafeCount == 5){
+					BlockPos targetPos = context.player().getBlockPos();
+					this.placeLight(targetPos, world);
 				}
 			});
 		});
@@ -254,5 +265,22 @@ public class Insilence implements ModInitializer {
 			ServerPlayNetworking.send(handler.getPlayer(), new RakeListReceivePayload(RakeManager.getRakeManager().getRakeList()));
 			ServerPlayNetworking.send(handler.getPlayer(), new MouseListReceivePayload(RakeManager.getRakeManager().getMouseList()));
 		});
+	}
+
+	public boolean placeLight(BlockPos targetPos, World world){
+		boolean lightPlaced = false;
+		BlockEntity blockEntity = world.getBlockEntity(targetPos);
+		if (world.getBlockState(targetPos).isAir()) {
+			world.setBlockState(targetPos, ModBlocks.FLASHLIGHT_LIGHT.getDefaultState());
+			world.syncWorldEvent(null, 2001, targetPos, getRawIdFromState(world.getBlockState(targetPos)));
+			lightPlaced = true;
+		} else if (blockEntity != null && blockEntity.getType() == ModBlockEntities.FLASHLIGHT_LIGHT_BLOCK_ENTITY) {
+			for (ServerPlayerEntity player : PlayerLookup.world((ServerWorld) world)) {
+				ServerPlayNetworking.send(player, new LightRestartPayload(targetPos.getX(), targetPos.getY(), targetPos.getZ()));
+			}
+			lightPlaced = true;
+		}
+
+		return lightPlaced;
 	}
 }

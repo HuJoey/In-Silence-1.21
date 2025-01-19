@@ -28,6 +28,7 @@ import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import static net.minecraft.block.Block.getRawIdFromState;
@@ -48,8 +49,9 @@ public class FlashlightItem extends Item {
                 } else if (entity.getHorizontalFacing() == Direction.NORTH) {
                     pos = pos.add(0, 0, -1);
                 }
+                Vec3d normalized = result.getPos().normalize();
 
-                ClientPlayNetworking.send(new LightPlacePayload(pos.getX(), pos.getY(), pos.getZ()));
+                ClientPlayNetworking.send(new LightPlacePayload(pos.getX(), pos.getY(), pos.getZ(), normalized.getX(), normalized.getY(), normalized.getZ()));
             }
         }
     }
