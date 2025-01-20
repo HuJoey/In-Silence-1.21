@@ -73,6 +73,7 @@ public class FlashlightItem extends Item {
             world.addParticle(ParticleTypes.FLASH, true, result.getPos().getX(), result.getPos().getY(), result.getPos().getZ(), 0, 0, 0);
             updateDamage(stack);
             ClientPlayNetworking.send(new FlashSendPayload(user.getId()));
+            user.getItemCooldownManager().set(this, 10);
         }
     }
 

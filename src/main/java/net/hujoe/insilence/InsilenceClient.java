@@ -193,8 +193,10 @@ public class InsilenceClient implements ClientModInitializer {
                     for (int i = 0; i < 36; i++) {
                         ItemStack stack = inv.getStack(i);
                         if (stack.isOf(ModItems.FLASHLIGHT) && stack.get(ModItems.FLASH_STAGE) != null && stack.get(ModItems.FLASH_STAGE) > 1) {
-                            FlashlightItem item = (FlashlightItem) stack.getItem();
-                            item.flash(client.world, stack, client.player);
+                            if (client.player.getItemCooldownManager().getCooldownProgress(ModItems.FLASHLIGHT, 0) == 0) {
+                                FlashlightItem item = (FlashlightItem) stack.getItem();
+                                item.flash(client.world, stack, client.player);
+                            }
                             break;
                         }
                     }
