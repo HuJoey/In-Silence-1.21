@@ -13,7 +13,11 @@ This download includes a map with a custom datapack, a couple resource packs, an
 * If you don't have access to a server, use a mod like Essentials to host your world.
 
 ## Video Showcase:
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/1iHenf02AJY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=1iHenf02AJY
+" target="_blank"><img src="http://img.youtube.com/vi/1iHenf02AJY/0.jpg" 
+alt="Link to Video Showcase" width="480" height="360" border="10" /></a>
+
+^ Click on the image to open the video on youtube.com
 
 ## Credits: 
 - [HuJoe](https://www.youtube.com/@HuJoe): Coding/Sfx
