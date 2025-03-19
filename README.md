@@ -2,7 +2,7 @@
 
 In Silence is a multiplayer co-op survival game in which 1 player becomes a monster that seeks out the other players. This map is an in-depth recreation of the game, including flashlights, noisemakers, and of course, the monster!
 
-Download the modpack and map here: _no modrinth download yet_
+Download the modpack and map here: https://modrinth.com/modpack/in-silence-for-minecraft
 
 ## Video Showcase:
 <a href="http://www.youtube.com/watch?feature=player_embedded&v=1iHenf02AJY
